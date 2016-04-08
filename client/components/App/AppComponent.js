@@ -5,8 +5,9 @@ import { Link } from 'react-router';
 import './App.scss';
 
 import Footer from '../Footer/FooterContainer';
+import LogoutIcon from '../Icon/LogoutIcon';
 import MessagesIcon from '../Icon/MessagesIcon';
-import SettingsIcon from '../Icon/SettingsIcon';
+import QuestionAnswerIcon from '../Icon/QuestionAnswerIcon';
 
 export default class App extends React.Component {
   static propTypes = {
@@ -45,13 +46,16 @@ export default class App extends React.Component {
         <section className='row content-container'>
           <nav className='col left-nav between-xs'>
             <div className='top-buttons col middle-xs'>
-              <IconButton>
+              <IconButton href='/smart-answers' linkButton>
+                <QuestionAnswerIcon />
+              </IconButton>
+              <IconButton href='/message-logs' linkButton>
                 <MessagesIcon />
               </IconButton>
             </div>
             <div className='bottom-buttons col middle-xs'>
-              <IconButton>
-                <SettingsIcon />
+              <IconButton href='/' linkButton>
+                <LogoutIcon />
               </IconButton>
             </div>
           </nav>
