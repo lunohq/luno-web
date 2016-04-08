@@ -41,19 +41,21 @@ const { nodeInterface, nodeField } = nodeDefinitions(
 
 // Our GraphQL Types
 
+const GraphQLSlackBot = new GraphQLObjectType({
+  name: 'SlackBot',
+  fields: {
+    id: {
+      type: GraphQLString,
+      description: 'Our main slack bot id for the Team',
+    },
+  },
+});
+
 const GraphQLSlackInfo = new GraphQLObjectType({
   name: 'SlackInfo',
   description: 'Slack info related to a Team',
   fields: {
-    bot: new GraphQLObjectType({
-      name: 'SlackBot',
-      fields: {
-        id: {
-          type: GraphQLString,
-          description: 'Our main slack bot id for the Team',
-        },
-      },
-    }),
+    bot: { type: GraphQLSlackBot },
   },
 });
 
@@ -73,8 +75,10 @@ const GraphQLTeam = new GraphQLObjectType({
       type: UsersConnection,
       description: 'Users within the Team',
       args: {
-        teamId: GraphQLString,
-        ...connectionAgs,
+        teamId: {
+          type: GraphQLString,
+        },
+        ...connectionArgs,
       },
       resolve: (_, { teamId, ...args }) => {
         const users = db.user.getUsers(teamId);
@@ -85,7 +89,9 @@ const GraphQLTeam = new GraphQLObjectType({
       type: BotsConnection,
       description: 'Bots within the Team',
       args: {
-        teamId: GraphQLString,
+        teamId: {
+          type: GraphQLString,
+        },
         ...connectionArgs,
       },
       resolve: (_, { teamId, ...args }) => {
@@ -97,9 +103,11 @@ const GraphQLTeam = new GraphQLObjectType({
       type: GraphQLUser,
       description: 'Logged in user',
       args: {
-        id: GraphQLString,
+        id: {
+          type: GraphQLString,
+        },
       },
-      resolve: (_, { id }) => getUser(id),
+      resolve: (_, { id }) => db.user.getUser(id),
     },
   }),
   interfaces: [nodeInterface],
@@ -127,12 +135,16 @@ const GraphQLBot = new GraphQLObjectType({
       type: AnswersConnection,
       description: 'Answers configured for the Bot',
       args: {
-        teamId: GraphQLString,
-        botId: GraphQLString,
+        teamId: {
+          type: GraphQLString,
+        },
+        botId: {
+          type: GraphQLString,
+        },
         ...connectionArgs,
       },
       resolve: (_, { teamId, botId, ...args }) => {
-        const answers = getAnswers(teamId, botId);
+        const answers = db.answer.getAnswers(teamId, botId);
         return connectionFromPromisedArray(answers, args);
       },
     },
@@ -176,7 +188,9 @@ const { connectionType: AnswersConnection } = connectionDefinitions({
 
 const GraphQLQuery = new GraphQLObjectType({
   name: 'Query',
-  node: nodeField,
+  fields: {
+    node: nodeField,
+  },
 });
 
 // Our Relay Mutations
@@ -189,5 +203,5 @@ const GraphQLMutation = new GraphQLObjectType({
 
 export default new GraphQLSchema({
   query: GraphQLQuery,
-  mutation: GraphQLMutation,
+  //mutation: GraphQLMutation,
 });

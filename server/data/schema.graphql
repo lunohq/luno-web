@@ -1,17 +1,31 @@
-type Feature implements Node {
+type Answer implements Node {
   id: ID!
-  name: String
-  description: String
-  url: String
+  title: String
+  body: String
 }
 
-type FeatureConnection {
+type AnswerConnection {
   pageInfo: PageInfo!
-  edges: [FeatureEdge]
+  edges: [AnswerEdge]
 }
 
-type FeatureEdge {
-  node: Feature
+type AnswerEdge {
+  node: Answer
+  cursor: String!
+}
+
+type Bot implements Node {
+  id: ID!
+  answers(teamId: String, botId: String, after: String, first: Int, before: String, last: Int): AnswerConnection
+}
+
+type BotConnection {
+  pageInfo: PageInfo!
+  edges: [BotEdge]
+}
+
+type BotEdge {
+  node: Bot
   cursor: String!
 }
 
@@ -28,12 +42,36 @@ type PageInfo {
 
 type Query {
   node(id: ID!): Node
-  viewer: User
+}
+
+type SlackBot {
+  id: String
+}
+
+type SlackInfo {
+  bot: SlackBot
+}
+
+type Team implements Node {
+  id: ID!
+  domain: String
+  slack: SlackInfo
+  users(teamId: String, after: String, first: Int, before: String, last: Int): UserConnection
+  bots(teamId: String, after: String, first: Int, before: String, last: Int): BotConnection
+  viewer(id: String): User
 }
 
 type User implements Node {
   id: ID!
-  features(after: String, first: Int, before: String, last: Int): FeatureConnection
-  username: String
-  website: String
+  fullName: String
+}
+
+type UserConnection {
+  pageInfo: PageInfo!
+  edges: [UserEdge]
+}
+
+type UserEdge {
+  node: User
+  cursor: String!
 }
