@@ -23,6 +23,11 @@ import {
 
 import { db } from 'luno-core';
 
+function getViewer() {
+  // TODO this should do something with the token
+  return db.user.getUser('1', '2');
+}
+
 const { nodeInterface, nodeField } = nodeDefinitions(
   (globalId) => {
     const { type, id } = fromGlobalId(globalId);
@@ -71,44 +76,6 @@ const GraphQLTeam = new GraphQLObjectType({
       type: GraphQLSlackInfo,
       description: 'Slack info related to the Team',
     },
-    users: {
-      type: UsersConnection,
-      description: 'Users within the Team',
-      args: {
-        teamId: {
-          type: GraphQLString,
-        },
-        ...connectionArgs,
-      },
-      resolve: (_, { teamId, ...args }) => {
-        const users = db.user.getUsers(teamId);
-        return connectionFromPromisedArray(users, args);
-      },
-    },
-    bots: {
-      type: BotsConnection,
-      description: 'Bots within the Team',
-      args: {
-        teamId: {
-          type: GraphQLString,
-        },
-        ...connectionArgs,
-      },
-      resolve: (_, { teamId, ...args }) => {
-        const bots = db.bot.getBots(teamId);
-        return connectionFromPromisedArray(bots, args);
-      },
-    },
-    viewer: {
-      type: GraphQLUser,
-      description: 'Logged in user',
-      args: {
-        id: {
-          type: GraphQLString,
-        },
-      },
-      resolve: (_, { id }) => db.user.getUser(id),
-    },
   }),
   interfaces: [nodeInterface],
 });
@@ -117,10 +84,23 @@ const GraphQLUser = new GraphQLObjectType({
   name: 'User',
   description: 'User within our system',
   fields: () => ({
-    id: globalIdField('User'),
+    id: globalIdField('User', (obj) => `${obj.teamId}:${obj.id}`),
     fullName: {
       type: GraphQLString,
       description: 'The full name of the User',
+    },
+    team: {
+      type: GraphQLTeam,
+      description: 'The Team the User belongs to',
+      resolve: (user) => db.team.getTeam(user.teamId),
+    },
+    bots: {
+      type: BotsConnection,
+      description: 'Bots the User has access to',
+      resolve: (user, args) => {
+        const bots = db.bot.getBots(user.teamId);
+        return connectionFromPromisedArray(bots, args);
+      },
     },
   }),
   interfaces: [nodeInterface],
@@ -130,21 +110,12 @@ const GraphQLBot = new GraphQLObjectType({
   name: 'Bot',
   description: 'Bot within our system',
   fields: () => ({
-    id: globalIdField('Bot'),
+    id: globalIdField('Bot', (obj) => `${obj.teamId}:${obj.id}`),
     answers: {
       type: AnswersConnection,
       description: 'Answers configured for the Bot',
-      args: {
-        teamId: {
-          type: GraphQLString,
-        },
-        botId: {
-          type: GraphQLString,
-        },
-        ...connectionArgs,
-      },
-      resolve: (_, { teamId, botId, ...args }) => {
-        const answers = db.answer.getAnswers(teamId, botId);
+      resolve: (bot, args) => {
+        const answers = db.answer.getAnswers(bot.teamId, bot.id);
         return connectionFromPromisedArray(answers, args);
       },
     },
@@ -156,7 +127,7 @@ const GraphQLAnswer = new GraphQLObjectType({
   name: 'Answer',
   description: 'An answer that is tied to a Bot',
   fields: () => ({
-    id: globalIdField('Answer'),
+    id: globalIdField('Answer', (obj) => `${obj.teamIdBotId}:${obj.id}`),
     title: {
       type: GraphQLString,
       description: 'Title of the Answer',
@@ -190,6 +161,10 @@ const GraphQLQuery = new GraphQLObjectType({
   name: 'Query',
   fields: {
     node: nodeField,
+    viewer: {
+      type: GraphQLUser,
+      resolve: getViewer,
+    },
   },
 });
 
