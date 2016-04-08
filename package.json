@@ -72,7 +72,7 @@
     "graphql": "^0.4.18",
     "graphql-relay": "^0.3.6",
     "lodash": "^4.7.0",
-    "luno-core": "git+ssh://git@github.com/lunohq/luno-core.git#v0.3.0",
+    "luno-core": "git+ssh://git@github.com/lunohq/luno-core.git#v0.6.0",
     "material-ui": "^0.15.0-alpha.2",
     "react": "^0.14.8",
     "react-dom": "^0.14.8",
