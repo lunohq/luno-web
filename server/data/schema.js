@@ -14,134 +14,180 @@ import {
 import {
   connectionArgs,
   connectionDefinitions,
-  connectionFromArray,
+  connectionFromPromisedArray,
   fromGlobalId,
   globalIdField,
   mutationWithClientMutationId,
   nodeDefinitions
 } from 'graphql-relay';
 
-import {
-  User,
-  Feature,
-  getUser,
-  getFeature,
-  getFeatures
-} from './database';
+import { db } from 'luno-core';
 
-
-/**
- * We get the node interface and field from the Relay library.
- *
- * The first method defines the way we resolve an ID to its object.
- * The second defines the way we resolve an object to its GraphQL type.
- */
 const { nodeInterface, nodeField } = nodeDefinitions(
   (globalId) => {
     const { type, id } = fromGlobalId(globalId);
-    if (type === 'User') {
-      return getUser(id);
-    } else if (type === 'Feature') {
-      return getFeature(id);
+    if (type === 'Team') {
+      return db.team.getTeam(id);
     }
     return null;
   },
   (obj) => {
-    if (obj instanceof User) {
-      return userType;
-    } else if (obj instanceof Feature) {
-      return featureType;
+    if (obj instanceof db.team.Team) {
+      return GraphQLTeam;
     }
     return null;
-  }
+  },
 );
 
-/**
- * Define your own types here
- */
+// Our GraphQL Types
 
-const userType = new GraphQLObjectType({
+const GraphQLSlackInfo = new GraphQLObjectType({
+  name: 'SlackInfo',
+  description: 'Slack info related to a Team',
+  fields: {
+    bot: new GraphQLObjectType({
+      name: 'SlackBot',
+      fields: {
+        id: {
+          type: GraphQLString,
+          description: 'Our main slack bot id for the Team',
+        },
+      },
+    }),
+  },
+});
+
+const GraphQLTeam = new GraphQLObjectType({
+  name: 'Team',
+  fields: () => ({
+    id: globalIdField('Team'),
+    domain: {
+      type: GraphQLString,
+      description: 'Team domain (maps to slack domain)',
+    },
+    slack: {
+      type: GraphQLSlackInfo,
+      description: 'Slack info related to the Team',
+    },
+    users: {
+      type: UsersConnection,
+      description: 'Users within the Team',
+      args: {
+        teamId: GraphQLString,
+        ...connectionAgs,
+      },
+      resolve: (_, { teamId, ...args }) => {
+        const users = db.user.getUsers(teamId);
+        return connectionFromPromisedArray(users, args);
+      },
+    },
+    bots: {
+      type: BotsConnection,
+      description: 'Bots within the Team',
+      args: {
+        teamId: GraphQLString,
+        ...connectionArgs,
+      },
+      resolve: (_, { teamId, ...args }) => {
+        const bots = db.bot.getBots(teamId);
+        return connectionFromPromisedArray(bots, args);
+      },
+    },
+    viewer: {
+      type: GraphQLUser,
+      description: 'Logged in user',
+      args: {
+        id: GraphQLString,
+      },
+      resolve: (_, { id }) => getUser(id),
+    },
+  }),
+  interfaces: [nodeInterface],
+});
+
+const GraphQLUser = new GraphQLObjectType({
   name: 'User',
-  description: 'A person who uses our app',
+  description: 'User within our system',
   fields: () => ({
     id: globalIdField('User'),
-    features: {
-      type: featureConnection,
-      description: 'Features that I have',
-      args: connectionArgs,
-      resolve: (_, args) => connectionFromArray(getFeatures(), args)
-    },
-    username: {
+    fullName: {
       type: GraphQLString,
-      description: 'Users\'s username'
+      description: 'The full name of the User',
     },
-    website: {
-      type: GraphQLString,
-      description: 'User\'s website'
-    }
   }),
-  interfaces: [nodeInterface]
+  interfaces: [nodeInterface],
 });
 
-const featureType = new GraphQLObjectType({
-  name: 'Feature',
-  description: 'Feature integrated in our starter kit',
+const GraphQLBot = new GraphQLObjectType({
+  name: 'Bot',
+  description: 'Bot within our system',
   fields: () => ({
-    id: globalIdField('Feature'),
-    name: {
-      type: GraphQLString,
-      description: 'Name of the feature'
+    id: globalIdField('Bot'),
+    answers: {
+      type: AnswersConnection,
+      description: 'Answers configured for the Bot',
+      args: {
+        teamId: GraphQLString,
+        botId: GraphQLString,
+        ...connectionArgs,
+      },
+      resolve: (_, { teamId, botId, ...args }) => {
+        const answers = getAnswers(teamId, botId);
+        return connectionFromPromisedArray(answers, args);
+      },
     },
-    description: {
-      type: GraphQLString,
-      description: 'Description of the feature'
-    },
-    url: {
-      type: GraphQLString,
-      description: 'Url of the feature'
-    }
   }),
-  interfaces: [nodeInterface]
+  interfaces: [nodeInterface],
 });
 
-/**
- * Define your own connection types here
- */
-const { connectionType: featureConnection } = connectionDefinitions({ name: 'Feature', nodeType: featureType });
+const GraphQLAnswer = new GraphQLObjectType({
+  name: 'Answer',
+  description: 'An answer that is tied to a Bot',
+  fields: () => ({
+    id: globalIdField('Answer'),
+    title: {
+      type: GraphQLString,
+      description: 'Title of the Answer',
+    },
+    body: {
+      type: GraphQLString,
+      description: 'Body of the Answer',
+    },
+  }),
+  interfaces: [nodeInterface],
+});
 
-/**
- * This is the type that will be the root of our query,
- * and the entry point into our schema.
- */
-const queryType = new GraphQLObjectType({
+// Our Relay GraphQL Connection Types
+
+const { connectionType: UsersConnection } = connectionDefinitions({
+  name: 'User',
+  nodeType: GraphQLUser,
+});
+
+const { connectionType: BotsConnection } = connectionDefinitions({
+  name: 'Bot',
+  nodeType: GraphQLBot,
+});
+
+const { connectionType: AnswersConnection } = connectionDefinitions({
+  name: 'Answer',
+  nodeType: GraphQLAnswer,
+});
+
+const GraphQLQuery = new GraphQLObjectType({
   name: 'Query',
-  fields: () => ({
-    node: nodeField,
-    // Add your own root fields here
-    viewer: {
-      type: userType,
-      resolve: () => getUser('1')
-    }
-  })
+  node: nodeField,
 });
 
-/**
- * This is the type that will be the root of our mutations,
- * and the entry point into performing writes in our schema.
- */
-const mutationType = new GraphQLObjectType({
+// Our Relay Mutations
+
+const GraphQLMutation = new GraphQLObjectType({
   name: 'Mutation',
   fields: () => ({
-    // Add your own mutations here
-  })
+  }),
 });
 
-/**
- * Finally, we construct our schema (whose starting query type is the query
- * type we defined above) and export it.
- */
 export default new GraphQLSchema({
-  query: queryType
-  // Uncomment the following after adding some mutation fields:
-  // mutation: mutationType
+  query: GraphQLQuery,
+  mutation: GraphQLMutation,
 });
