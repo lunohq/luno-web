@@ -167,7 +167,7 @@ const { connectionType: BotsConnection } = connectionDefinitions({
   nodeType: GraphQLBot,
 });
 
-const { connectionType: AnswersConnection } = connectionDefinitions({
+const { connectionType: AnswersConnection, edgeType: GraphQLAnswerEdge } = connectionDefinitions({
   name: 'Answer',
   nodeType: GraphQLAnswer,
 });
@@ -185,13 +185,52 @@ const GraphQLQuery = new GraphQLObjectType({
 
 // Our Relay Mutations
 
+const GraphQLCreateAnswerMutation = mutationWithClientMutationId({
+  name: 'CreateAnswer',
+  inputFields: {
+    title: {
+      description: 'Title of the Answer',
+      type: new GraphQLNonNull(GraphQLString),
+    },
+    body: {
+      description: 'Body of the Answer',
+      type: new GraphQLNonNull(GraphQLString),
+    },
+    teamId: {
+      description: 'ID of the Team',
+      type: new GraphQLNonNull(GraphQLString),
+    },
+    botId: {
+      description: 'ID of the Bot for this Answer',
+      type: new GraphQLNonNull(GraphQLString),
+    },
+  },
+  outputFields: {
+    viewer: {
+      type: GraphQLUser,
+      resolve: getViewer,
+    },
+    answer: {
+      type: GraphQLAnswer,
+      resolve: (answer) => answer,
+    },
+  },
+  mutateAndGetPayload: async ({ title, body, teamId, botId }) => {
+    const answer = await db.answer.createAnswer({ title, body, teamId, botId });
+    return answer;
+  },
+});
+
 const GraphQLMutation = new GraphQLObjectType({
   name: 'Mutation',
   fields: () => ({
+    createAnswer: GraphQLCreateAnswerMutation,
   }),
 });
 
+// Our Relay Schema
+
 export default new GraphQLSchema({
   query: GraphQLQuery,
-  //mutation: GraphQLMutation,
+  mutation: GraphQLMutation,
 });

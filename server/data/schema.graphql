@@ -16,7 +16,7 @@ type AnswerEdge {
 
 type Bot implements Node {
   id: ID!
-  answers(teamId: String, botId: String, after: String, first: Int, before: String, last: Int): AnswerConnection
+  answers: AnswerConnection
 }
 
 type BotConnection {
@@ -27,6 +27,24 @@ type BotConnection {
 type BotEdge {
   node: Bot
   cursor: String!
+}
+
+input CreateAnswerInput {
+  title: String!
+  body: String!
+  teamId: String!
+  botId: String!
+  clientMutationId: String!
+}
+
+type CreateAnswerPayload {
+  viewer: User
+  answer: Answer
+  clientMutationId: String!
+}
+
+type Mutation {
+  createAnswer(input: CreateAnswerInput!): CreateAnswerPayload
 }
 
 interface Node {
@@ -42,6 +60,7 @@ type PageInfo {
 
 type Query {
   node(id: ID!): Node
+  viewer: User
 }
 
 type SlackBot {
@@ -56,22 +75,11 @@ type Team implements Node {
   id: ID!
   domain: String
   slack: SlackInfo
-  users(teamId: String, after: String, first: Int, before: String, last: Int): UserConnection
-  bots(teamId: String, after: String, first: Int, before: String, last: Int): BotConnection
-  viewer(id: String): User
 }
 
 type User implements Node {
   id: ID!
   fullName: String
-}
-
-type UserConnection {
-  pageInfo: PageInfo!
-  edges: [UserEdge]
-}
-
-type UserEdge {
-  node: User
-  cursor: String!
+  team: Team
+  bots: BotConnection
 }
