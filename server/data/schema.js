@@ -221,10 +221,34 @@ const GraphQLCreateAnswerMutation = mutationWithClientMutationId({
   },
 });
 
+const GraphQLDeleteAnswerMutation = mutationWithClientMutationId({
+  name: 'DeleteAnswer',
+  inputFields: {
+    id: { type: new GraphQLNonNull(GraphQLID) },
+  },
+  outputFields: {
+    viewer: {
+      type: GraphQLUser,
+      resolve: getViewer,
+    },
+    deletedId: {
+      type: GraphQLID,
+      resolve: ({ id }) => id,
+    },
+  },
+  mutateAndGetPayload: async ({ id }) => {
+    const { id: answerId } = fromGlobalId(id);
+    const [partitionKey, sortKey] = answerId.split(':');
+    await db.answer.deleteAnswer(partitionKey, sortKey);
+    return { id };
+  },
+});
+
 const GraphQLMutation = new GraphQLObjectType({
   name: 'Mutation',
   fields: () => ({
     createAnswer: GraphQLCreateAnswerMutation,
+    deleteAnswer: GraphQLDeleteAnswerMutation,
   }),
 });
 

@@ -43,8 +43,20 @@ type CreateAnswerPayload {
   clientMutationId: String!
 }
 
+input DeleteAnswerInput {
+  id: ID!
+  clientMutationId: String!
+}
+
+type DeleteAnswerPayload {
+  viewer: User
+  deletedId: ID
+  clientMutationId: String!
+}
+
 type Mutation {
   createAnswer(input: CreateAnswerInput!): CreateAnswerPayload
+  deleteAnswer(input: DeleteAnswerInput!): DeleteAnswerPayload
 }
 
 interface Node {
