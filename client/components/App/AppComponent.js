@@ -5,9 +5,9 @@ import { Link } from 'react-router';
 import './App.scss';
 
 import Footer from '../Footer/FooterComponent';
-import LogoutIcon from '../Icon/LogoutIcon';
-import MessagesIcon from '../Icon/MessagesIcon';
-import QuestionAnswerIcon from '../Icon/QuestionAnswerIcon';
+import LogoutIcon from '../LogoutIcon';
+import MessagesIcon from '../MessagesIcon';
+import QuestionAnswerIcon from '../QuestionAnswerIcon';
 
 export default class App extends React.Component {
   static propTypes = {
