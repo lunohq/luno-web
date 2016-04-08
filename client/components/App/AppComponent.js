@@ -15,14 +15,26 @@ export default class App extends React.Component {
     viewer: React.PropTypes.object.isRequired
   };
 
+  getFAQ() {
+    const faqs = [
+      'how do i setup the office printer?',
+      'how can i get access to github?',
+      'what is the wifi password?',
+      'what is our office address?',
+      'where should i file expenses?'
+    ];
+    return faqs[Math.floor((Math.random() * faqs.length))];
+  }
+
   appContainer() {
     // TODO: Check whether user is authenticated or not
     if (window.location.pathname === '/') {
       return (
         <div className='landing'>
-          <div className='greeting'>
-            <h1>Luno</h1>
-            <p>Focus on what matters and leave the rest to Luno.</p>
+          <div className='greeting col middle-xs center-xs'>
+            <img className='logo' height='30px' src={require('../../assets/luno-logo-white.png')} />
+            <h1>@luno - {this.getFAQ()}</h1>
+            <h4>Luno is your partner in doing great work &mdash; a bot that answers frequenty asked questions.</h4>
             <Link to='/smart-answers'>
               <img
                 alt='Add to Slack'
@@ -35,6 +47,19 @@ export default class App extends React.Component {
           </div>
           <div className='content'>
             {this.props.children}
+            <div className='row'>
+              <div className='col-xs-6'>
+                <h2>Scale your teams</h2>
+                <h3>Stop answering repeated questions</h3>
+                <p>
+                  Train luno like your team member once, add it to your help channels, and it will take care of responding to everyone.
+                  You can also teach luno on when to escalate and who would be the right person for a topic.
+                </p>
+              </div>
+              <div className='col-xs-6 interaction-container'>
+                <img src={require('../../assets/travel.gif')} />
+              </div>
+            </div>
           </div>
           <Footer viewer={this.props.viewer} />
         </div>

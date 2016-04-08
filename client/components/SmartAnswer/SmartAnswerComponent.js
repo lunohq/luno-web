@@ -12,7 +12,7 @@ import SmartAnswerForm from './SmartAnswerFormComponent';
 
 export default class SmartAnswer extends React.Component {
   state = {
-    open: true,
+    open: false,
   }
 
   openSmartAnswerForm() {
