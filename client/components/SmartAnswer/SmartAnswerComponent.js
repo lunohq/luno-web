@@ -8,8 +8,25 @@ import TableRow from 'material-ui/lib/table/table-row';
 import TableRowColumn from 'material-ui/lib/table/table-row-column';
 
 import './SmartAnswer.scss';
+import SmartAnswerForm from './SmartAnswerFormComponent';
 
 export default class SmartAnswer extends React.Component {
+  state = {
+    open: true,
+  }
+
+  openSmartAnswerForm() {
+    this.setState({
+      open: true
+    });
+  }
+
+  closeSmartAnswerForm() {
+    this.setState({
+      open: false
+    });
+  }
+
   render() {
     return (
       <div className='smart-answers-container'>
@@ -26,6 +43,7 @@ export default class SmartAnswer extends React.Component {
                 <h1>Smart Answers</h1>
                 <RaisedButton
                   label='Add'
+                  onClick={::this.openSmartAnswerForm}
                   primary
                 />
             </div>
@@ -75,6 +93,11 @@ export default class SmartAnswer extends React.Component {
                 </TableBody>
               </Table>
         </div>
+        <SmartAnswerForm
+          handleSubmit={() => {}}
+          handleClose={::this.closeSmartAnswerForm}
+          open={this.state.open}
+        />
       </div>
     );
   }
