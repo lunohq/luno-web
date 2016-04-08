@@ -1,6 +1,6 @@
 {
   "name": "relay-fullstack",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Relay Starter Kit - Integrated with Relay, GraphQL, Express, ES6/ES7, JSX, Webpack, Babel, Material Design Lite, and PostCSS",
   "scripts": {
     "start": "npm run update && babel-node server/index.js",
