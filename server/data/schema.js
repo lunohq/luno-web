@@ -206,10 +206,6 @@ const GraphQLCreateAnswerMutation = mutationWithClientMutationId({
     },
   },
   outputFields: {
-    viewer: {
-      type: GraphQLUser,
-      resolve: getViewer,
-    },
     answer: {
       type: GraphQLAnswer,
       resolve: (answer) => answer,
@@ -227,10 +223,6 @@ const GraphQLDeleteAnswerMutation = mutationWithClientMutationId({
     id: { type: new GraphQLNonNull(GraphQLID) },
   },
   outputFields: {
-    viewer: {
-      type: GraphQLUser,
-      resolve: getViewer,
-    },
     deletedId: {
       type: GraphQLID,
       resolve: ({ id }) => id,
@@ -244,11 +236,38 @@ const GraphQLDeleteAnswerMutation = mutationWithClientMutationId({
   },
 });
 
+const GraphQLUpdateAnswerMutation = mutationWithClientMutationId({
+  name: 'UpdateAnswer',
+  inputFields: {
+    id: { type: new GraphQLNonNull(GraphQLID) },
+    title: { type: new GraphQLNonNull(GraphQLString) },
+    body: { type: new GraphQLNonNull(GraphQLString) },
+  },
+  outputFields: {
+    answer: {
+      type: GraphQLAnswer,
+      resolve: (answer) => answer,
+    },
+  },
+  mutateAndGetPayload: async ({ id, title, body }) => {
+    const { id: answerId } = fromGlobalId(id);
+    const [partitionKey, sortKey] = answerId.split(':');
+    const answer = await db.answer.updateAnswer({
+      body,
+      title,
+      teamIdBotId: partitionKey,
+      id: sortKey,
+    });
+    return answer;
+  },
+});
+
 const GraphQLMutation = new GraphQLObjectType({
   name: 'Mutation',
   fields: () => ({
     createAnswer: GraphQLCreateAnswerMutation,
     deleteAnswer: GraphQLDeleteAnswerMutation,
+    updateAnswer: GraphQLUpdateAnswerMutation,
   }),
 });
 

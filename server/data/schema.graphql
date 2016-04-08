@@ -38,7 +38,6 @@ input CreateAnswerInput {
 }
 
 type CreateAnswerPayload {
-  viewer: User
   answer: Answer
   clientMutationId: String!
 }
@@ -49,7 +48,6 @@ input DeleteAnswerInput {
 }
 
 type DeleteAnswerPayload {
-  viewer: User
   deletedId: ID
   clientMutationId: String!
 }
@@ -57,6 +55,7 @@ type DeleteAnswerPayload {
 type Mutation {
   createAnswer(input: CreateAnswerInput!): CreateAnswerPayload
   deleteAnswer(input: DeleteAnswerInput!): DeleteAnswerPayload
+  updateAnswer(input: UpdateAnswerInput!): UpdateAnswerPayload
 }
 
 interface Node {
@@ -87,6 +86,18 @@ type Team implements Node {
   id: ID!
   domain: String
   slack: SlackInfo
+}
+
+input UpdateAnswerInput {
+  id: ID!
+  title: String!
+  body: String!
+  clientMutationId: String!
+}
+
+type UpdateAnswerPayload {
+  answer: Answer
+  clientMutationId: String!
 }
 
 type User implements Node {
