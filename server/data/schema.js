@@ -33,12 +33,27 @@ const { nodeInterface, nodeField } = nodeDefinitions(
     const { type, id } = fromGlobalId(globalId);
     if (type === 'Team') {
       return db.team.getTeam(id);
+    } else if (type === 'User') {
+      const [partitionKey, sortKey] = id.split(':');
+      return db.user.getUser(partitionKey, sortKey);
+    } else if (type === 'Bot') {
+      const [partitionKey, sortKey] = id.split(':');
+      return db.bot.getBot(partitionKey, sortKey);
+    } else if (type === 'Answer') {
+      const [partitionKey, sortKey] = id.split(':');
+      return db.answer.getAnswer(partitionKey, sortKey);
     }
     return null;
   },
   (obj) => {
     if (obj instanceof db.team.Team) {
       return GraphQLTeam;
+    } else if (obj instanceof db.user.User) {
+      return GraphQLUser;
+    } else if (obj instanceof db.bot.Bot) {
+      return GraphQLBot;
+    } else if (obj instanceof db.answer.Answer) {
+      return GraphQLAnswer;
     }
     return null;
   },
