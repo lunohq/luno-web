@@ -27,7 +27,7 @@ module.exports = {
       exclude: /node_modules/
     }, {
       test: /\.scss$/,
-      loaders: ['style-loader', 'css-loader', 'postcss-loader']
+      loader: 'style!css!sass'
     }, {
       test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)$/,
       loader: 'url-loader?limit=10000&name=assets/[hash].[ext]'
@@ -41,7 +41,7 @@ module.exports = {
     new webpack.NoErrorsPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
-      title: 'Relay Starter Kit - Integrated with Relay, GraphQL, Express, ES6/ES7, JSX, Webpack, Babel, Material Design Lite, and PostCSS',
+      title: 'Luno',
       template: './client/index.html',
       mobile: true,
       inject: false
