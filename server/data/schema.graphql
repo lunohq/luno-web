@@ -32,7 +32,6 @@ type BotEdge {
 input CreateAnswerInput {
   title: String!
   body: String!
-  teamId: String!
   botId: String!
   clientMutationId: String!
 }

@@ -1,13 +1,20 @@
-import React, { PropTypes } from 'react';
-import RaisedButton from 'material-ui/lib/raised-button';
-import Table from 'material-ui/lib/table/table';
-import TableBody from 'material-ui/lib/table/table-body';
-import TableHeader from 'material-ui/lib/table/table-header';
-import TableHeaderColumn from 'material-ui/lib/table/table-header-column';
-import TableRow from 'material-ui/lib/table/table-row';
-import TableRowColumn from 'material-ui/lib/table/table-row-column';
+import React, { Component, PropTypes } from 'react';
+import Relay from 'react-relay';
+import {
+  RaisedButton,
+  Table,
+  TableBody,
+  TableHeader,
+  TableHeaderColumn,
+  TableRow,
+  TableRowColumn,
+} from 'material-ui';
 
 import './style.scss';
+
+import CreateAnswerMutation from '../../mutations/CreateAnswerMutation';
+
+import Form from './Form';
 
 const AnswerRow = ({ answer: { id, title, body } }) => {
   const cellStyle = { whiteSpace: 'pre-wrap' };
@@ -60,35 +67,75 @@ AnswersTable.propTypes = {
   bot: PropTypes.object.isRequired,
 };
 
-const Answers = ({ viewer: { bots } }) => {
-  const bot = bots.edges[0].node;
-  return (
-    <div className='smart-answers-container'>
-      <aside className='col-xs sub-nav-container'>
-        <div className='sub-nav-title'>Luno Bot</div>
-        <hr />
-        <ul>
-          <li className='sub-nav-item selected'>Smart Answers</li>
-          <li className='sub-nav-item'>Bot Settings</li>
-        </ul>
-      </aside>
-      <div className='col-xs content-body'>
-        <div className='row between-xs middle-xs no-margin'>
-          <h1>Smart Answers</h1>
-          <RaisedButton
-            label='Add'
-            primary
-          />
+class Answers extends Component {
+
+  state = {
+    open: false,
+  }
+
+  getBot() {
+    const { viewer: { bots } } = this.props;
+    return bots.edges[0].node;
+  }
+
+  displayForm = () => {
+    this.setState({ open: true });
+  }
+
+  hideForm = () => {
+    this.setState({ open: false });
+  }
+
+  handleSubmitAnswer = () => {
+    const title = `Title ${(new Date()).toString()}`;
+    const body = `Body ${(new Date()).toString()}`;
+    const bot = this.getBot();
+    Relay.Store.commitUpdate(
+      new CreateAnswerMutation({
+        title,
+        body,
+        bot,
+      })
+    );
+    this.hideForm();
+  }
+
+  render() {
+    const bot = this.getBot();
+    return (
+      <div className='smart-answers-container'>
+        <aside className='col-xs sub-nav-container'>
+          <div className='sub-nav-title'>Luno Bot</div>
+          <hr />
+          <ul>
+            <li className='sub-nav-item selected'>Smart Answers</li>
+            <li className='sub-nav-item'>Bot Settings</li>
+          </ul>
+        </aside>
+        <div className='col-xs content-body'>
+          <div className='row between-xs middle-xs no-margin'>
+            <h1>Smart Answers</h1>
+            <RaisedButton
+              label='Add'
+              onTouchTap={this.displayForm}
+              primary
+            />
+          </div>
+          <hr />
+          <p>
+              Use Smart Answers to scale yourself and answer common questions. Your Luno Bot will search these Smart Answers and intelligently reply in any channel that its added to.
+          </p>
+          <AnswersTable bot={bot} />
         </div>
-        <hr />
-        <p>
-            Use Smart Answers to scale yourself and answer common questions. Your Luno Bot will search these Smart Answers and intelligently reply in any channel that its added to.
-        </p>
-        <AnswersTable bot={bot} />
+        <Form
+          onClose={this.hideForm}
+          onSubmit={this.handleSubmitAnswer}
+          open={this.state.open}
+        />
       </div>
-    </div>
-  );
-};
+    );
+  }
+}
 
 Answers.propTypes = {
   viewer: PropTypes.object.isRequired,

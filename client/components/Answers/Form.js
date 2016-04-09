@@ -1,69 +1,66 @@
-import React, { Component, PropTypes } from 'react';
-import Dialog from 'material-ui/lib/dialog';
-import FlatButton from 'material-ui/lib/flat-button';
-import TextField from 'material-ui/lib/text-field';
+import React, { PropTypes } from 'react';
+import {
+  Dialog,
+  FlatButton,
+  TextField,
+} from 'material-ui';
 
-export default class SmartAnswerForm extends Component {
+const Form = ({ onSubmit, onClose, open }) => {
+  const actions = [
+    <FlatButton
+      label='Cancel'
+      secondary
+      onClick={onClose}
+    />,
+    <FlatButton
+      label='Submit'
+      primary
+      onClick={onSubmit}
+    />,
+  ];
 
-  static propTypes = {
-    handleSubmit: PropTypes.func.isRequired,
-    handleClose: PropTypes.func.isRequired,
-    open: PropTypes.bool.isRequired,
-  };
+  return (
+    <Dialog
+      title='Add an Answer'
+      actions={actions}
+      modal={false}
+      open={open}
+      onRequestClose={onClose}
+    >
+      <form onSubmit={onSubmit}>
+        <div>
+          <TextField
+            floatingLabelText='Title'
+            fullWidth
+            hintText='Title'
+          />
+          <TextField
+            floatingLabelText='Answer'
+            fullWidth
+            hintText='Answer'
+            multiLine
+            rows={2}
+            rowsMax={5}
+          />
+          <TextField
+            floatingLabelText='Topics'
+            fullWidth
+            hintText='Topics'
+          />
+        </div>
+      </form>
+    </Dialog>
+  );
+};
 
-  static defaultPropTypes = {
-    open: false,
-  }
+Form.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
+};
 
-  render() {
-    const {
-      handleClose,
-      handleSubmit
-    } = this.props;
-    const actions = [
-      <FlatButton
-        label='Cancel'
-        secondary
-        onClick={handleClose}
-      />,
-      <FlatButton
-        label='Submit'
-        primary
-        onClick={handleSubmit}
-      />,
-    ];
+Form.defaultPropTypes = {
+  open: false,
+};
 
-    return (
-      <Dialog
-        title='Add a Smart Answer'
-        actions={actions}
-        modal={false}
-        open={this.props.open}
-        onRequestClose={handleClose}
-      >
-        <form onSubmit={handleSubmit}>
-          <div>
-            <TextField
-              floatingLabelText='Title'
-              fullWidth
-              hintText='Title'
-            />
-            <TextField
-              floatingLabelText='Smart Answer'
-              fullWidth
-              hintText='Smart Answer'
-              multiLine
-              rows={2}
-              rowsMax={5}
-            />
-            <TextField
-              floatingLabelText='Topics'
-              fullWidth
-              hintText='Topics'
-            />
-          </div>
-        </form>
-      </Dialog>
-    );
-  }
-}
+export default Form;

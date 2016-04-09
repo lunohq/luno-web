@@ -15,7 +15,7 @@ import {
   connectionArgs,
   connectionDefinitions,
   connectionFromPromisedArray,
-  cursorForObjectInConnection,
+  offsetToCursor,
   fromGlobalId,
   globalIdField,
   mutationWithClientMutationId,
@@ -199,10 +199,6 @@ const GraphQLCreateAnswerMutation = mutationWithClientMutationId({
       description: 'Body of the Answer',
       type: new GraphQLNonNull(GraphQLString),
     },
-    teamId: {
-      description: 'ID of the Team',
-      type: new GraphQLNonNull(GraphQLString),
-    },
     botId: {
       description: 'ID of the Bot for this Answer',
       type: new GraphQLNonNull(GraphQLString),
@@ -215,27 +211,49 @@ const GraphQLCreateAnswerMutation = mutationWithClientMutationId({
     },
     answerEdge: {
       type: GraphQLAnswerEdge,
-      resolve: async ({ teamId, botId, answerId, teamIdBotId }) => {
-        const answer = await db.answer.getAnswer(teamIdBotId, answerId);
+      // TODO: should this be returning a promise that can be rjected?
+      resolve: async ({ answer: { id }, teamId, botId, botGlobalId }) => {
+        const answer = await db.answer.getAnswer(`${teamId}_${botId}`, id);
+        const answers = await db.answer.getAnswers(teamId, botId);
+
+        // TODO: maybe we make this our own function?
+        // cursorForObjectInConnection indexOf was returning -1 even though the
+        // item was there, something to do with ===
+        let cursor;
+        for (const index in answers) {
+          const a = answers[index];
+          if (a.id === answer.id) {
+            cursor = offsetToCursor(index);
+            break;
+          }
+        }
+
         return {
-          cursor: cursorForObjectInConnection(await db.answer.getAnswers(teamId, botId)),
+          cursor,
           node: answer,
         };
       }
     },
   },
-  mutateAndGetPayload: async ({ title, body, teamId, botId }) => {
-    // TODO: DON"T LIKE THIS BUT ITS NEEDED IN THE CURRENT SETUP.
-    // SHOULD PROBABLY STORE THESE AS SEPARATE FIELDS
-    const actualBotId = (fromGlobalId(botId).id.split(':'))[1];
-    const actualTeamId = fromGlobalId(teamId).id;
-    const answer = await db.answer.createAnswer({
-      title,
-      body,
-      teamId: actualTeamId,
-      botId: actualBotId
-    });
-    return answer;
+  mutateAndGetPayload: async ({ title, body, botId: id }) => {
+    const [teamId, botId] = fromGlobalId(id).id.split(':');
+    let answer;
+    try {
+      answer = await db.answer.createAnswer({
+        title,
+        body,
+        teamId,
+        botId,
+      });
+    } catch (err) {
+      return err;
+    }
+    return {
+      answer,
+      botId,
+      teamId,
+      botGlobalId: id,
+    };
   },
 });
 

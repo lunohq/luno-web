@@ -861,20 +861,6 @@
               "defaultValue": null
             },
             {
-              "name": "teamId",
-              "description": "ID of the Team",
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "defaultValue": null
-            },
-            {
               "name": "botId",
               "description": "ID of the Bot for this Answer",
               "type": {
