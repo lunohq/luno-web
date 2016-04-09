@@ -207,27 +207,23 @@ const GraphQLCreateAnswerMutation = mutationWithClientMutationId({
     },
   },
   outputFields: {
-    answerEdge: {
-      type: GraphQLAnswerEdge,
-      resolve: (payload) => {
-        return {
-          cursor: cursorForObjectInConnection(db.answer.getAnswers(payload.teamId, payload.botId), payload.answer),
-          node: payload.answer
-        };
-      }
-    },
     viewer: {
       type: GraphQLUser,
       resolve: getViewer,
     },
   },
   mutateAndGetPayload: async ({ title, body, teamId, botId }) => {
-    const answer = await db.answer.createAnswer({ title, body, teamId, botId });
-    return {
-      answer,
-      teamId,
-      botId
-    };
+    // TODO: DON"T LIKE THIS BUT ITS NEEDED IN THE CURRENT SETUP.
+    // SHOULD PROBABLY STORE THESE AS SEPARATE FIELDS
+    const actualBotId = (fromGlobalId(botId).id.split(':'))[1];
+    const actualTeamId = fromGlobalId(teamId).id;
+    const answer = await db.answer.createAnswer({
+      title,
+      body,
+      teamId: actualTeamId,
+      botId: actualBotId
+    });
+    return answer;
   },
 });
 

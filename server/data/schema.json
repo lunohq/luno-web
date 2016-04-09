@@ -821,18 +821,6 @@
           "description": null,
           "fields": [
             {
-              "name": "answerEdge",
-              "description": null,
-              "args": [],
-              "type": {
-                "kind": "OBJECT",
-                "name": "AnswerEdge",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
               "name": "viewer",
               "description": null,
               "args": [],
