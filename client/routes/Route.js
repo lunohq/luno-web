@@ -1,7 +1,6 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router';
 
-import SmartAnswersQuery from '../queries/SmartAnswers';
 import ViewerQuery from '../queries/Viewer';
 
 import AppContainer from '../components/App/Container';
