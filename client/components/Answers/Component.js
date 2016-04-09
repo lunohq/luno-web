@@ -86,9 +86,7 @@ class Answers extends Component {
     this.setState({ open: false });
   }
 
-  handleSubmitAnswer = () => {
-    const title = `Title ${(new Date()).toString()}`;
-    const body = `Body ${(new Date()).toString()}`;
+  handleSubmitAnswer = ({ title, body }) => {
     const bot = this.getBot();
     Relay.Store.commitUpdate(
       new CreateAnswerMutation({
