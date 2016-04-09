@@ -7,10 +7,6 @@ export default Relay.createContainer(AppComponent, {
     viewer: () => Relay.QL`
       fragment on User {
         id
-        team {
-          id
-          domain
-        }
       }
     `
   }

@@ -23,16 +23,6 @@ export default class AddSmartAnswerMutation extends Relay.Mutation {
     return Relay.QL`mutation{ createAnswer }`;
   }
 
-  getFatQuery() {
-    return Relay.QL`
-      fragment on CreateAnswerPayload {
-        viewer {
-          id
-        }
-      }
-    `;
-  }
-
   getConfigs() {
     return [{
       type: 'FIELDS_CHANGE',

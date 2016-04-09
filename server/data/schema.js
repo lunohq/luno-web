@@ -207,9 +207,19 @@ const GraphQLCreateAnswerMutation = mutationWithClientMutationId({
     },
   },
   outputFields: {
-    viewer: {
-      type: GraphQLUser,
-      resolve: getViewer,
+    bot: {
+      type: GraphQLBot,
+      resolve: ({ teamId, botId }) => db.bot.getBot(teamId, botId),
+    },
+    answerEdge: {
+      type: GraphQLAnswerEdge,
+      resolve: async ({ teamId, botId, answerId, teamIdBotId }) => {
+        const answer = await db.answer.getAnswer(teamIdBotId, answerId);
+        return {
+          cursor: cursorForObjectInConnection(await db.answer.getAnswers(teamId, botId)),
+          node: answer,
+        };
+      }
     },
   },
   mutateAndGetPayload: async ({ title, body, teamId, botId }) => {

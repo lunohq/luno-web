@@ -70,7 +70,6 @@ export default class SmartAnswer extends React.Component {
   }
 
   render() {
-    console.log(this.props.viewer);
     return (
       <div className='smart-answers-container'>
         <aside className='col-xs sub-nav-container'>

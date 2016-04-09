@@ -821,12 +821,24 @@
           "description": null,
           "fields": [
             {
-              "name": "viewer",
+              "name": "bot",
               "description": null,
               "args": [],
               "type": {
                 "kind": "OBJECT",
-                "name": "User",
+                "name": "Bot",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "answerEdge",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "OBJECT",
+                "name": "AnswerEdge",
                 "ofType": null
               },
               "isDeprecated": false,
