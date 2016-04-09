@@ -1,16 +1,18 @@
 import Relay from 'react-relay';
 import Component from './Component';
-import AddSmartAnswerMutation from '../../mutations/AddSmartAnswerMutation';
 
 export default Relay.createContainer(Component, {
+  initialVariables: {
+    limit: -1 >>> 1,
+  },
+
   fragments: {
     viewer: () => Relay.QL`
       fragment on User {
-        ${AddSmartAnswerMutation.getFragment('viewer')}
-        bots {
+        bots(first: 1) {
           edges {
             node {
-              answers {
+              answers(first: $limit) {
                 edges {
                   node {
                     id
@@ -22,6 +24,8 @@ export default Relay.createContainer(Component, {
             }
           }
         }
-      }`,
-  }
+      }
+    `,
+  },
+
 });

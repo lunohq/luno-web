@@ -113,6 +113,7 @@ const GraphQLUser = new GraphQLObjectType({
     bots: {
       type: BotsConnection,
       description: 'Bots the User has access to',
+      args: connectionArgs,
       resolve: (user, args) => {
         const bots = db.bot.getBots(user.teamId);
         return connectionFromPromisedArray(bots, args);
@@ -130,6 +131,7 @@ const GraphQLBot = new GraphQLObjectType({
     answers: {
       type: AnswersConnection,
       description: 'Answers configured for the Bot',
+      args: connectionArgs,
       resolve: (bot, args) => {
         const answers = db.answer.getAnswers(bot.teamId, bot.id);
         return connectionFromPromisedArray(answers, args);

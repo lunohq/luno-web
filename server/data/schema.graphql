@@ -16,7 +16,7 @@ type AnswerEdge {
 
 type Bot implements Node {
   id: ID!
-  answers: AnswerConnection
+  answers(after: String, first: Int, before: String, last: Int): AnswerConnection
 }
 
 type BotConnection {
@@ -105,5 +105,5 @@ type User implements Node {
   id: ID!
   fullName: String
   team: Team
-  bots: BotConnection
+  bots(after: String, first: Int, before: String, last: Int): BotConnection
 }

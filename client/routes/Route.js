@@ -1,18 +1,15 @@
 import React from 'react';
 import { IndexRoute, Route } from 'react-router';
 
-import ViewerQuery from '../queries/Viewer';
+import ViewerQueries from '../queries/Viewer';
 
 import AppContainer from '../components/App/Container';
-import SmartAnswerContainer from '../components/SmartAnswer/Container';
-
-import MessageLogComponent from '../components/MessageLog/MessageLogComponent';
+import AnswersContainer from '../components/Answers/Container';
 
 export default (
-  <Route path='/' component={AppContainer} queries={ViewerQuery}>
-    <IndexRoute component={AppContainer} queries={ViewerQuery} />
-    <Route path='/message-logs' component={MessageLogComponent} />
-    <Route path='/smart-answers' component={SmartAnswerContainer} queries={ViewerQuery} />
+  <Route path='/' component={AppContainer} queries={ViewerQueries}>
+    <IndexRoute component={AppContainer} queries={ViewerQueries} />
+    <Route path='/answers' component={AnswersContainer} queries={ViewerQueries} />
   </Route>
 );
 
