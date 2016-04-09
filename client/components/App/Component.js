@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import IconButton from 'material-ui/lib/icon-button';
 import { Link } from 'react-router';
 
-import './App.scss';
+import './Style.scss';
 
 import Footer from '../Footer/FooterComponent';
 import LogoutIcon from '../LogoutIcon';
@@ -11,8 +11,8 @@ import QuestionAnswerIcon from '../QuestionAnswerIcon';
 
 export default class App extends React.Component {
   static propTypes = {
-    children: React.PropTypes.object.isRequired,
-    viewer: React.PropTypes.object.isRequired
+    children: PropTypes.object,
+    viewer: PropTypes.object.isRequired,
   };
 
   getFAQ() {

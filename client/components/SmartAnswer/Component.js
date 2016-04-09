@@ -1,5 +1,5 @@
 import RaisedButton from 'material-ui/lib/raised-button';
-import React from 'react';
+import React, { PropTypes } from 'react';
 import Table from 'material-ui/lib/table/table';
 import TableBody from 'material-ui/lib/table/table-body';
 import TableHeader from 'material-ui/lib/table/table-header';
@@ -7,10 +7,14 @@ import TableHeaderColumn from 'material-ui/lib/table/table-header-column';
 import TableRow from 'material-ui/lib/table/table-row';
 import TableRowColumn from 'material-ui/lib/table/table-row-column';
 
-import './SmartAnswer.scss';
-import SmartAnswerForm from './SmartAnswerFormComponent';
+import './Style.scss';
+import SmartAnswerForm from './Form';
 
 export default class SmartAnswer extends React.Component {
+  static propTypes = {
+    viewer: PropTypes.object,
+  };
+
   state = {
     open: false,
   }
@@ -27,7 +31,30 @@ export default class SmartAnswer extends React.Component {
     });
   }
 
+  renderSmartAnswers() {
+    const { bots } = this.props.viewer;
+    const answerRows = [];
+
+    if (bots && bots.edges.length) {
+      const answers = bots.edges[0].node.answers.edges;
+      const cellStyle = { whiteSpace: 'pre-wrap' };
+      for (const answer of answers) {
+        answerRows.push(
+          <TableRow key={answer.node.id}>
+            <TableRowColumn style={cellStyle}>{answer.node.title}</TableRowColumn>
+            <TableRowColumn style={cellStyle}>{answer.node.body}</TableRowColumn>
+            <TableRowColumn style={cellStyle}>Topic1, Topic2</TableRowColumn>
+            <TableRowColumn>Edit Delete</TableRowColumn>
+          </TableRow>
+        );
+      }
+    }
+
+    return answerRows;
+  }
+
   render() {
+    console.log(this.props.viewer);
     return (
       <div className='smart-answers-container'>
         <aside className='col-xs sub-nav-container'>
@@ -72,24 +99,7 @@ export default class SmartAnswer extends React.Component {
                   displayRowCheckbox={false}
                   showRowHover
                 >
-                    <TableRow>
-                        <TableRowColumn>Guest WiFi</TableRowColumn>
-                        <TableRowColumn>Network: Acme Guest <br /> Password: WelcomeToAcme</TableRowColumn>
-                        <TableRowColumn>SF Office</TableRowColumn>
-                        <TableRowColumn>Edit Delete</TableRowColumn>
-                    </TableRow>
-                    <TableRow>
-                        <TableRowColumn>Benefits Brochure</TableRowColumn>
-                        <TableRowColumn>Download our latest benefits brochure: https://drive.google.com/open?id=0B0g1oeNdj7wBYU5TRFJa43llcHc</TableRowColumn>
-                        <TableRowColumn>Benefits, New Hire</TableRowColumn>
-                        <TableRowColumn>Edit Delete</TableRowColumn>
-                    </TableRow>
-                    <TableRow>
-                        <TableRowColumn>SF Address</TableRowColumn>
-                        <TableRowColumn>555 California Street,San Francisco, CA 94104</TableRowColumn>
-                        <TableRowColumn>SF Office</TableRowColumn>
-                        <TableRowColumn>Edit Delete</TableRowColumn>
-                    </TableRow>
+                    {this.renderSmartAnswers()}
                 </TableBody>
               </Table>
         </div>
