@@ -4,7 +4,7 @@ export default class AddSmartAnswerMutation extends Relay.Mutation {
   static fragments = {
     viewer: () => Relay.QL`
       fragment on User {
-        id,
+        id
         team {
           id
         }
@@ -27,22 +27,7 @@ export default class AddSmartAnswerMutation extends Relay.Mutation {
     return Relay.QL`
       fragment on CreateAnswerPayload {
         viewer {
-          id,
-          bots {
-            edges {
-              node {
-                answers {
-                  edges {
-                    node {
-                      id
-                      body
-                      title
-                    }
-                  }
-                }
-              }
-            }
-          }
+          id
         }
       }
     `;
@@ -50,23 +35,29 @@ export default class AddSmartAnswerMutation extends Relay.Mutation {
 
   getConfigs() {
     return [{
-      type: 'RANGE_ADD',
-      parentName: 'viewer',
-      parentID: this.props.viewer.id,
-      connectionName: 'answers',
-      edgeName: 'answerEdge',
-      rangeBehaviors: {
-        '': 'append',
+      type: 'FIELDS_CHANGE',
+      fieldIDs: {
+        viewer: this.props.viewer.id,
       },
     }];
   }
 
   getVariables() {
+    const {
+      title,
+      body
+    } = this.props;
+
+    const {
+      bots,
+      team
+    } = this.props.viewer;
+
     return {
-      title: this.props.title,
-      body: this.props.body,
-      teamId: this.props.viewer.team.id,
-      botId: this.props.viewer.bots.edges[0].node.id,
+      body,
+      title,
+      botId: bots.edges[0].node.id,
+      teamId: team.id,
     };
   }
 }

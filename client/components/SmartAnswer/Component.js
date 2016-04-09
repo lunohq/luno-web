@@ -35,16 +35,16 @@ export default class SmartAnswer extends React.Component {
   }
 
   handleSubmitSmartAnswer() {
-    const title = 'Answer1';
-    const body = 'Body1';
-    const { viewer } = this.props;
+    const title = `Title ${(new Date()).toString()}`;
+    const body = `Body ${(new Date()).toString()}`;
     Relay.Store.commitUpdate(
       new AddSmartAnswerMutation({
         title,
         body,
-        viewer,
+        viewer: this.props.viewer,
       })
     );
+    this.closeSmartAnswerForm();
   }
 
   renderSmartAnswers() {

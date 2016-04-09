@@ -6,6 +6,7 @@ export default Relay.createContainer(Component, {
   fragments: {
     viewer: () => Relay.QL`
       fragment on User {
+        ${AddSmartAnswerMutation.getFragment('viewer')}
         bots {
           edges {
             node {
@@ -21,7 +22,6 @@ export default Relay.createContainer(Component, {
             }
           }
         }
-        ${AddSmartAnswerMutation.getFragment('viewer')}
       }`,
   }
 });
