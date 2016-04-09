@@ -30,7 +30,7 @@ export default class CreateAnswerMutation extends Relay.Mutation {
       connectionName: 'answers',
       edgeName: 'answerEdge',
       rangeBehaviors: {
-        '': 'append',
+        '': 'prepend',
       },
     }];
   }
