@@ -43,4 +43,17 @@ export default class CreateAnswerMutation extends Relay.Mutation {
       botId,
     };
   }
+
+  getOptimisticResponse() {
+    const { body, title } = this.props;
+    return {
+      answerEdge: {
+        node: {
+          body,
+          title,
+        },
+      },
+    };
+  }
+
 }
