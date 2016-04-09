@@ -12,7 +12,7 @@ const AuthenticatedLanding = ({ children }) => (
     <section className='row content-container'>
       <nav className='col left-nav between-xs'>
         <div className='top-buttons col middle-xs'>
-          <IconButton href='/smart-answers' linkButton>
+          <IconButton href='/answers' linkButton>
             <QuestionAnswerIcon />
           </IconButton>
           <IconButton href='/message-logs' linkButton>

@@ -25,7 +25,7 @@ const AnonymousLanding = () => (
       <img className='logo' height='30px' src={require('../../assets/luno-logo-white.png')} />
       <h1>@luno - {getFAQ()}</h1>
       <h4>Luno is your partner in doing great work &mdash; a bot that answers frequenty asked questions.</h4>
-      <Link to='/smart-answers'>
+      <Link to='/answers'>
         <img
           alt='Add to Slack'
           height='40'
