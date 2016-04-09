@@ -12,7 +12,7 @@ import MessageLogComponent from '../components/MessageLog/MessageLogComponent';
 export default (
   <Route path='/' component={AppContainer} queries={ViewerQuery}>
     <Route path='/message-logs' component={MessageLogComponent} />
-    <Route path='/smart-answers' component={SmartAnswerContainer} queries={SmartAnswersQuery} />
+    <Route path='/smart-answers' component={SmartAnswerContainer} queries={ViewerQuery} />
     <Redirect from='*' to='/' />
   </Route>
 );

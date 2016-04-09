@@ -1,11 +1,14 @@
 import RaisedButton from 'material-ui/lib/raised-button';
 import React, { PropTypes } from 'react';
+import Relay from 'react-relay';
 import Table from 'material-ui/lib/table/table';
 import TableBody from 'material-ui/lib/table/table-body';
 import TableHeader from 'material-ui/lib/table/table-header';
 import TableHeaderColumn from 'material-ui/lib/table/table-header-column';
 import TableRow from 'material-ui/lib/table/table-row';
 import TableRowColumn from 'material-ui/lib/table/table-row-column';
+
+import AddSmartAnswerMutation from '../../mutations/AddSmartAnswerMutation';
 
 import './Style.scss';
 import SmartAnswerForm from './Form';
@@ -29,6 +32,19 @@ export default class SmartAnswer extends React.Component {
     this.setState({
       open: false
     });
+  }
+
+  handleSubmitSmartAnswer() {
+    const title = 'Answer1';
+    const body = 'Body1';
+    const { viewer } = this.props;
+    Relay.Store.commitUpdate(
+      new AddSmartAnswerMutation({
+        title,
+        body,
+        viewer,
+      })
+    );
   }
 
   renderSmartAnswers() {
@@ -104,7 +120,7 @@ export default class SmartAnswer extends React.Component {
               </Table>
         </div>
         <SmartAnswerForm
-          handleSubmit={() => {}}
+          handleSubmit={::this.handleSubmitSmartAnswer}
           handleClose={::this.closeSmartAnswerForm}
           open={this.state.open}
         />

@@ -1,5 +1,6 @@
 import Relay from 'react-relay';
 import Component from './Component';
+import AddSmartAnswerMutation from '../../mutations/AddSmartAnswerMutation';
 
 export default Relay.createContainer(Component, {
   fragments: {
@@ -20,6 +21,7 @@ export default Relay.createContainer(Component, {
             }
           }
         }
+        ${AddSmartAnswerMutation.getFragment('viewer')}
       }`,
   }
 });

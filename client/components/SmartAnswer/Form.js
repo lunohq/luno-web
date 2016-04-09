@@ -29,7 +29,7 @@ export default class SmartAnswerForm extends Component {
       <FlatButton
         label='Submit'
         primary
-        onClick={handleClose}
+        onClick={handleSubmit}
       />,
     ];
 

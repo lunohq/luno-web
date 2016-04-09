@@ -38,7 +38,8 @@ input CreateAnswerInput {
 }
 
 type CreateAnswerPayload {
-  answer: Answer
+  answerEdge: AnswerEdge
+  viewer: User
   clientMutationId: String!
 }
 

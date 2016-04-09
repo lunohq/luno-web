@@ -15,6 +15,7 @@ import {
   connectionArgs,
   connectionDefinitions,
   connectionFromPromisedArray,
+  cursorForObjectInConnection,
   fromGlobalId,
   globalIdField,
   mutationWithClientMutationId,
@@ -206,14 +207,27 @@ const GraphQLCreateAnswerMutation = mutationWithClientMutationId({
     },
   },
   outputFields: {
-    answer: {
-      type: GraphQLAnswer,
-      resolve: (answer) => answer,
+    answerEdge: {
+      type: GraphQLAnswerEdge,
+      resolve: (payload) => {
+        return {
+          cursor: cursorForObjectInConnection(db.answer.getAnswers(payload.teamId, payload.botId), payload.answer),
+          node: payload.answer
+        };
+      }
+    },
+    viewer: {
+      type: GraphQLUser,
+      resolve: getViewer,
     },
   },
   mutateAndGetPayload: async ({ title, body, teamId, botId }) => {
     const answer = await db.answer.createAnswer({ title, body, teamId, botId });
-    return answer;
+    return {
+      answer,
+      teamId,
+      botId
+    };
   },
 });
 
