@@ -22,12 +22,10 @@ const AnswerRow = ({ answer, handleDelete }) => {
   const cellStyle = { whiteSpace: 'pre-wrap' };
 
   const deleteAnswer = (answerToDelete) => {
-    console.log(answerToDelete.id);
     handleDelete(answerToDelete);
   };
 
   const { id, title, body } = answer;
-  console.log(id);
   return (
     <TableRow key={id}>
       <TableRowColumn style={cellStyle}>{title}</TableRowColumn>
@@ -49,13 +47,7 @@ AnswerRow.propTypes = {
 };
 
 const AnswersTable = ({ bot, handleDelete }) => {
-  const answerRows = bot.answers.edges.map(({ node }, index) => {
-    return (<AnswerRow
-      answer={node}
-      handleDelete={handleDelete}
-      key={index}
-    />);
-  });
+  const answerRows = bot.answers.edges.map(({ node }, index) => <AnswerRow answer={node} handleDelete={handleDelete} key={index} />);
   return (
     <Table
       fixedFooter
