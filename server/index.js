@@ -23,7 +23,10 @@ function startGraphQLServer(schema) {
     pretty: true,
     schema
   }));
-  graphQLServer = graphql.listen(config.graphql.port, () => console.log(chalk.green(`GraphQL is listening on port ${config.graphql.port}`)));
+  graphQLServer = graphql.listen(
+    config.graphql.port,
+    () => console.log(chalk.green(`GraphQL is listening on port ${config.graphql.port}`)),
+  );
 }
 
 function startRelayServer() {
@@ -53,7 +56,7 @@ if (config.env === 'development') {
   // Watch JavaScript files in the data folder for changes, and update schema.json and schema.graphql
   gaze(path.join(__dirname, 'data/*.js'), (err, watcher) => {
     if (err) console.error(chalk.red('Error: Watching files in data folder'));
-    watcher.on('all', async() => {
+    watcher.on('all', async () => {
       try {
         // Close the GraphQL server, update the schema.json and schema.graphql, and start the server again
         graphQLServer.close();
