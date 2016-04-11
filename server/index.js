@@ -7,14 +7,79 @@ import WebpackDevServer from 'webpack-dev-server';
 import historyApiFallback from 'connect-history-api-fallback';
 import gaze from 'gaze';
 import chalk from 'chalk';
-import requireUncached from './utils/requireUncached';
+import Botkit from 'botkit';
+import jwt from 'express-jwt';
+import cookieParser from 'cookie-parser';
+import { db } from 'luno-core';
+
 import webpackConfig from '../webpack.config';
+import requireUncached from './utils/requireUncached';
 import config from './config/environment';
 import schema from './data/schema';
+import botkitStorage from './data/botkitStorage';
 import updateSchema from './utils/updateSchema';
+
+import { generateToken } from './actions';
 
 let graphQLServer;
 let relayServer;
+
+const TOKEN_SECRET = 'shhhh';
+const AUTH_COOKIE_KEY = 'atv1';
+const COOKIE_SECRET = 'shhh!';
+
+const botkit = Botkit.slackbot({
+  storage: botkitStorage,
+}).configureSlackApp({
+  clientId: '22618016311.26511459793',
+  clientSecret: '3dad74e3d7874065041063f4571639db',
+  scopes: ['bot'],
+});
+
+function oauth(app) {
+  // Serve oauth endpoints
+  botkit.createOauthEndpoints(app, async (err, req, res) => {
+    if (err) {
+      // TODO better logging (more consistent);
+      console.error('Failure', err);
+      res.status(500).send(err);
+    } else {
+      let token;
+      try {
+        token = await generateToken(TOKEN_SECRET, { user: res.locals.user });
+      } catch (err) {
+        console.error('Failure', err);
+        return res.status(500).send(err);
+      }
+
+      res.cookie(AUTH_COOKIE_KEY, token, { signed: true });
+      res.redirect('/');
+    }
+    return res;
+  });
+}
+
+function protect(app) {
+  app.use(cookieParser(COOKIE_SECRET));
+  app.use(jwt({
+    secret: TOKEN_SECRET,
+    getToken: req => {
+      console.log('fetching token');
+      return req.signedCookies.atv1;
+    },
+    isRevoked: async (req, payload, done) => {
+      console.log('checking revoked', payload);
+      let token;
+      try {
+        token = await db.token.getToken(payload.uid, payload.jti);
+      } catch (err) {
+        return done(err);
+      }
+      return done(null, !!token);
+    },
+    credentialsRequired: false,
+  }));
+}
 
 function startGraphQLServer(schema) {
   const graphql = express();
@@ -40,12 +105,21 @@ function startRelayServer() {
       colors: true
     },
     hot: true,
-    historyApiFallback: true
+
+    // XXX some issue here where it won't listen to the oauth endpoints if we
+    // set this to true
+    // historyApiFallback: true
   });
 
   // Serve static resources
   relayServer.use('/', express.static(path.join(__dirname, '../build')));
-  relayServer.listen(config.port, () => console.log(chalk.green(`Relay is listening on port ${config.port}`)));
+
+  oauth(relayServer.app);
+  protect(relayServer.app);
+
+  relayServer.listen(config.port, () => {
+    console.log(chalk.green(`Relay is listening on port ${config.port}`));
+  });
 }
 
 if (config.env === 'development') {

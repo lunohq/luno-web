@@ -1,7 +1,7 @@
 {
-  "name": "relay-fullstack",
+  "name": "luno-web",
   "version": "1.0.0",
-  "description": "Relay Starter Kit - Integrated with Relay, GraphQL, Express, ES6/ES7, JSX, Webpack, Babel, Material Design Lite, and PostCSS",
+  "description": "Luno web app",
   "scripts": {
     "start": "npm run update && babel-node server/index.js",
     "update": "babel-node server/utils/updateSchema.js",
@@ -9,10 +9,6 @@
     "lint": "eslint --ignore-path .gitignore client server"
   },
   "pre-commit": "lint",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/lvarayut/relay-fullstack.git"
-  },
   "keywords": [
     "react",
     "relay",
@@ -66,11 +62,15 @@
     "webpack-dev-server": "^1.14.1"
   },
   "dependencies": {
+    "botkit": "git+ssh://git@github.com/lunohq/botkit.git",
     "connect-history-api-fallback": "^1.2.0",
+    "cookie-parser": "^1.4.1",
     "express": "^4.13.4",
     "express-graphql": "^0.4.13",
+    "express-jwt": "^3.3.0",
     "graphql": "^0.4.18",
     "graphql-relay": "^0.3.6",
+    "jsonwebtoken": "^5.7.0",
     "lodash": "^4.7.0",
     "luno-core": "git+ssh://git@github.com/lunohq/luno-core.git#v0.6.4",
     "material-ui": "^0.15.0-alpha.2",
