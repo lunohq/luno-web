@@ -48,6 +48,7 @@ input DeleteAnswerInput {
 }
 
 type DeleteAnswerPayload {
+  bot: Bot
   deletedId: ID
   clientMutationId: String!
 }

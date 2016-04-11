@@ -263,6 +263,10 @@ const GraphQLDeleteAnswerMutation = mutationWithClientMutationId({
     id: { type: new GraphQLNonNull(GraphQLID) },
   },
   outputFields: {
+    bot: {
+      type: GraphQLBot,
+      resolve: ({ teamId, botId }) => db.bot.getBot(teamId, botId),
+    },
     deletedId: {
       type: GraphQLID,
       resolve: ({ id }) => id,
@@ -271,8 +275,13 @@ const GraphQLDeleteAnswerMutation = mutationWithClientMutationId({
   mutateAndGetPayload: async ({ id }) => {
     const { id: answerId } = fromGlobalId(id);
     const [partitionKey, sortKey] = answerId.split(':');
+    const [teamId, botId] = partitionKey.split('_');
     await db.answer.deleteAnswer(partitionKey, sortKey);
-    return { id };
+    return {
+      botId,
+      id,
+      teamId,
+    };
   },
 });
 
