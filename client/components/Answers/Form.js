@@ -52,7 +52,7 @@ class Form extends Component {
               fullWidth
               hintText='Answer'
               multiLine
-              rows={2}
+              rows={1}
               rowsMax={5}
               ref='body'
             />

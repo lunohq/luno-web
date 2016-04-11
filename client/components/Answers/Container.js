@@ -2,6 +2,7 @@ import Relay from 'react-relay';
 import Component from './Component';
 
 import CreateAnswerMutation from '../../mutations/CreateAnswerMutation';
+import DeleteAnswerMutation from '../../mutations/DeleteAnswerMutation';
 
 export default Relay.createContainer(Component, {
   initialVariables: {
@@ -18,6 +19,7 @@ export default Relay.createContainer(Component, {
               answers(first: $limit) {
                 edges {
                   node {
+                    ${DeleteAnswerMutation.getFragment('answer')}
                     id
                     title
                     body

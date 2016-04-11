@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
 import {
+  FlatButton,
   RaisedButton,
   Table,
   TableBody,
@@ -13,28 +14,48 @@ import {
 import './style.scss';
 
 import CreateAnswerMutation from '../../mutations/CreateAnswerMutation';
+import DeleteAnswerMutation from '../../mutations/DeleteAnswerMutation';
 
 import Form from './Form';
 
-const AnswerRow = ({ answer: { id, title, body } }) => {
+const AnswerRow = ({ answer, handleDelete }) => {
   const cellStyle = { whiteSpace: 'pre-wrap' };
 
+  const deleteAnswer = (answerToDelete) => {
+    console.log(answerToDelete.id);
+    handleDelete(answerToDelete);
+  };
+
+  const { id, title, body } = answer;
+  console.log(id);
   return (
     <TableRow key={id}>
       <TableRowColumn style={cellStyle}>{title}</TableRowColumn>
       <TableRowColumn style={cellStyle}>{body}</TableRowColumn>
       <TableRowColumn style={cellStyle}>Topic1, Topic2</TableRowColumn>
-      <TableRowColumn>Edit Delete</TableRowColumn>
+      <TableRowColumn>
+        <FlatButton
+          label='Delete'
+          onClick={() => deleteAnswer(answer)}
+        />
+      </TableRowColumn>
     </TableRow>
   );
 };
 
 AnswerRow.propTypes = {
   answer: PropTypes.object.isRequired,
+  handleDelete: PropTypes.func.isRequired,
 };
 
-const AnswersTable = ({ bot }) => {
-  const answerRows = bot.answers.edges.map(({ node }, index) => <AnswerRow answer={node} key={index} />);
+const AnswersTable = ({ bot, handleDelete }) => {
+  const answerRows = bot.answers.edges.map(({ node }, index) => {
+    return (<AnswerRow
+      answer={node}
+      handleDelete={handleDelete}
+      key={index}
+    />);
+  });
   return (
     <Table
       fixedFooter
@@ -65,6 +86,7 @@ const AnswersTable = ({ bot }) => {
 
 AnswersTable.propTypes = {
   bot: PropTypes.object.isRequired,
+  handleDelete: PropTypes.func.isRequired,
 };
 
 class Answers extends Component {
@@ -98,6 +120,16 @@ class Answers extends Component {
     this.hideForm();
   }
 
+  handleDeleteAnswer = (answer) => {
+    const bot = this.getBot();
+    Relay.Store.commitUpdate(
+      new DeleteAnswerMutation({
+        answer,
+        bot,
+      })
+    );
+  }
+
   render() {
     const bot = this.getBot();
     return (
@@ -123,7 +155,10 @@ class Answers extends Component {
           <p>
               Use Smart Answers to scale yourself and answer common questions. Your Luno Bot will search these Smart Answers and intelligently reply in any channel that its added to.
           </p>
-          <AnswersTable bot={bot} />
+          <AnswersTable
+            bot={bot}
+            handleDelete={this.handleDeleteAnswer}
+          />
         </div>
         <Form
           onClose={this.hideForm}
