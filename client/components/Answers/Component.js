@@ -15,11 +15,16 @@ import './style.scss';
 
 import CreateAnswerMutation from '../../mutations/CreateAnswerMutation';
 import DeleteAnswerMutation from '../../mutations/DeleteAnswerMutation';
+import UpdateAnswerMutation from '../../mutations/UpdateAnswerMutation';
 
 import Form from './Form';
 
-const AnswerRow = ({ answer, handleDelete }) => {
+const AnswerRow = ({ answer, handleDelete, handleEdit }) => {
   const cellStyle = { whiteSpace: 'pre-wrap' };
+
+  const editAnswer = (answerToEdit) => {
+    handleEdit(answerToEdit);
+  };
 
   const deleteAnswer = (answerToDelete) => {
     handleDelete(answerToDelete);
@@ -33,8 +38,12 @@ const AnswerRow = ({ answer, handleDelete }) => {
       <TableRowColumn style={cellStyle}>Topic1, Topic2</TableRowColumn>
       <TableRowColumn>
         <FlatButton
+          label='Edit'
+          onTouchTap={() => editAnswer(answer)}
+        />
+        <FlatButton
           label='Delete'
-          onClick={() => deleteAnswer(answer)}
+          onTouchTap={() => deleteAnswer(answer)}
         />
       </TableRowColumn>
     </TableRow>
@@ -44,10 +53,16 @@ const AnswerRow = ({ answer, handleDelete }) => {
 AnswerRow.propTypes = {
   answer: PropTypes.object.isRequired,
   handleDelete: PropTypes.func.isRequired,
+  handleEdit: PropTypes.func.isRequired,
 };
 
-const AnswersTable = ({ bot, handleDelete }) => {
-  const answerRows = bot.answers.edges.map(({ node }, index) => <AnswerRow answer={node} handleDelete={handleDelete} key={index} />);
+const AnswersTable = ({ bot, handleDelete, handleEdit }) => {
+  const answerRows = bot.answers.edges.map(({ node }, index) => <AnswerRow
+    answer={node}
+    handleDelete={handleDelete}
+    handleEdit={handleEdit}
+    key={index}
+  />);
   return (
     <Table
       fixedFooter
@@ -79,12 +94,14 @@ const AnswersTable = ({ bot, handleDelete }) => {
 AnswersTable.propTypes = {
   bot: PropTypes.object.isRequired,
   handleDelete: PropTypes.func.isRequired,
+  handleEdit: PropTypes.func.isRequired,
 };
 
 class Answers extends Component {
 
   state = {
     open: false,
+    answerToBeEdited: null,
   }
 
   getBot() {
@@ -100,16 +117,12 @@ class Answers extends Component {
     this.setState({ open: false });
   }
 
-  handleSubmitAnswer = ({ title, body }) => {
-    const bot = this.getBot();
-    Relay.Store.commitUpdate(
-      new CreateAnswerMutation({
-        title,
-        body,
-        bot,
-      })
-    );
-    this.hideForm();
+  handleAddAnswer = () => {
+    this.setState({ answerToBeEdited: null }, () => this.displayForm());
+  }
+
+  handleEditAnswer = (answer) => {
+    this.setState({ answerToBeEdited: answer }, () => this.displayForm());
   }
 
   handleDeleteAnswer = (answer) => {
@@ -122,6 +135,29 @@ class Answers extends Component {
     );
   }
 
+  handleSubmitAnswer = ({ title, body }, id) => {
+    const bot = this.getBot();
+    let mutation;
+    if (id === undefined || id === null) {
+      mutation = new CreateAnswerMutation({
+        title,
+        body,
+        bot,
+      });
+    } else {
+      mutation = new UpdateAnswerMutation({
+        answer: {
+          title,
+          body,
+          id
+        }
+      });
+    }
+
+    Relay.Store.commitUpdate(mutation);
+    this.hideForm();
+  }
+
   render() {
     const bot = this.getBot();
     return (
@@ -130,13 +166,13 @@ class Answers extends Component {
           <div className='sub-nav-title'>Luno Bot</div>
           <hr />
           <ul>
-            <li className='sub-nav-item selected'>Smart Answers</li>
-            <li className='sub-nav-item'>Bot Settings</li>
+            <li className='sub-nav-item selected'>Smart answers</li>
+            <li className='sub-nav-item'>Bot settings</li>
           </ul>
         </aside>
         <div className='col-xs content-body'>
           <div className='row between-xs middle-xs no-margin'>
-            <h1>Smart Answers</h1>
+            <h1>Smart answers</h1>
             <RaisedButton
               label='Add'
               onTouchTap={this.displayForm}
@@ -145,14 +181,16 @@ class Answers extends Component {
           </div>
           <hr />
           <p>
-              Use Smart Answers to scale yourself and answer common questions. Your Luno Bot will search these Smart Answers and intelligently reply in any channel that its added to.
+              Use smart answers to scale yourself and answer common questions. Your Luno Bot will search these smart answers and intelligently reply in any channel that its added to.
           </p>
           <AnswersTable
             bot={bot}
             handleDelete={this.handleDeleteAnswer}
+            handleEdit={this.handleEditAnswer}
           />
         </div>
         <Form
+          answer={this.state.answerToBeEdited}
           onClose={this.hideForm}
           onSubmit={this.handleSubmitAnswer}
           open={this.state.open}
