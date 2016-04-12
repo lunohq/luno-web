@@ -9,7 +9,7 @@
     "lint": "eslint --ignore-path .gitignore client server",
     "docker-build": "docker build -t lunohq/luno-web . && docker tag lunohq/luno-web lunohq/luno-web:`git log -n 1 --pretty=format:'%H'`",
     "docker-push": "docker push lunohq/luno-web",
-    "docker": "npm run docker-build && docker-push"
+    "docker": "npm run docker-build && npm run docker-push"
   },
   "pre-commit": "lint",
   "keywords": [
