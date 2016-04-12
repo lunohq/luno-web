@@ -55,11 +55,10 @@ class Form extends Component {
 
   handleSubmit = () => {
     const { onSubmit } = this.props;
-    const answerId = this.state.answer !== null ? this.state.answer.id : null;
     onSubmit({
       title: this.refs.title.getValue(),
       body: this.refs.body.getValue(),
-    }, answerId);
+    }, this.state.answer);
   }
 
   render() {

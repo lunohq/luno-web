@@ -135,10 +135,10 @@ class Answers extends Component {
     );
   }
 
-  handleSubmitAnswer = ({ title, body }, id) => {
+  handleSubmitAnswer = ({ title, body }, answer) => {
     const bot = this.getBot();
     let mutation;
-    if (id === undefined || id === null) {
+    if (!answer) {
       mutation = new CreateAnswerMutation({
         title,
         body,
@@ -146,11 +146,9 @@ class Answers extends Component {
       });
     } else {
       mutation = new UpdateAnswerMutation({
-        answer: {
-          title,
-          body,
-          id
-        }
+        answer,
+        title,
+        body,
       });
     }
 

@@ -31,7 +31,7 @@ export default class UpdateAnswerMutation extends Relay.Mutation {
   }
 
   getVariables() {
-    const { answer: { id, title, body } } = this.props;
+    const { answer: { id }, title, body } = this.props;
     return {
       body,
       id,
@@ -40,7 +40,7 @@ export default class UpdateAnswerMutation extends Relay.Mutation {
   }
 
   getOptimisticResponse() {
-    const { answer: { id, title, body } } = this.props;
+    const { answer: { id }, title, body } = this.props;
     return {
       answer: {
         body,
