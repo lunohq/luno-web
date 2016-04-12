@@ -2,13 +2,8 @@ import cookieParser from 'cookie-parser';
 import jwt from 'express-jwt';
 import { db } from 'luno-core';
 
+import config from '../config/environment';
 import { generateToken } from '../actions';
-
-const TOKEN_SECRET = 'shhhh';
-const AUTH_COOKIE_KEY = 'atv1';
-const COOKIE_SECRET = 'shhh!';
-// Cookie should last for 365 days
-const COOKIE_MAX_AGE = 1000 * 60 * 60 * 24 * 365;
 
 /**
  * Use botkit to handle the oauth process.
@@ -28,13 +23,14 @@ function oauth(botkit, app) {
     } else {
       let token;
       try {
-        token = await generateToken(TOKEN_SECRET, { user: res.locals.user });
+        token = await generateToken(config.token.secret, { user: res.locals.user });
       } catch (err) {
+        // TODO we should be redirecting to '/' with error=<something>
         console.error('Failure', err);
         return res.status(500).send(err);
       }
 
-      res.cookie(AUTH_COOKIE_KEY, token, { maxAge: COOKIE_MAX_AGE, signed: true });
+      res.cookie(config.cookie.key, token, { maxAge: config.cookie.maxAge, signed: true });
       res.redirect('/');
     }
     return res;
@@ -43,12 +39,12 @@ function oauth(botkit, app) {
 
 export default function (app, botkit) {
   // cookieParser is required so we can read and write cookie values
-  app.use(cookieParser(COOKIE_SECRET));
+  app.use(cookieParser(config.cookie.secret));
 
   // jwt unpacks the jwt token if present and stores credential information on
   // req.auth
   app.use(jwt({
-    secret: TOKEN_SECRET,
+    secret: config.token.secret,
     getToken: req => req.signedCookies.atv1,
     credentialsRequired: false,
     requestProperty: 'auth',
@@ -66,7 +62,7 @@ export default function (app, botkit) {
 
       if (!token && req.auth) {
         delete req.auth;
-        res.clearCookie(AUTH_COOKIE_KEY);
+        res.clearCookie(config.cookie.key);
       }
     }
     return next();
