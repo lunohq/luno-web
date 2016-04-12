@@ -35,6 +35,15 @@ class Form extends Component {
     return 'Add an answer';
   }
 
+  resetState() {
+    this.setState({
+      title: {},
+      body: {},
+      topics: {},
+      answer: null,
+    });
+  }
+
   handleTitleChange = (event) => {
     this.setState({
       title: { value: event.target.value },
@@ -61,15 +70,21 @@ class Form extends Component {
     }, this.state.answer);
   }
 
+  handleClose = () => {
+    const { onClose } = this.props;
+    this.resetState();
+    onClose();
+  }
+
   render() {
-    const { onClose, open } = this.props;
+    const { open } = this.props;
     const { title, body, topics } = this.state;
 
     const actions = [
       <FlatButton
         label='Cancel'
         secondary
-        onClick={onClose}
+        onClick={this.handleClose}
       />,
       <FlatButton
         label='Submit'
@@ -84,7 +99,7 @@ class Form extends Component {
         actions={actions}
         modal={false}
         open={open}
-        onRequestClose={onClose}
+        onRequestClose={this.handleClose}
       >
         <form>
           <div>
