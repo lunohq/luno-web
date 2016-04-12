@@ -44,7 +44,7 @@
     "webpack-dev-server": "^1.14.1"
   },
   "dependencies": {
-    "botkit": "git+ssh://git@github.com/lunohq/botkit.git#5bfc607444bfeb7d198cf5ba4166e4ac9ccc9c47",
+    "botkit": "git+https://github.com/lunohq/botkit.git#5bfc607444bfeb7d198cf5ba4166e4ac9ccc9c47",
     "connect-history-api-fallback": "^1.2.0",
     "cookie-parser": "^1.4.1",
     "express": "^4.13.4",
