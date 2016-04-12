@@ -10,7 +10,7 @@ export default class DeleteAnswerMutation extends Relay.Mutation {
   };
 
   getMutation() {
-    return Relay.QL`mutation{ deleteAnswer }`;
+    return Relay.QL`mutation { deleteAnswer }`;
   }
 
   getFatQuery() {
