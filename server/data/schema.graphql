@@ -53,10 +53,20 @@ type DeleteAnswerPayload {
   clientMutationId: String!
 }
 
+input LogoutInput {
+  clientMutationId: String!
+}
+
+type LogoutPayload {
+  viewer: User
+  clientMutationId: String!
+}
+
 type Mutation {
   createAnswer(input: CreateAnswerInput!): CreateAnswerPayload
   deleteAnswer(input: DeleteAnswerInput!): DeleteAnswerPayload
   updateAnswer(input: UpdateAnswerInput!): UpdateAnswerPayload
+  logout(input: LogoutInput!): LogoutPayload
 }
 
 interface Node {

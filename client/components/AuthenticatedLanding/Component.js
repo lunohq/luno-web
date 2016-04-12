@@ -7,7 +7,7 @@ import QuestionAnswerIcon from '../QuestionAnswerIcon';
 
 import './style.scss';
 
-const AuthenticatedLanding = ({ children }) => (
+const AuthenticatedLanding = ({ children, onLogout }) => (
   <div className='app'>
     <section className='row content-container'>
       <nav className='col left-nav between-xs'>
@@ -20,7 +20,7 @@ const AuthenticatedLanding = ({ children }) => (
           </IconButton>
         </div>
         <div className='bottom-buttons col middle-xs'>
-          <IconButton href='/' linkButton>
+          <IconButton onTouchTap={onLogout}>
             <LogoutIcon />
           </IconButton>
         </div>
@@ -34,6 +34,7 @@ const AuthenticatedLanding = ({ children }) => (
 
 AuthenticatedLanding.propTypes = {
   children: PropTypes.node,
+  onLogout: PropTypes.func,
 };
 
 export default AuthenticatedLanding;

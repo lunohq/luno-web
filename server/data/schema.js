@@ -184,8 +184,7 @@ const GraphQLQuery = new GraphQLObjectType({
       type: GraphQLUser,
       resolve: (source, args, { rootValue }) => {
         return new Promise(async (resolve, reject) => {
-          let user = new db.user.User();
-          user.anonymous = true;
+          let user = new db.user.AnonymousUser();
 
           if (!rootValue) {
             return resolve(user);
@@ -332,12 +331,38 @@ const GraphQLUpdateAnswerMutation = mutationWithClientMutationId({
   },
 });
 
+const GraphQLLogoutMutation = mutationWithClientMutationId({
+  name: 'Logout',
+  outputFields: {
+    viewer: {
+      type: GraphQLUser,
+      resolve: user => user,
+    },
+  },
+  mutateAndGetPayload: (_, { rootValue }) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        await db.token.deleteToken(rootValue.t.id, rootValue.uid);
+      } catch (err) {
+        return reject(err);
+      }
+
+      const user = new db.user.AnonymousUser();
+      // this value is needed to invalidate the relay cache for the currently
+      // logged in user
+      user.id = rootValue.uid;
+      return resolve(user);
+    });
+  },
+});
+
 const GraphQLMutation = new GraphQLObjectType({
   name: 'Mutation',
   fields: () => ({
     createAnswer: GraphQLCreateAnswerMutation,
     deleteAnswer: GraphQLDeleteAnswerMutation,
     updateAnswer: GraphQLUpdateAnswerMutation,
+    logout: GraphQLLogoutMutation,
   }),
 });
 

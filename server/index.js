@@ -8,26 +8,17 @@ import historyApiFallback from 'connect-history-api-fallback';
 import gaze from 'gaze';
 import chalk from 'chalk';
 import Botkit from 'botkit';
-import jwt from 'express-jwt';
-import cookieParser from 'cookie-parser';
-import { botkit as bk, db } from 'luno-core';
+import { botkit as bk } from 'luno-core';
 
 import webpackConfig from '../webpack.config';
 import requireUncached from './utils/requireUncached';
 import config from './config/environment';
 import schema from './data/schema';
 import updateSchema from './utils/updateSchema';
-
-import { generateToken } from './actions';
+import auth from './middleware/auth';
 
 let graphQLServer;
 let relayServer;
-
-const TOKEN_SECRET = 'shhhh';
-const AUTH_COOKIE_KEY = 'atv1';
-const COOKIE_SECRET = 'shhh!';
-// Cookie should last for 365 days
-const COOKIE_MAX_AGE = 1000 * 60 * 60 * 24 * 365;
 
 const botkit = Botkit.slackbot({
   storage: bk.storage,
@@ -37,51 +28,9 @@ const botkit = Botkit.slackbot({
   scopes: ['bot'],
 });
 
-function oauth(app) {
-  // Serve oauth endpoints
-  botkit.createOauthEndpoints(app, async (err, req, res) => {
-    if (err) {
-      // TODO better logging (more consistent);
-      console.error('Failure', err);
-      res.status(500).send(err);
-    } else {
-      let token;
-      try {
-        token = await generateToken(TOKEN_SECRET, { user: res.locals.user });
-      } catch (err) {
-        console.error('Failure', err);
-        return res.status(500).send(err);
-      }
-
-      res.cookie(AUTH_COOKIE_KEY, token, { maxAge: COOKIE_MAX_AGE, signed: true });
-      res.redirect('/');
-    }
-    return res;
-  });
-}
-
-function protect(app) {
-  app.use(cookieParser(COOKIE_SECRET));
-  app.use(jwt({
-    secret: TOKEN_SECRET,
-    getToken: req => req.signedCookies.atv1,
-    isRevoked: async (req, payload, done) => {
-      let token;
-      try {
-        token = await db.token.getToken(payload.uid, payload.t.id);
-      } catch (err) {
-        return done(err);
-      }
-      return done(null, !token.active);
-    },
-    credentialsRequired: false,
-    requestProperty: 'auth',
-  }));
-}
-
 function startGraphQLServer(schema) {
   const graphql = express();
-  protect(graphql);
+  auth(graphql);
   graphql.use('/', graphQLHTTP(request => {
     return {
       graphiql: true,
@@ -119,8 +68,7 @@ function startRelayServer() {
     },
   });
 
-  protect(relayServer.app);
-  oauth(relayServer.app);
+  auth(relayServer.app, botkit);
   // Serve static resources
   relayServer.use('/', express.static(path.join(__dirname, '../build')));
 

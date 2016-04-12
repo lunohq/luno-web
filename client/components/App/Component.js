@@ -1,15 +1,28 @@
 import React, { PropTypes } from 'react';
+import Relay from 'react-relay';
 
 import './style.scss';
 
 import AnonymousLanding from '../AnonymousLanding/Component';
 import AuthenticatedLanding from '../AuthenticatedLanding/Component';
+import LogoutMutation from '../../mutations/LogoutMutation';
 
 const App = ({ children, viewer }) => {
+  function handleLogout() {
+    Relay.Store.commitUpdate(
+      new LogoutMutation({ viewer })
+    );
+  }
+
   if (viewer.anonymous) {
     return <AnonymousLanding />;
   }
-  return <AuthenticatedLanding children={children} viewer={viewer} />;
+  return (
+    <AuthenticatedLanding
+      children={children}
+      onLogout={handleLogout}
+    />
+  );
 };
 
 App.propTypes = {

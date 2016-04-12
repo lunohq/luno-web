@@ -12,6 +12,8 @@
     "max-len": 0,
     "react/jsx-no-bind": 0,
     "react/prefer-stateless-function": 0,
-    "jsx-quotes": [2, "prefer-single"]
+    "jsx-quotes": [2, "prefer-single"],
+    "no-param-reassign": 0,
+    "no-shadow": 0
   }
 }
