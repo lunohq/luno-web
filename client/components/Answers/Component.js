@@ -97,8 +97,38 @@ AnswersTable.propTypes = {
   handleEdit: PropTypes.func.isRequired,
 };
 
-class Answers extends Component {
+const AddAnswer = ({ handleAddAnswer, label }) => {
+  return (
+    <RaisedButton
+      label={label}
+      onTouchTap={handleAddAnswer}
+      primary
+    />
+  );
+};
 
+AddAnswer.propTypes = {
+  handleAddAnswer: PropTypes.func.isRequired,
+  label: PropTypes.string.isRequired,
+};
+
+const EmptyState = ({ handleAddAnswer }) => {
+  return (
+    <div className='row-xs middle-xs center-xs empty-state'>
+      <h3>Add your first smart answer</h3>
+      <AddAnswer
+        label='Add smart answer'
+        handleAddAnswer={handleAddAnswer}
+      />
+    </div>
+  );
+};
+
+EmptyState.propTypes = {
+  handleAddAnswer: PropTypes.func.isRequired,
+};
+
+class Answers extends Component {
   state = {
     open: false,
     answerToBeEdited: null,
@@ -107,6 +137,11 @@ class Answers extends Component {
   getBot() {
     const { viewer: { bots } } = this.props;
     return bots.edges[0].node;
+  }
+
+  hasAnswers() {
+    const bot = this.getBot();
+    return !!bot.answers.edges.length;
   }
 
   displayForm = () => {
@@ -156,36 +191,45 @@ class Answers extends Component {
     this.hideForm();
   }
 
-  render() {
+  renderAddAnswer() {
+    if (this.hasAnswers()) {
+      return (<AddAnswer
+        label='Add'
+        handleAddAnswer={this.handleAddAnswer}
+      />);
+    }
+
+    return <span />;
+  }
+
+  renderContent() {
     const bot = this.getBot();
+    if (this.hasAnswers()) {
+      return (
+        <AnswersTable
+          bot={bot}
+          handleDelete={this.handleDeleteAnswer}
+          handleEdit={this.handleEditAnswer}
+        />
+      );
+    }
+
+    return <EmptyState handleAddAnswer={this.handleAddAnswer} />;
+  }
+
+  render() {
     return (
       <div className='smart-answers-container'>
-        <aside className='col-xs sub-nav-container'>
-          <div className='sub-nav-title'>Luno Bot</div>
-          <hr />
-          <ul>
-            <li className='sub-nav-item selected'>Smart answers</li>
-            <li className='sub-nav-item'>Bot settings</li>
-          </ul>
-        </aside>
         <div className='col-xs content-body'>
           <div className='row between-xs middle-xs no-margin'>
             <h1>Smart answers</h1>
-            <RaisedButton
-              label='Add'
-              onTouchTap={this.displayForm}
-              primary
-            />
+            {this.renderAddAnswer()}
           </div>
           <hr />
           <p>
               Use smart answers to scale yourself and answer common questions. Your Luno Bot will search these smart answers and intelligently reply in any channel that its added to.
           </p>
-          <AnswersTable
-            bot={bot}
-            handleDelete={this.handleDeleteAnswer}
-            handleEdit={this.handleEditAnswer}
-          />
+          {this.renderContent()}
         </div>
         <Form
           answer={this.state.answerToBeEdited}
