@@ -6,7 +6,7 @@ import {
 } from 'material-ui';
 
 const AnswerRow = ({ answer, handleDelete, handleEdit }) => {
-  const cellStyle = { whiteSpace: 'pre-wrap' };
+  const cellStyle = { fontSize: '1.4em', whiteSpace: 'pre-wrap' };
 
   const editAnswer = (answerToEdit) => {
     handleEdit(answerToEdit);
