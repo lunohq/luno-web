@@ -26,6 +26,8 @@ let relayServer;
 const TOKEN_SECRET = 'shhhh';
 const AUTH_COOKIE_KEY = 'atv1';
 const COOKIE_SECRET = 'shhh!';
+// Cookie should last for 365 days
+const COOKIE_MAX_AGE = 1000 * 60 * 60 * 24 * 365;
 
 const botkit = Botkit.slackbot({
   storage: bk.storage,
@@ -51,7 +53,7 @@ function oauth(app) {
         return res.status(500).send(err);
       }
 
-      res.cookie(AUTH_COOKIE_KEY, token, { maxAge: 900000, signed: true });
+      res.cookie(AUTH_COOKIE_KEY, token, { maxAge: COOKIE_MAX_AGE, signed: true });
       res.redirect('/');
     }
     return res;
