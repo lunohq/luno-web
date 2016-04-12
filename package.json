@@ -12,27 +12,6 @@
     "docker": "npm run docker-build && npm run docker-push"
   },
   "pre-commit": "lint",
-  "keywords": [
-    "react",
-    "relay",
-    "graphql",
-    "express",
-    "es6",
-    "es7",
-    "jsx",
-    "webpack",
-    "babel",
-    "material design lite",
-    "postcss",
-    "scaffolding",
-    "fullstack"
-  ],
-  "author": "Varayut Lerdkanlayanawat",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/lvarayut/relay-fullstack/issues"
-  },
-  "homepage": "https://github.com/lvarayut/relay-fullstack",
   "devDependencies": {
     "autoprefixer": "^6.3.6",
     "babel-cli": "^6.6.5",
