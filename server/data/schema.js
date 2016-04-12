@@ -102,15 +102,18 @@ const GraphQLUser = new GraphQLObjectType({
     team: {
       type: GraphQLTeam,
       description: 'The Team the User belongs to',
-      resolve: (user) => db.team.getTeam(user.teamId),
+      resolve: user => db.team.getTeam(user.teamId),
     },
     bots: {
       type: BotsConnection,
       description: 'Bots the User has access to',
       args: connectionArgs,
       resolve: (user, args) => {
-        const bots = db.bot.getBots(user.teamId);
-        return connectionFromPromisedArray(bots, args);
+        if (!user.anonymous) {
+          const bots = db.bot.getBots(user.teamId);
+          return connectionFromPromisedArray(bots, args);
+        }
+        return null;
       },
     },
     anonymous: {
@@ -125,13 +128,13 @@ const GraphQLBot = new GraphQLObjectType({
   name: 'Bot',
   description: 'Bot within our system',
   fields: () => ({
-    id: globalIdField('Bot', obj => db.client.compositeId([obj.teamId, obj.id])),
+    id: globalIdField('Bot', obj => db.client.compositeId(obj.teamId, obj.id)),
     answers: {
       type: AnswersConnection,
       description: 'Answers configured for the Bot',
       args: connectionArgs,
       resolve: (bot, args) => {
-        const answers = db.answer.getAnswers(bot.teamId, bot.id);
+        const answers = db.answer.getAnswers(bot.id);
         return connectionFromPromisedArray(answers, args);
       },
     },
@@ -143,7 +146,7 @@ const GraphQLAnswer = new GraphQLObjectType({
   name: 'Answer',
   description: 'An answer that is tied to a Bot',
   fields: () => ({
-    id: globalIdField('Answer', obj => db.client.compositeId([obj.botId, obj.id])),
+    id: globalIdField('Answer', obj => db.client.compositeId(obj.botId, obj.id)),
     title: {
       type: GraphQLString,
       description: 'Title of the Answer',

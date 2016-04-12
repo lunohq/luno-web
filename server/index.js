@@ -108,6 +108,8 @@ function startRelayServer() {
     hot: true,
     historyApiFallback: {
       verbose: true,
+      // historyApiFallback doesn't wait till we get a 404 to rewrite to
+      // index.html. This is required so we can access these urls.
       rewrites: [
         { from: /\/login/, to: '/login' },
         { from: /\/oauth/, to: '/oauth' },
