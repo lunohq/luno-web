@@ -28,11 +28,19 @@ class Form extends Component {
   }
 
   getFormTitle() {
-    if (this.state.answer && this.state.answer.id) {
-      return 'Edit answer';
+    if (this.isNew()) {
+      return 'Add an answer';
     }
 
-    return 'Add an answer';
+    return 'Edit answer';
+  }
+
+  getSubmitButtonLabel() {
+    if (this.isNew()) {
+      return 'Add';
+    }
+
+    return 'Update';
   }
 
   resetState() {
@@ -42,6 +50,10 @@ class Form extends Component {
       topics: {},
       answer: null,
     });
+  }
+
+  isNew() {
+    return !(this.state.answer && this.state.answer.id);
   }
 
   handleTitleChange = (event) => {
@@ -87,7 +99,7 @@ class Form extends Component {
         onClick={this.handleClose}
       />,
       <FlatButton
-        label='Submit'
+        label={this.getSubmitButtonLabel()}
         primary
         onClick={this.handleSubmit}
       />,
