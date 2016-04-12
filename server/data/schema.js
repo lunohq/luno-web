@@ -14,7 +14,7 @@ import {
 import {
   connectionArgs,
   connectionDefinitions,
-  connectionFromPromisedArray,
+  connectionFromArray,
   offsetToCursor,
   fromGlobalId,
   globalIdField,
@@ -108,10 +108,10 @@ const GraphQLUser = new GraphQLObjectType({
       type: BotsConnection,
       description: 'Bots the User has access to',
       args: connectionArgs,
-      resolve: (user, args) => {
+      resolve: async (user, args) => {
         if (!user.anonymous) {
-          const bots = db.bot.getBots(user.teamId);
-          return connectionFromPromisedArray(bots, args);
+          const bots = await db.bot.getBots(user.teamId);
+          return connectionFromArray(bots, args);
         }
         return null;
       },
@@ -133,9 +133,9 @@ const GraphQLBot = new GraphQLObjectType({
       type: AnswersConnection,
       description: 'Answers configured for the Bot',
       args: connectionArgs,
-      resolve: (bot, args) => {
-        const answers = db.answer.getAnswers(bot.id);
-        return connectionFromPromisedArray(answers, args);
+      resolve: async (bot, args) => {
+        const answers = await db.answer.getAnswers(bot.id);
+        return connectionFromArray(answers, args);
       },
     },
   }),
@@ -290,7 +290,7 @@ const GraphQLDeleteAnswerMutation = mutationWithClientMutationId({
     },
     deletedId: {
       type: GraphQLID,
-      resolve: ({ id }) => id,
+      resolve: ({ globalId }) => globalId,
     },
   },
   mutateAndGetPayload: async ({ id: globalId }) => {
@@ -299,7 +299,7 @@ const GraphQLDeleteAnswerMutation = mutationWithClientMutationId({
     const { teamId } = await db.answer.deleteAnswer(botId, id);
     return {
       botId,
-      id,
+      globalId,
       teamId,
     };
   },
