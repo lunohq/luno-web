@@ -1,14 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
 import {
-  FlatButton,
   RaisedButton,
-  Table,
-  TableBody,
-  TableHeader,
-  TableHeaderColumn,
-  TableRow,
-  TableRowColumn,
 } from 'material-ui';
 
 import './style.scss';
@@ -17,85 +10,8 @@ import CreateAnswerMutation from '../../mutations/CreateAnswerMutation';
 import DeleteAnswerMutation from '../../mutations/DeleteAnswerMutation';
 import UpdateAnswerMutation from '../../mutations/UpdateAnswerMutation';
 
+import AnswersTable from './AnswersTable';
 import Form from './Form';
-
-const AnswerRow = ({ answer, handleDelete, handleEdit }) => {
-  const cellStyle = { whiteSpace: 'pre-wrap' };
-
-  const editAnswer = (answerToEdit) => {
-    handleEdit(answerToEdit);
-  };
-
-  const deleteAnswer = (answerToDelete) => {
-    handleDelete(answerToDelete);
-  };
-
-  const { id, title, body } = answer;
-  return (
-    <TableRow key={id}>
-      <TableRowColumn style={cellStyle}>{title}</TableRowColumn>
-      <TableRowColumn style={cellStyle}>{body}</TableRowColumn>
-      <TableRowColumn style={cellStyle}>Topic1, Topic2</TableRowColumn>
-      <TableRowColumn>
-        <FlatButton
-          label='Edit'
-          onTouchTap={() => editAnswer(answer)}
-        />
-        <FlatButton
-          label='Delete'
-          onTouchTap={() => deleteAnswer(answer)}
-        />
-      </TableRowColumn>
-    </TableRow>
-  );
-};
-
-AnswerRow.propTypes = {
-  answer: PropTypes.object.isRequired,
-  handleDelete: PropTypes.func.isRequired,
-  handleEdit: PropTypes.func.isRequired,
-};
-
-const AnswersTable = ({ bot, handleDelete, handleEdit }) => {
-  const answerRows = bot.answers.edges.map(({ node }, index) => <AnswerRow
-    answer={node}
-    handleDelete={handleDelete}
-    handleEdit={handleEdit}
-    key={index}
-  />);
-  return (
-    <Table
-      fixedFooter
-      fixedHeader
-      selectable={false}
-    >
-      <TableHeader
-        displaySelectAll={false}
-        adjustForCheckbox={false}
-      >
-        <TableRow>
-          <TableHeaderColumn>Title</TableHeaderColumn>
-          <TableHeaderColumn>Smart Answer</TableHeaderColumn>
-          <TableHeaderColumn>Topics</TableHeaderColumn>
-          <TableHeaderColumn />
-        </TableRow>
-      </TableHeader>
-      <TableBody
-        deselectOnClickaway
-        displayRowCheckbox={false}
-        showRowHover
-      >
-        {answerRows}
-      </TableBody>
-    </Table>
-  );
-};
-
-AnswersTable.propTypes = {
-  bot: PropTypes.object.isRequired,
-  handleDelete: PropTypes.func.isRequired,
-  handleEdit: PropTypes.func.isRequired,
-};
 
 const AddAnswer = ({ handleAddAnswer, label }) => {
   return (
