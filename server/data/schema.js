@@ -113,6 +113,10 @@ const GraphQLUser = new GraphQLObjectType({
         return connectionFromPromisedArray(bots, args);
       },
     },
+    anonymous: {
+      type: GraphQLBoolean,
+      description: 'Boolean indicating whether or not the user is authenticated',
+    },
   }),
   interfaces: [nodeInterface],
 });
@@ -175,7 +179,23 @@ const GraphQLQuery = new GraphQLObjectType({
     node: nodeField,
     viewer: {
       type: GraphQLUser,
-      resolve: (source, args, user) => user,
+      resolve: (source, args, { rootValue }) => {
+        return new Promise(async (resolve, reject) => {
+          let user = new db.user.User();
+          user.anonymous = true;
+
+          if (!rootValue) {
+            return resolve(user);
+          }
+
+          try {
+            user = await db.user.getUser(rootValue.uid);
+          } catch (err) {
+            return reject(err);
+          }
+          return resolve(user);
+        });
+      },
     },
   },
 });

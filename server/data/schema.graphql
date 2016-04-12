@@ -106,4 +106,5 @@ type User implements Node {
   fullName: String
   team: Team
   bots(after: String, first: Int, before: String, last: Int): BotConnection
+  anonymous: Boolean
 }
