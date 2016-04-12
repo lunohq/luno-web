@@ -139,7 +139,7 @@
               "deprecationReason": null
             },
             {
-              "name": "domain",
+              "name": "name",
               "description": "Team domain (maps to slack domain)",
               "args": [],
               "type": {

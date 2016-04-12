@@ -24,24 +24,18 @@ import {
 
 import { db } from 'luno-core';
 
-function getViewer() {
-  // TODO this should do something with the token
-  return db.user.getUser('1', '2');
-}
-
 const { nodeInterface, nodeField } = nodeDefinitions(
   (globalId) => {
     const { type, id } = fromGlobalId(globalId);
     if (type === 'Team') {
       return db.team.getTeam(id);
     } else if (type === 'User') {
-      const [partitionKey, sortKey] = id.split(':');
-      return db.user.getUser(partitionKey, sortKey);
+      return db.user.getUser(id);
     } else if (type === 'Bot') {
-      const [partitionKey, sortKey] = id.split(':');
+      const [partitionKey, sortKey] = db.client.deconstructId(id);
       return db.bot.getBot(partitionKey, sortKey);
     } else if (type === 'Answer') {
-      const [partitionKey, sortKey] = id.split(':');
+      const [partitionKey, sortKey] = db.client.deconstructId(id);
       return db.answer.getAnswer(partitionKey, sortKey);
     }
     return null;
@@ -84,7 +78,7 @@ const GraphQLTeam = new GraphQLObjectType({
   name: 'Team',
   fields: () => ({
     id: globalIdField('Team'),
-    domain: {
+    name: {
       type: GraphQLString,
       description: 'Team domain (maps to slack domain)',
     },
@@ -100,7 +94,7 @@ const GraphQLUser = new GraphQLObjectType({
   name: 'User',
   description: 'User within our system',
   fields: () => ({
-    id: globalIdField('User', (obj) => `${obj.teamId}:${obj.id}`),
+    id: globalIdField('User'),
     fullName: {
       type: GraphQLString,
       description: 'The full name of the User',
@@ -127,7 +121,7 @@ const GraphQLBot = new GraphQLObjectType({
   name: 'Bot',
   description: 'Bot within our system',
   fields: () => ({
-    id: globalIdField('Bot', (obj) => `${obj.teamId}:${obj.id}`),
+    id: globalIdField('Bot', obj => db.client.compositeId([obj.teamId, obj.id])),
     answers: {
       type: AnswersConnection,
       description: 'Answers configured for the Bot',
@@ -145,7 +139,7 @@ const GraphQLAnswer = new GraphQLObjectType({
   name: 'Answer',
   description: 'An answer that is tied to a Bot',
   fields: () => ({
-    id: globalIdField('Answer', (obj) => `${obj.teamIdBotId}:${obj.id}`),
+    id: globalIdField('Answer', obj => db.client.compositeId([obj.botId, obj.id])),
     title: {
       type: GraphQLString,
       description: 'Title of the Answer',
@@ -181,7 +175,7 @@ const GraphQLQuery = new GraphQLObjectType({
     node: nodeField,
     viewer: {
       type: GraphQLUser,
-      resolve: getViewer,
+      resolve: (source, args, user) => user,
     },
   },
 });
@@ -211,49 +205,53 @@ const GraphQLCreateAnswerMutation = mutationWithClientMutationId({
     },
     answerEdge: {
       type: GraphQLAnswerEdge,
-      // TODO: should this be returning a promise that can be rjected?
-      resolve: async ({ answer: { id }, teamId, botId, botGlobalId }) => {
-        const answer = await db.answer.getAnswer(`${teamId}_${botId}`, id);
-        const answers = await db.answer.getAnswers(teamId, botId);
-
-        // TODO: maybe we make this our own function?
-        // cursorForObjectInConnection indexOf was returning -1 even though the
-        // item was there, something to do with ===
-        let cursor;
-        for (const index in answers) {
-          const a = answers[index];
-          if (a.id === answer.id) {
-            cursor = offsetToCursor(index);
-            break;
+      resolve: ({ answer, botId }) => {
+        return new Promise(async (resolve, reject) => {
+          // XXX need to have a way to do this that doesn't require fetching
+          // all answers
+          let answers;
+          try {
+            answers = await db.answer.getAnswers(botId);
+          } catch (err) {
+            return reject(err);
           }
-        }
 
-        return {
-          cursor,
-          node: answer,
-        };
+          // TODO: maybe we make this our own function?
+          // cursorForObjectInConnection indexOf was returning -1 even though the
+          // item was there, something to do with ===
+          let cursor;
+          for (const index in answers) {
+            const a = answers[index];
+            if (a.id === answer.id) {
+              cursor = offsetToCursor(index);
+              break;
+            }
+          }
+
+          return resolve({ cursor, node: answer });
+        });
       }
     },
   },
-  mutateAndGetPayload: async ({ title, body, botId: id }) => {
-    const [teamId, botId] = fromGlobalId(id).id.split(':');
-    let answer;
-    try {
-      answer = await db.answer.createAnswer({
-        title,
-        body,
-        teamId,
-        botId,
-      });
-    } catch (err) {
-      return err;
-    }
-    return {
-      answer,
-      botId,
-      teamId,
-      botGlobalId: id,
-    };
+  mutateAndGetPayload: ({ title, body, botId: globalId }) => {
+    return new Promise(async (resolve, reject) => {
+      const { id: compositeId } = fromGlobalId(globalId);
+      const [teamId, botId] = db.client.deconstructId(compositeId);
+
+      let answer;
+      try {
+        answer = await db.answer.createAnswer({
+          title,
+          body,
+          botId,
+          teamId,
+        });
+      } catch (err) {
+        return reject(err);
+      }
+
+      return resolve({ answer, teamId, botId });
+    });
   },
 });
 
@@ -272,11 +270,10 @@ const GraphQLDeleteAnswerMutation = mutationWithClientMutationId({
       resolve: ({ id }) => id,
     },
   },
-  mutateAndGetPayload: async ({ id }) => {
-    const { id: answerId } = fromGlobalId(id);
-    const [partitionKey, sortKey] = answerId.split(':');
-    const [teamId, botId] = partitionKey.split('_');
-    await db.answer.deleteAnswer(partitionKey, sortKey);
+  mutateAndGetPayload: async ({ id: globalId }) => {
+    const { id: compositeId } = fromGlobalId(globalId);
+    const [botId, id] = db.client.deconstructId(compositeId);
+    const { teamId } = await db.answer.deleteAnswer(botId, id);
     return {
       botId,
       id,
@@ -298,14 +295,15 @@ const GraphQLUpdateAnswerMutation = mutationWithClientMutationId({
       resolve: (answer) => answer,
     },
   },
-  mutateAndGetPayload: async ({ id, title, body }) => {
-    const { id: answerId } = fromGlobalId(id);
-    const [partitionKey, sortKey] = answerId.split(':');
+  mutateAndGetPayload: async ({ id: globalId, title, body }) => {
+    const { id: compositeId } = fromGlobalId(globalId);
+    const [botId, id] = db.client.deconstructId(compositeId);
+
     const answer = await db.answer.updateAnswer({
       body,
       title,
-      teamIdBotId: partitionKey,
-      id: sortKey,
+      botId,
+      id,
     });
     return answer;
   },

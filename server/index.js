@@ -10,13 +10,12 @@ import chalk from 'chalk';
 import Botkit from 'botkit';
 import jwt from 'express-jwt';
 import cookieParser from 'cookie-parser';
-import { db } from 'luno-core';
+import { botkit as bk, db } from 'luno-core';
 
 import webpackConfig from '../webpack.config';
 import requireUncached from './utils/requireUncached';
 import config from './config/environment';
 import schema from './data/schema';
-import botkitStorage from './data/botkitStorage';
 import updateSchema from './utils/updateSchema';
 
 import { generateToken } from './actions';
@@ -29,7 +28,7 @@ const AUTH_COOKIE_KEY = 'atv1';
 const COOKIE_SECRET = 'shhh!';
 
 const botkit = Botkit.slackbot({
-  storage: botkitStorage,
+  storage: bk.storage,
 }).configureSlackApp({
   clientId: '22618016311.26511459793',
   clientSecret: '3dad74e3d7874065041063f4571639db',
@@ -52,7 +51,7 @@ function oauth(app) {
         return res.status(500).send(err);
       }
 
-      res.cookie(AUTH_COOKIE_KEY, token, { signed: true });
+      res.cookie(AUTH_COOKIE_KEY, token, { maxAge: 900000, signed: true });
       res.redirect('/');
     }
     return res;
@@ -63,30 +62,31 @@ function protect(app) {
   app.use(cookieParser(COOKIE_SECRET));
   app.use(jwt({
     secret: TOKEN_SECRET,
-    getToken: req => {
-      console.log('fetching token');
-      return req.signedCookies.atv1;
-    },
+    getToken: req => req.signedCookies.atv1,
     isRevoked: async (req, payload, done) => {
-      console.log('checking revoked', payload);
       let token;
       try {
-        token = await db.token.getToken(payload.uid, payload.jti);
+        token = await db.token.getToken(payload.uid, payload.t.id);
       } catch (err) {
         return done(err);
       }
-      return done(null, !!token);
+      return done(null, !token.active);
     },
     credentialsRequired: false,
+    requestProperty: 'auth',
   }));
 }
 
 function startGraphQLServer(schema) {
   const graphql = express();
-  graphql.use('/', graphQLHTTP({
-    graphiql: true,
-    pretty: true,
-    schema
+  protect(graphql);
+  graphql.use('/', graphQLHTTP(request => {
+    return {
+      graphiql: true,
+      pretty: true,
+      context: { auth: request.auth },
+      schema,
+    };
   }));
   graphQLServer = graphql.listen(
     config.graphql.port,
@@ -105,17 +105,19 @@ function startRelayServer() {
       colors: true
     },
     hot: true,
-
-    // XXX some issue here where it won't listen to the oauth endpoints if we
-    // set this to true
-    // historyApiFallback: true
+    historyApiFallback: {
+      verbose: true,
+      rewrites: [
+        { from: /\/login/, to: '/login' },
+        { from: /\/oauth/, to: '/oauth' },
+      ],
+    },
   });
 
+  protect(relayServer.app);
+  oauth(relayServer.app);
   // Serve static resources
   relayServer.use('/', express.static(path.join(__dirname, '../build')));
-
-  oauth(relayServer.app);
-  protect(relayServer.app);
 
   relayServer.listen(config.port, () => {
     console.log(chalk.green(`Relay is listening on port ${config.port}`));

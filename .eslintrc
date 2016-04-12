@@ -7,7 +7,7 @@
   },
   "rules": {
     "guard-for-in": 0,
-    "arrow-body-style": 1,
+    "arrow-body-style": 0,
     "comma-dangle": 0,
     "max-len": 0,
     "react/jsx-no-bind": 0,

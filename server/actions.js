@@ -12,9 +12,9 @@ export function generateToken(secret, { user }) {
     }
 
     const payload = {
-      jti: token,
+      t: token,
       uid: user.id,
-      tid: user.team_id,
+      tid: user.teamId,
     };
     const output = jwt.sign(payload, secret);
     return resolve(output);

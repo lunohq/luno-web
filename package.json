@@ -62,7 +62,7 @@
     "webpack-dev-server": "^1.14.1"
   },
   "dependencies": {
-    "botkit": "git+ssh://git@github.com/lunohq/botkit.git",
+    "botkit": "git+ssh://git@github.com/lunohq/botkit.git#res-auth-helpers",
     "connect-history-api-fallback": "^1.2.0",
     "cookie-parser": "^1.4.1",
     "express": "^4.13.4",

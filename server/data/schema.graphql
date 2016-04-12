@@ -85,7 +85,7 @@ type SlackInfo {
 
 type Team implements Node {
   id: ID!
-  domain: String
+  name: String
   slack: SlackInfo
 }
 
