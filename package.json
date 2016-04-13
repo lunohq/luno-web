@@ -4,6 +4,7 @@
   "description": "Luno web app",
   "scripts": {
     "start": "npm run update && babel-node server/index.js",
+    "dev": "npm run update && ./bin/server",
     "update": "babel-node server/utils/updateSchema.js",
     "deploy": "NODE_ENV=production webpack --config webpack.production.config.js && npm run docker",
     "lint": "eslint --ignore-path .gitignore client server",
@@ -44,6 +45,7 @@
     "webpack-dev-server": "^1.14.1"
   },
   "dependencies": {
+    "dotenv": "^2.0.0",
     "botkit": "git+https://github.com/lunohq/botkit.git#5bfc607444bfeb7d198cf5ba4166e4ac9ccc9c47",
     "connect-history-api-fallback": "^1.2.0",
     "cookie-parser": "^1.4.1",
