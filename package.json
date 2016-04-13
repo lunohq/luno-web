@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Luno web app",
   "scripts": {
-    "start": "npm run update && DEBUG=express:* babel-node server/index.js",
+    "start": "npm run update && babel-node server/index.js",
     "update": "babel-node server/utils/updateSchema.js",
     "deploy": "NODE_ENV=production webpack --config webpack.production.config.js && npm run docker",
     "lint": "eslint --ignore-path .gitignore client server",
@@ -56,6 +56,7 @@
     "lodash": "^4.7.0",
     "luno-core": "git+https://1d0cdee693b540fb3b9cd603b01834ec45976ce9:x-oauth-basic@github.com/lunohq/luno-core.git#v0.6.6",
     "material-ui": "^0.15.0-alpha.2",
+    "morgan": "^1.7.0",
     "react": "^0.14.8",
     "react-dom": "^0.14.8",
     "react-mdl": "^1.5.2",

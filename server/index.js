@@ -9,6 +9,7 @@ import gaze from 'gaze';
 import chalk from 'chalk';
 import Botkit from 'botkit';
 import { botkit as bk } from 'luno-core';
+import morgan from 'morgan';
 
 import webpackConfig from '../webpack.config';
 import requireUncached from './utils/requireUncached';
@@ -68,6 +69,7 @@ function startRelayServer() {
     },
   });
 
+  relayServer.use(morgan('short'));
   auth(relayServer.app, botkit);
   // Serve static resources
   relayServer.use('/', express.static(path.join(__dirname, '../build')));
@@ -104,6 +106,7 @@ if (config.env === 'development') {
 } else if (config.env === 'production') {
   // Launch Relay by creating a normal express server
   relayServer = express();
+  relayServer.use(morgan('short'));
   auth(relayServer, botkit);
   relayServer.use(historyApiFallback());
   relayServer.use('/', express.static(path.join(__dirname, '../build')));
