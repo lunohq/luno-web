@@ -1,15 +1,19 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 import {
   Dialog,
   FlatButton,
   TextField,
 } from 'material-ui';
 
-class Form extends Component {
+import FormComponent from '../../utils/FormComponent';
+
+class Form extends FormComponent {
+
+  static defaultProps = {
+    fields: ['title', 'body'],
+  }
 
   state = {
-    title: {},
-    body: {},
     topics: {},
     answer: null,
   };
@@ -20,9 +24,12 @@ class Form extends Component {
     ) {
       this.setState({
         answer: nextProps.answer,
-        title: { value: nextProps.answer.title },
-        body: { value: nextProps.answer.body },
         topics: {}
+      });
+
+      this.initializeWithValues({
+        title: nextProps.answer.title,
+        body: nextProps.answer.body,
       });
     }
   }
@@ -45,8 +52,6 @@ class Form extends Component {
 
   resetState() {
     this.setState({
-      title: {},
-      body: {},
       topics: {},
       answer: null,
     });
@@ -54,18 +59,6 @@ class Form extends Component {
 
   isNew() {
     return !(this.state.answer && this.state.answer.id);
-  }
-
-  handleTitleChange = (event) => {
-    this.setState({
-      title: { value: event.target.value },
-    });
-  }
-
-  handleBodyChange = (event) => {
-    this.setState({
-      body: { value: event.target.value },
-    });
   }
 
   handleTopicsChange = (event) => {
@@ -77,8 +70,8 @@ class Form extends Component {
   handleSubmit = () => {
     const { onSubmit } = this.props;
     onSubmit({
-      title: this.refs.title.getValue(),
-      body: this.refs.body.getValue(),
+      title: this.getValue('title'),
+      body: this.getValue('body'),
     }, this.state.answer);
   }
 
@@ -119,7 +112,6 @@ class Form extends Component {
               floatingLabelText='Title'
               fullWidth
               hintText='Title'
-              onChange={this.handleTitleChange}
               ref='title'
               {...title}
             />
@@ -128,7 +120,6 @@ class Form extends Component {
               fullWidth
               hintText='Answer'
               multiLine
-              onChange={this.handleBodyChange}
               rows={1}
               rowsMax={5}
               ref='body'
