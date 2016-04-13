@@ -104,8 +104,13 @@ if (config.env === 'development') {
 } else if (config.env === 'production') {
   // Launch Relay by creating a normal express server
   relayServer = express();
+  auth(relayServer, botkit);
   relayServer.use(historyApiFallback());
   relayServer.use('/', express.static(path.join(__dirname, '../build')));
-  relayServer.use('/graphql', graphQLHTTP({ schema }));
+  relayServer.use('/graphql', graphQLHTTP(request => ({
+    schema,
+    context: { auth: request.auth },
+    rootValue: request.auth,
+  })));
   relayServer.listen(config.port, () => console.log(chalk.green(`Relay is listening on port ${config.port}`)));
 }
