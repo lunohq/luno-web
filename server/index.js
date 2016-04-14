@@ -8,7 +8,7 @@ import historyApiFallback from 'connect-history-api-fallback';
 import gaze from 'gaze';
 import chalk from 'chalk';
 import Botkit from 'botkit';
-import { botkit as bk } from 'luno-core';
+import { botkit as bk, events } from 'luno-core';
 import morgan from 'morgan';
 
 import webpackConfig from '../webpack.config';
@@ -27,6 +27,14 @@ const botkit = Botkit.slackbot({
   clientId: config.slack.clientId,
   clientSecret: config.slack.clientSecret,
   scopes: ['bot'],
+});
+
+botkit.on('create_bot', (bot) => {
+  try {
+    events.publish.createBot(bot.config.id);
+  } catch (err) {
+    console.error('FAILURE TO PUBLISH:', err);
+  }
 });
 
 function startGraphQLServer(schema) {
