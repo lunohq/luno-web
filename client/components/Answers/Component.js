@@ -13,32 +13,28 @@ import UpdateAnswerMutation from '../../mutations/UpdateAnswerMutation';
 import AnswersTable from './AnswersTable';
 import Form from './Form';
 
-const AddAnswer = ({ handleAddAnswer, label }) => {
-  return (
-    <RaisedButton
-      label={label}
-      onTouchTap={handleAddAnswer}
-      primary
-    />
-  );
-};
+const AddAnswer = ({ handleAddAnswer, label }) => (
+  <RaisedButton
+    label={label}
+    onTouchTap={handleAddAnswer}
+    primary
+  />
+);
 
 AddAnswer.propTypes = {
   handleAddAnswer: PropTypes.func.isRequired,
   label: PropTypes.string.isRequired,
 };
 
-const EmptyState = ({ handleAddAnswer }) => {
-  return (
-    <div className='row-xs middle-xs center-xs empty-state'>
-      <h3>Add your first smart answer</h3>
-      <AddAnswer
-        label='Add smart answer'
-        handleAddAnswer={handleAddAnswer}
-      />
-    </div>
-  );
-};
+const EmptyState = ({ handleAddAnswer }) => (
+  <div className='row-xs middle-xs center-xs empty-state'>
+    <h3>Add your first smart answer</h3>
+    <AddAnswer
+      label='Add smart answer'
+      handleAddAnswer={handleAddAnswer}
+    />
+  </div>
+);
 
 EmptyState.propTypes = {
   handleAddAnswer: PropTypes.func.isRequired,
