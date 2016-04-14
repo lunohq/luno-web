@@ -69,6 +69,7 @@ class Form extends FormComponent {
         title: this.getValue('title'),
         body: this.getValue('body'),
       }, this.state.answer);
+      this.handleClose();
     }
   }
 
