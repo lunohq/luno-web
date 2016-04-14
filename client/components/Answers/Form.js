@@ -5,12 +5,14 @@ import {
   TextField,
 } from 'material-ui';
 
+import { answerValidator } from '../../utils/validators';
 import FormComponent from '../../utils/FormComponent';
 
 class Form extends FormComponent {
 
   static defaultProps = {
     fields: ['title', 'body'],
+    validate: answerValidator,
   }
 
   state = {
@@ -55,6 +57,8 @@ class Form extends FormComponent {
       topics: {},
       answer: null,
     });
+
+    this.resetFormState();
   }
 
   isNew() {
@@ -68,11 +72,13 @@ class Form extends FormComponent {
   }
 
   handleSubmit = () => {
-    const { onSubmit } = this.props;
-    onSubmit({
-      title: this.getValue('title'),
-      body: this.getValue('body'),
-    }, this.state.answer);
+    if (this.isFormValid()) {
+      const { onSubmit } = this.props;
+      onSubmit({
+        title: this.getValue('title'),
+        body: this.getValue('body'),
+      }, this.state.answer);
+    }
   }
 
   handleClose = () => {
