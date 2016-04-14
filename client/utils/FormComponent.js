@@ -16,7 +16,10 @@ class FormComponent extends Component {
   componentWillMount() {
     const { fields } = this.props;
     for (const field of fields) {
-      this.formFields[field] = new FormField(field, () => this.fillFormState(), () => this.validate(true));
+      this.formFields[field] = new FormField(field, () => this.fillFormState(), () => {
+        this.fillFormState();
+        this.validate(true);
+      });
     }
 
     this.fillFormState();
@@ -95,16 +98,13 @@ class FormComponent extends Component {
   }
 
   resetFormState() {
-    const stateObject = {};
     const { fields } = this.props;
 
     for (const field of fields) {
-      stateObject[field] = null;
       this.formFields[field].reset();
     }
 
-    stateObject._values = null;
-    this.setState(stateObject);
+    this.fillFormState();
   }
 }
 
