@@ -61,7 +61,7 @@ class Answers extends Component {
   }
 
   hideForm = () => {
-    this.setState({ open: false });
+    this.setState({ open: false, answerToBeEdited: null });
   }
 
   handleAddAnswer = () => {
