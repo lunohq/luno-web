@@ -1,21 +1,35 @@
 
 .left-nav {
-    background: #181D21;
+    background: #393F44;
     margin: 0;
-    width: 70px;
     padding: 35px 0 6px 0;
+    width: 70px;
 }
 
 .nav-button {
   border-radius: 2px;
-  opacity: 0.7;
   margin-bottom: 10px;
   margin-left: 8px;
+  opacity: 0.6;
   padding: 10px;
+  position: relative;
+}
+
+.nav-button.selected::before {
+  content: "";
+  position: absolute;
+  height: 36px;
+  border-left: 8px solid #FFF;
+  border-radius: 4px;
+  left: -12px;
+  top: 5px;
+}
+
+.nav-button:hover, .nav-button.selected {
+  opacity: 1;
 }
 
 .nav-button:hover {
   background: #2F3437;
   cursor: pointer;
-  opacity: 1;
 }
