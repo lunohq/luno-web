@@ -18,10 +18,10 @@ MessagesIcon.propTypes = {
 };
 
 MessagesIcon.defaultProps = {
-  height: 30,
+  height: 26,
   stroke: '#FAFAFA',
   strokeWidth: 1,
-  width: 30,
+  width: 26,
 };
 
 export default MessagesIcon;
