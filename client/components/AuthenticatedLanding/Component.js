@@ -1,5 +1,4 @@
 import React, { PropTypes } from 'react';
-import { IconButton } from 'material-ui';
 
 import DocumentTitle from '../DocumentTitle';
 import LogoutIcon from '../LogoutIcon';
@@ -14,17 +13,17 @@ const AuthenticatedLanding = ({ children, onLogout }) => (
       <section className='row content-container'>
         <nav className='col left-nav between-xs'>
           <div className='top-buttons col middle-xs'>
-            <IconButton href='/' linkButton>
+            <a className='nav-button' href='/'>
               <QuestionAnswerIcon />
-            </IconButton>
-            <IconButton href='/message-logs' linkButton>
+            </a>
+            <a className='nav-button' href='/message-logs'>
               <MessagesIcon />
-            </IconButton>
+            </a>
           </div>
           <div className='bottom-buttons col middle-xs'>
-            <IconButton onTouchTap={onLogout}>
+            <a className='nav-button' onClick={onLogout}>
               <LogoutIcon />
-            </IconButton>
+            </a>
           </div>
         </nav>
         <main className='row col-xs content'>
