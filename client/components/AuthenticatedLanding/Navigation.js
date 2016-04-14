@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react';
 
 import LogoutIcon from '../LogoutIcon';
-import MessagesIcon from '../MessagesIcon';
 import QuestionAnswerIcon from '../QuestionAnswerIcon';
 
 const Navigation = ({ onLogout }) => {
@@ -14,9 +13,6 @@ const Navigation = ({ onLogout }) => {
       <div className='top-buttons col middle-xs'>
         <a className={`nav-button ${isSelected('/')}`} href='/'>
           <QuestionAnswerIcon />
-        </a>
-        <a className={`nav-button ${isSelected('/message-logs')}`} href='/message-logs'>
-          <MessagesIcon />
         </a>
       </div>
       <div className='bottom-buttons col middle-xs'>
