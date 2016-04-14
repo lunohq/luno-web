@@ -30,7 +30,6 @@ const AnswersTable = ({ bot, handleDelete, handleEdit }) => {
         <TableRow>
           <TableHeaderColumn>Title</TableHeaderColumn>
           <TableHeaderColumn>Smart Answer</TableHeaderColumn>
-          <TableHeaderColumn>Topics</TableHeaderColumn>
           <TableHeaderColumn />
         </TableRow>
       </TableHeader>

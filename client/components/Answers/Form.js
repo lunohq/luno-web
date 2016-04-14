@@ -16,7 +16,6 @@ class Form extends FormComponent {
   }
 
   state = {
-    topics: {},
     answer: null,
   };
 
@@ -26,7 +25,6 @@ class Form extends FormComponent {
     ) {
       this.setState({
         answer: nextProps.answer,
-        topics: {}
       });
 
       this.initializeWithValues({
@@ -54,7 +52,6 @@ class Form extends FormComponent {
 
   resetState() {
     this.setState({
-      topics: {},
       answer: null,
     });
 
@@ -63,12 +60,6 @@ class Form extends FormComponent {
 
   isNew() {
     return !(this.state.answer && this.state.answer.id);
-  }
-
-  handleTopicsChange = (event) => {
-    this.setState({
-      topics: { value: event.target.value },
-    });
   }
 
   handleSubmit = () => {
@@ -89,7 +80,7 @@ class Form extends FormComponent {
 
   render() {
     const { open } = this.props;
-    const { title, body, topics } = this.state;
+    const { title, body } = this.state;
 
     const actions = [
       <FlatButton
@@ -130,13 +121,6 @@ class Form extends FormComponent {
               rowsMax={5}
               ref='body'
               {...body}
-            />
-            <TextField
-              floatingLabelText='Topics'
-              fullWidth
-              hintText='Topics'
-              onChange={this.handleTopicsChange}
-              {...topics}
             />
           </div>
         </form>

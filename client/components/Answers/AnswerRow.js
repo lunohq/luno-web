@@ -21,7 +21,6 @@ const AnswerRow = ({ answer, handleDelete, handleEdit }) => {
     <TableRow key={id}>
       <TableRowColumn style={cellStyle}>{title}</TableRowColumn>
       <TableRowColumn style={cellStyle}>{body}</TableRowColumn>
-      <TableRowColumn style={cellStyle}>Topic1, Topic2</TableRowColumn>
       <TableRowColumn>
         <FlatButton
           label='Edit'
