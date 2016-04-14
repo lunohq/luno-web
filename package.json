@@ -45,10 +45,10 @@
     "webpack-dev-server": "^1.14.1"
   },
   "dependencies": {
-    "dotenv": "^2.0.0",
     "botkit": "git+https://github.com/lunohq/botkit.git#5bfc607444bfeb7d198cf5ba4166e4ac9ccc9c47",
     "connect-history-api-fallback": "^1.2.0",
     "cookie-parser": "^1.4.1",
+    "dotenv": "^2.0.0",
     "express": "^4.13.4",
     "express-graphql": "^0.4.13",
     "express-jwt": "^3.3.0",
@@ -60,6 +60,7 @@
     "material-ui": "^0.15.0-alpha.2",
     "morgan": "^1.7.0",
     "react": "^0.14.8",
+    "react-document-title": "^2.0.1",
     "react-dom": "^0.14.8",
     "react-mdl": "^1.5.2",
     "react-relay": "^0.7.3",
