@@ -41,7 +41,7 @@ module.exports = {
     new webpack.NoErrorsPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
-      title: 'Luno',
+      title: 'Luno - Helpdesk bot for Slack teams',
       template: './client/index.html',
       mobile: true,
       inject: false

@@ -3,7 +3,7 @@ import Relay from 'react-relay';
 
 import './style.scss';
 
-import AnonymousLanding from '../AnonymousLanding/Component';
+import AnonymousLanding from '../AnonymousLanding2/Component';
 import AuthenticatedLanding from '../AuthenticatedLanding/Component';
 import LogoutMutation from '../../mutations/LogoutMutation';
 

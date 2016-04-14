@@ -6,6 +6,7 @@
 <!--[if (gt IE 9)|!(IE)]><!--> <html lang="en" class="" <% if(htmlWebpackPlugin.files.manifest) { %> manifest="<%= htmlWebpackPlugin.files.manifest %>"<% } %>> <!--<![endif]-->
 <head>
   <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title><%= htmlWebpackPlugin.options.title || 'Webpack App'%></title>
 
   <% if (htmlWebpackPlugin.files.favicon) { %>
@@ -18,6 +19,8 @@
   <% for (var css in htmlWebpackPlugin.files.css) { %>
   <link href="<%= htmlWebpackPlugin.files.css[css] %>" rel="stylesheet">
   <% } %>
+
+  <link href='http://fonts.googleapis.com/css?family=Lato:300,400,900' rel='stylesheet' type='text/css'>
 </head>
 <body>
 <% if (htmlWebpackPlugin.options.unsupportedBrowser) { %>
