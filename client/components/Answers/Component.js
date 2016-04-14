@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
 import {
+  Dialog,
+  FlatButton,
   RaisedButton,
 } from 'material-ui';
 
@@ -26,6 +28,43 @@ AddAnswer.propTypes = {
   label: PropTypes.string.isRequired,
 };
 
+const DeleteDialog = ({ answer, open, onClose, onSubmit }) => {
+  const actions = [
+    <FlatButton
+      label='Cancel'
+      secondary
+      onClick={onClose}
+    />,
+    <FlatButton
+      label='Yes'
+      primary
+      onClick={onSubmit}
+    />,
+  ];
+
+  const answerTitle = answer ? answer.title : 'answer';
+  return (
+    <Dialog
+      title='Confirm delete answer?'
+      actions={actions}
+      modal={false}
+      open={open}
+      onRequestClose={onClose}
+    >
+      <div style={{ fontSize: '1.4em' }}>
+        {`Are you sure you want to delete "${answerTitle}"? This action cannot be undone.`}
+      </div>
+    </Dialog>
+  );
+};
+
+DeleteDialog.propTypes = {
+  answer: PropTypes.object,
+  open: PropTypes.bool,
+  onClose: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+};
+
 const EmptyState = ({ handleAddAnswer }) => (
   <div className='row-xs middle-xs center-xs empty-state'>
     <h3>Add your first smart answer</h3>
@@ -44,6 +83,8 @@ class Answers extends Component {
   state = {
     open: false,
     answerToBeEdited: null,
+    showDeleteDialog: false,
+    answerToBeDeleted: null,
   }
 
   getBot() {
@@ -72,14 +113,33 @@ class Answers extends Component {
     this.setState({ answerToBeEdited: answer }, () => this.displayForm());
   }
 
-  handleDeleteAnswer = (answer) => {
-    const bot = this.getBot();
-    Relay.Store.commitUpdate(
-      new DeleteAnswerMutation({
-        answer,
-        bot,
-      })
-    );
+  handleDeleteAnswer = () => {
+    const answer = this.state.answerToBeDeleted;
+    if (answer) {
+      const bot = this.getBot();
+      Relay.Store.commitUpdate(
+        new DeleteAnswerMutation({
+          answer,
+          bot,
+        })
+      );
+    }
+
+    this.hideDeleteDialog();
+  }
+
+  showDeleteDialog = (answer) => {
+    this.setState({
+      showDeleteDialog: true,
+      answerToBeDeleted: answer,
+    });
+  }
+
+  hideDeleteDialog = () => {
+    this.setState({
+      showDeleteDialog: false,
+      answerToBeDeleted: null,
+    });
   }
 
   handleSubmitAnswer = ({ title, body }, answer) => {
@@ -120,7 +180,7 @@ class Answers extends Component {
       return (
         <AnswersTable
           bot={bot}
-          handleDelete={this.handleDeleteAnswer}
+          handleDelete={this.showDeleteDialog}
           handleEdit={this.handleEditAnswer}
         />
       );
@@ -148,6 +208,12 @@ class Answers extends Component {
           onClose={this.hideForm}
           onSubmit={this.handleSubmitAnswer}
           open={this.state.open}
+        />
+        <DeleteDialog
+          answer={this.state.answerToBeDeleted}
+          onClose={this.hideDeleteDialog}
+          onSubmit={this.handleDeleteAnswer}
+          open={this.state.showDeleteDialog}
         />
       </div>
     );
