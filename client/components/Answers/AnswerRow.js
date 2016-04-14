@@ -1,12 +1,15 @@
 import React, { PropTypes } from 'react';
 import {
-  FlatButton,
+  FontIcon,
+  IconButton,
   TableRow,
   TableRowColumn,
 } from 'material-ui';
 
 const AnswerRow = ({ answer, handleDelete, handleEdit }) => {
   const cellStyle = { fontSize: '1.4em', whiteSpace: 'pre-wrap' };
+  const actionsCellStyle = { textAlign: 'right' };
+  const actionsIconColor = '#757575';
 
   const editAnswer = (answerToEdit) => {
     handleEdit(answerToEdit);
@@ -21,15 +24,19 @@ const AnswerRow = ({ answer, handleDelete, handleEdit }) => {
     <TableRow key={id}>
       <TableRowColumn style={cellStyle}>{title}</TableRowColumn>
       <TableRowColumn style={cellStyle}>{body}</TableRowColumn>
-      <TableRowColumn>
-        <FlatButton
-          label='Edit'
+      <TableRowColumn style={actionsCellStyle}>
+        <IconButton
+          tooltip='Edit'
           onTouchTap={() => editAnswer(answer)}
-        />
-        <FlatButton
-          label='Delete'
+        >
+          <FontIcon className='material-icons' color={actionsIconColor}>edit</FontIcon>
+        </IconButton>
+        <IconButton
+          tooltip='Delete'
           onTouchTap={() => deleteAnswer(answer)}
-        />
+        >
+          <FontIcon className='material-icons' color={actionsIconColor}>delete</FontIcon>
+        </IconButton>
       </TableRowColumn>
     </TableRow>
   );
