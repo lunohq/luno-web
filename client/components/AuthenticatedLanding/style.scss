@@ -1,15 +1,40 @@
+$leftNavWidth: 60px;
+
+.app {
+  .content {
+    left: $leftNavWidth;
+    margin: 0;
+    overflow-x: hidden;
+    padding: 0;
+    position: absolute;
+    top: 0px;
+  }
+
+  .content-body {
+    background: #FFF;
+    padding: 30px 40px;
+    margin: 0;
+  }
+
+  .title-section {
+    background: #FFF;
+    z-index: 10;
+  }
+}
 
 .left-nav {
     background: #393F44;
+    height: 95vh;
+    left: 0;
     margin: 0;
     padding: 35px 0 6px 0;
-    width: 70px;
+    position: fixed;
+    width: $leftNavWidth;
 }
 
 .nav-button {
   border-radius: 2px;
   margin-bottom: 10px;
-  margin-left: 8px;
   opacity: 0.6;
   padding: 10px;
   position: relative;
@@ -21,8 +46,8 @@
   height: 36px;
   border-left: 8px solid #FFF;
   border-radius: 4px;
-  left: -12px;
-  top: 5px;
+  left: -10px;
+  top: 4px;
 }
 
 .nav-button:hover, .nav-button.selected {

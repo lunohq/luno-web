@@ -193,14 +193,16 @@ class Answers extends Component {
     return (
       <div className='smart-answers-container'>
         <div className='col-xs content-body'>
-          <div className='row between-xs middle-xs no-margin'>
-            <h1>Smart answers</h1>
-            {this.renderAddAnswer()}
+        <div className='title-section'>
+            <div className='row between-xs middle-xs no-margin'>
+              <h1>Smart answers</h1>
+              {this.renderAddAnswer()}
+            </div>
+            <hr />
+            <p>
+                Use smart answers to scale yourself and answer common questions. Your Luno Bot will search these smart answers and intelligently reply in any channel that its added to.
+            </p>
           </div>
-          <hr />
-          <p>
-              Use smart answers to scale yourself and answer common questions. Your Luno Bot will search these smart answers and intelligently reply in any channel that its added to.
-          </p>
           {this.renderContent()}
         </div>
         <Form

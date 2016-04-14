@@ -19,8 +19,6 @@ const AnswersTable = ({ bot, handleDelete, handleEdit }) => {
   />);
   return (
     <Table
-      fixedFooter
-      fixedHeader
       selectable={false}
     >
       <TableHeader
