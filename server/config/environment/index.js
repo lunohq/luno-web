@@ -18,6 +18,7 @@ const config = {
     clientId: process.env.SLACK_CLIENT_ID,
     clientSecret: process.env.SLACK_CLIENT_SECRET,
   },
+  ssl: process.env.FORCE_SSL || false,
 };
 
 export default _.merge(config, require(`./${config.env}`).default);

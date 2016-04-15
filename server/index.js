@@ -10,6 +10,7 @@ import chalk from 'chalk';
 import Botkit from 'botkit';
 import { botkit as bk, events } from 'luno-core';
 import morgan from 'morgan';
+import { HTTPS as enforceHttps } from 'express-sslify';
 
 import webpackConfig from '../webpack.config';
 import requireUncached from './utils/requireUncached';
@@ -114,6 +115,11 @@ if (config.env === 'development') {
 } else if (config.env === 'production') {
   // Launch Relay by creating a normal express server
   relayServer = express();
+
+  if (config.ssl) {
+    relayServer.use(enforceHttps({ trustProtoHeader: true }));
+  }
+
   relayServer.use(morgan('short'));
   auth(relayServer, botkit);
   relayServer.use(historyApiFallback());
