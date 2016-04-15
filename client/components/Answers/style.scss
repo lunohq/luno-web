@@ -1,3 +1,7 @@
+@import '../../styles/global.scss';
+@import '../../../node_modules/react-mdl/extra/css/material.cyan-red.min.css';
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
 .smart-answers-container {
     h1 {
         color: rgba(0,0,0,0.87);

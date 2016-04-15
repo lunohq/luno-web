@@ -7,3 +7,28 @@ body {
     font-family: "Roboto", Helvetica, sans-serif;
     font-size: 10px;
 }
+
+.col {
+   display: -webkit-flex;
+   display: flex;
+   -webkit-flex-direction: column;
+   flex-direction: column;
+}
+
+.content-body {
+    background: #FFF;
+    padding: 30px 40px;
+    margin: 0;
+}
+
+.content-container {
+    height: 100vh;
+}
+
+.no-margin {
+    margin: 0;
+}
+
+.no-padding {
+    padding: 0;
+}
