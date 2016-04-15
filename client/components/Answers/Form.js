@@ -110,17 +110,16 @@ class Form extends FormComponent {
               floatingLabelText='Title'
               fullWidth
               hintText='Title'
-              ref='title'
+              key='title'
               {...title}
             />
             <TextField
               floatingLabelText='Answer'
               fullWidth
               hintText='Answer'
+              key='body'
               multiLine
               rows={1}
-              rowsMax={5}
-              ref='body'
               {...body}
             />
           </div>
