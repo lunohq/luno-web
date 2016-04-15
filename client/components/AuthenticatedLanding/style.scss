@@ -1,6 +1,9 @@
 $leftNavWidth: 60px;
 
 .app {
+
+  overflow-x: hidden;
+
   .content {
     left: $leftNavWidth;
     margin: 0;
@@ -22,13 +25,19 @@ $leftNavWidth: 60px;
   }
 }
 
+.top-buttons {
+  margin-top: 35px;
+}
+
 .left-nav {
     background: #393F44;
-    height: 95vh;
+    bottom: 0;
+    height: 100%;
     left: 0;
     margin: 0;
-    padding: 35px 0 6px 0;
+    padding: 0;
     position: fixed;
+    top: 0;
     width: $leftNavWidth;
 }
 
