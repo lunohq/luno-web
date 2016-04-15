@@ -8,14 +8,14 @@
  */
 
 .row {
-    margin-right: -10px;
-    margin-left: -10px;
+  margin-right: -10px;
+  margin-left: -10px;
 }
 
 /* Titles */
 h1, h2, h3, h4, h5, h6 {
-    font-family: 'Lato', sans-serif;
-    font-weight: 300;
+  font-family: 'Lato', sans-serif;
+  font-weight: 300;
 }
 
 h1 {
@@ -34,9 +34,9 @@ h4 {
 
 /* Paragraph & Typographic */
 p {
-    font-size: 16px;
-    line-height: 22.8px;
-    margin-bottom: 20px;
+  font-size: 16px;
+  line-height: 22.8px;
+  margin-bottom: 20px;
 }
 
 .centered {
@@ -45,39 +45,39 @@ p {
 
 /* Links */
 a {
-    color: #7A8EFF;
-    word-wrap: break-word;
+  color: #7A8EFF;
+  word-wrap: break-word;
 
-    -webkit-transition: color 0.1s ease-in, background 0.1s ease-in;
-    -moz-transition: color 0.1s ease-in, background 0.1s ease-in;
-    -ms-transition: color 0.1s ease-in, background 0.1s ease-in;
-    -o-transition: color 0.1s ease-in, background 0.1s ease-in;
-    transition: color 0.1s ease-in, background 0.1s ease-in;
+  -webkit-transition: color 0.1s ease-in, background 0.1s ease-in;
+  -moz-transition: color 0.1s ease-in, background 0.1s ease-in;
+  -ms-transition: color 0.1s ease-in, background 0.1s ease-in;
+  -o-transition: color 0.1s ease-in, background 0.1s ease-in;
+  transition: color 0.1s ease-in, background 0.1s ease-in;
 }
 
 a:hover,
 a:focus {
-    color: #7A8EFF;
-    text-decoration: none;
-    outline: 0;
+  color: #7A8EFF;
+  text-decoration: none;
+  outline: 0;
 }
 
 a:before,
 a:after {
-    -webkit-transition: color 0.1s ease-in, background 0.1s ease-in;
-    -moz-transition: color 0.1s ease-in, background 0.1s ease-in;
-    -ms-transition: color 0.1s ease-in, background 0.1s ease-in;
-    -o-transition: color 0.1s ease-in, background 0.1s ease-in;
-    transition: color 0.1s ease-in, background 0.1s ease-in;
+  -webkit-transition: color 0.1s ease-in, background 0.1s ease-in;
+  -moz-transition: color 0.1s ease-in, background 0.1s ease-in;
+  -ms-transition: color 0.1s ease-in, background 0.1s ease-in;
+  -o-transition: color 0.1s ease-in, background 0.1s ease-in;
+  transition: color 0.1s ease-in, background 0.1s ease-in;
 }
 
  hr {
-    display: block;
-    height: 1px;
-    border: 0;
-    border-top: 1px solid #ccc;
-    margin: 1em 0;
-    padding: 0;
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #ccc;
+  margin: 1em 0;
+  padding: 0;
 }
 
 /* Navbar */
@@ -92,8 +92,8 @@ a:after {
 .navbar-default .navbar-brand:visited,
 .navbar-default .navbar-brand:hover {
 	font-family: sofia;
-    font-size: 32px;
-    color: white;
+  font-size: 32px;
+  color: white;
 }
 
 .navbar-default .navbar-nav > li > a,
@@ -127,24 +127,23 @@ i {
 
 /* HeaderWrap */
 #headerwrap {
-	/* background: url(../img/bg01.jpg) no-repeat center top; */
 	background-color: #484959;
-	margin-top: -20px;
-	padding-top: 100px;
-	background-attachment: relative;
-	background-position: center center;
-	min-height: 500px;
-	width: 100%;
+  margin-top: -20px;
+  padding-top: 100px;
+  background-attachment: relative;
+  background-position: center center;
+  min-height: 500px;
+  width: 100%;
 
-    -webkit-background-size: 100%;
-    -moz-background-size: 100%;
-    -o-background-size: 100%;
-    background-size: 100%;
+  -webkit-background-size: 100%;
+  -moz-background-size: 100%;
+  -o-background-size: 100%;
+  background-size: 100%;
 
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
 }
 
 #headerwrap h1 {
@@ -157,6 +156,6 @@ i {
 }
 
 #headerwrap h3 {
-    color: #E1E1EB;
-    font-weight: 300;
+  color: #E1E1EB;
+  font-weight: 300;
 }
