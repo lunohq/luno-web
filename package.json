@@ -14,7 +14,6 @@
   },
   "pre-commit": "lint",
   "devDependencies": {
-    "autoprefixer": "^6.3.6",
     "babel-cli": "^6.6.5",
     "babel-core": "^6.7.4",
     "babel-eslint": "^6.0.2",
@@ -34,7 +33,6 @@
     "html-webpack-plugin": "^2.15.0",
     "node-sass": "^3.4.2",
     "pre-commit": "^1.1.2",
-    "precss": "^1.4.0",
     "react-transform-catch-errors": "^1.0.2",
     "react-transform-hmr": "^1.0.4",
     "redbox-react": "^1.2.2",

@@ -1,10 +1,8 @@
 'use strict';
 
-var path = require('path');
-var webpack = require('webpack');
-var autoprefixer = require('autoprefixer');
-var precss = require('precss');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
+const path = require('path');
+const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   entry: {
@@ -30,9 +28,6 @@ module.exports = {
       test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)$/,
       loader: 'url-loader?limit=10000&name=assets/[hash].[ext]'
     }]
-  },
-  postcss: function() {
-    return [precss, autoprefixer];
   },
   plugins: [
     new webpack.optimize.DedupePlugin(),
