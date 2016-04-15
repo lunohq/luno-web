@@ -26,15 +26,11 @@ const AnswerRow = ({ answer, handleDelete, handleEdit }) => {
       <TableRowColumn style={cellStyle}>{body}</TableRowColumn>
       <TableRowColumn style={actionsCellStyle}>
         <IconButton
-          tooltip='Edit'
-          tooltipPosition='top-center'
           onTouchTap={() => editAnswer(answer)}
         >
           <FontIcon className='material-icons' color={actionsIconColor}>edit</FontIcon>
         </IconButton>
         <IconButton
-          tooltip='Delete'
-          tooltipPosition='top-center'
           onTouchTap={() => deleteAnswer(answer)}
         >
           <FontIcon className='material-icons' color={actionsIconColor}>delete</FontIcon>
