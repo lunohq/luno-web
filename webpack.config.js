@@ -27,7 +27,7 @@ module.exports = {
       test: /\.scss$/,
       loader: 'style!css!sass'
     }, {
-      test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)$/,
+      test: /\.(png|jpg|jpeg|ico|gif|svg|woff|woff2)$/,
       loader: 'url-loader?limit=10000&name=assets/[hash].[ext]'
     }]
   },
@@ -39,7 +39,8 @@ module.exports = {
       title: 'Helpdesk bot for Slack teams - Luno',
       template: './client/index.html',
       mobile: true,
-      inject: false
+      inject: false,
+      favicon: './client/assets/favicon.ico'
     })
   ]
 };
