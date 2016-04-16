@@ -6,15 +6,10 @@ const AnonymousLanding = () => (
   <div className='landing'>
       <div className='navbar navbar-default navbar-fixed-top'>
         <div className='container'>
-          <div className='navbar-header'>
-            <button type='button' className='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
-              <span className='icon-bar'></span>
-              <span className='icon-bar'></span>
-              <span className='icon-bar'></span>
-            </button>
+          <div className='col-xs-6'>
             <a className='navbar-brand' href='#'>luno</a>
           </div>
-          <div className='navbar-collapse collapse'>
+          <div className='col-xs-6'>
             <ul className='nav navbar-nav navbar-right'>
               <li><a href='/login'>Sign in</a></li>
             </ul>
@@ -47,7 +42,7 @@ const AnonymousLanding = () => (
           <h2>Let your Lunobot field all those common questions that you keep answering over and over again.</h2>
         </div>
         <div style={{ width: '100%' }}>
-          <img style={{ marginTop: '40px' }} src={require('../../assets/travel.gif')} />
+          <img className='demo-img' src={require('../../assets/travel.gif')} />
         </div>
       </div>
     </div>
