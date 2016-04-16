@@ -255,7 +255,7 @@ const GraphQLCreateAnswerMutation = mutationWithClientMutationId({
       }
     },
   },
-  mutateAndGetPayload: ({ title, body, botId: globalId }) => {
+  mutateAndGetPayload: ({ title, body, botId: globalId }, { rootValue: { uid: createdBy } }) => {
     return new Promise(async (resolve, reject) => {
       const { id: compositeId } = fromGlobalId(globalId);
       const [teamId, botId] = db.client.deconstructId(compositeId);
@@ -267,6 +267,7 @@ const GraphQLCreateAnswerMutation = mutationWithClientMutationId({
           body,
           botId,
           teamId,
+          createdBy,
         });
       } catch (err) {
         return reject(err);
