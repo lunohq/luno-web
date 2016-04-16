@@ -10,6 +10,21 @@
   .margin-centered {
     margin: 0 auto;
   }
+
+  .demo-img {
+    margin-top: 40px;
+    max-width: 800px;
+    object-fit: scale-down;
+    width: 100%;
+  }
+
+  .navbar-nav.navbar-right:last-child {
+    margin-right: -15px !important;
+  }
+
+  .navbar-right {
+    float: right!important;
+  }
 }
 
 .landing {
