@@ -2,11 +2,16 @@ class FormField {
 
   constructor(fieldKey, onValueChange, onFieldBlur) {
     this.fieldKey = fieldKey;
-    this.value = '';
+    this.value = undefined;
+    this.defaultValue = '';
     this.touched = false;
     this.errorText = '';
     this.onValueChange = onValueChange;
     this.onFieldBlur = onFieldBlur;
+  }
+
+  setDefaultValue(defaultValue) {
+    this.defaultValue = defaultValue;
   }
 
   setValue(value) {
@@ -21,7 +26,15 @@ class FormField {
     this.errorText = '';
   }
 
+  getDefaultValue() {
+    return this.defaultValue;
+  }
+
   getValue() {
+    if (!this.touched || this.value === undefined) {
+      return this.defaultValue;
+    }
+
     return this.value;
   }
 
@@ -40,6 +53,7 @@ class FormField {
 
   getProperties() {
     return {
+      defaultValue: this.defaultValue,
       onChange: this.onChange,
       onBlur: this.onBlur,
       touched: this.touched,
@@ -49,7 +63,8 @@ class FormField {
   }
 
   reset() {
-    this.value = '';
+    this.defaultValue = '';
+    this.value = undefined;
     this.errorText = '';
     this.touched = false;
   }

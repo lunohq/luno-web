@@ -39,7 +39,7 @@ class FormComponent extends Component {
 
   initializeWithValues(fieldNameValuesObject) {
     for (const field in fieldNameValuesObject) {
-      this.formFields[field].setValue(fieldNameValuesObject[field]);
+      this.formFields[field].setDefaultValue(fieldNameValuesObject[field]);
     }
 
     this.fillFormState();
