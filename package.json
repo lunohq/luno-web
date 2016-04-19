@@ -12,6 +12,11 @@
     "docker-push": "docker push lunohq/luno-web",
     "docker": "npm run docker-build && npm run docker-push"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lunohq/luno-web.git"
+  },
+  "license": "MIT",
   "pre-commit": "lint",
   "devDependencies": {
     "babel-cli": "^6.6.5",
@@ -61,7 +66,6 @@
     "react": "^0.14.8",
     "react-document-title": "^2.0.1",
     "react-dom": "^0.14.8",
-    "react-mdl": "^1.5.2",
     "react-relay": "^0.7.3",
     "react-router": "^2.0.1",
     "react-router-relay": "^0.9.5",
