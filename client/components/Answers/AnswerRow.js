@@ -7,7 +7,7 @@ import {
 } from 'material-ui';
 
 const AnswerRow = ({ answer, handleDelete, handleEdit }) => {
-  const cellStyle = { fontSize: '1.4em', whiteSpace: 'pre-wrap' };
+  const cellStyle = { fontSize: '1.4rem', whiteSpace: 'pre-wrap' };
   const actionsCellStyle = { textAlign: 'right' };
   const actionsIconColor = '#757575';
 

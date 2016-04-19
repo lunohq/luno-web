@@ -6,17 +6,16 @@ import {
   RaisedButton,
 } from 'material-ui';
 
-import DocumentTitle from '../DocumentTitle';
-import Divider from '../Divider';
-
-import './style.scss';
-
 import CreateAnswerMutation from '../../mutations/CreateAnswerMutation';
 import DeleteAnswerMutation from '../../mutations/DeleteAnswerMutation';
 import UpdateAnswerMutation from '../../mutations/UpdateAnswerMutation';
 
+import DocumentTitle from '../DocumentTitle';
+import Divider from '../Divider';
+
 import AnswersTable from './AnswersTable';
 import Form from './Form';
+import './style.scss';
 
 const AddAnswer = ({ handleAddAnswer, label }) => (
   <RaisedButton
@@ -54,7 +53,7 @@ const DeleteDialog = ({ answer, open, onClose, onSubmit }) => {
       open={open}
       onRequestClose={onClose}
     >
-      <div style={{ fontSize: '1.4em' }}>
+      <div style={{ fontSize: '1.4rem' }}>
         {`Are you sure you want to delete "${answerTitle}"? This action cannot be undone.`}
       </div>
     </Dialog>
