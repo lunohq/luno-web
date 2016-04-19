@@ -68,6 +68,7 @@ type Mutation {
   createAnswer(input: CreateAnswerInput!): CreateAnswerPayload
   deleteAnswer(input: DeleteAnswerInput!): DeleteAnswerPayload
   updateAnswer(input: UpdateAnswerInput!): UpdateAnswerPayload
+  updateBot(input: UpdateBotInput!): UpdateBotPayload
   logout(input: LogoutInput!): LogoutPayload
 }
 
@@ -110,6 +111,18 @@ input UpdateAnswerInput {
 
 type UpdateAnswerPayload {
   answer: Answer
+  clientMutationId: String!
+}
+
+input UpdateBotInput {
+  id: ID!
+  purpose: String!
+  pointsOfContact: [String]
+  clientMutationId: String!
+}
+
+type UpdateBotPayload {
+  bot: Bot
   clientMutationId: String!
 }
 

@@ -340,6 +340,33 @@ const GraphQLUpdateAnswerMutation = mutationWithClientMutationId({
   },
 });
 
+const GraphQLUpdateBotMutation = mutationWithClientMutationId({
+  name: 'UpdateBot',
+  inputFields: {
+    id: { type: new GraphQLNonNull(GraphQLID) },
+    purpose: { type: new GraphQLNonNull(GraphQLString) },
+    pointsOfContact: { type: new GraphQLList(GraphQLString) },
+  },
+  outputFields: {
+    bot: {
+      type: GraphQLBot,
+      resolve: (bot) => bot,
+    },
+  },
+  mutateAndGetPayload: async ({ id: globalId, purpose, pointsOfContact }) => {
+    const { id: compositeId } = fromGlobalId(globalId);
+    const [teamId, id] = db.client.deconstructId(compositeId);
+
+    const bot = await db.bot.updateBot({
+      pointsOfContact,
+      purpose,
+      teamId,
+      id,
+    });
+    return bot;
+  },
+});
+
 const GraphQLLogoutMutation = mutationWithClientMutationId({
   name: 'Logout',
   outputFields: {
@@ -371,6 +398,7 @@ const GraphQLMutation = new GraphQLObjectType({
     createAnswer: GraphQLCreateAnswerMutation,
     deleteAnswer: GraphQLDeleteAnswerMutation,
     updateAnswer: GraphQLUpdateAnswerMutation,
+    updateBot: GraphQLUpdateBotMutation,
     logout: GraphQLLogoutMutation,
   }),
 });
