@@ -6,6 +6,8 @@ import {
   RaisedButton,
 } from 'material-ui';
 
+import DocumentTitle from '../DocumentTitle';
+
 import './style.scss';
 
 import CreateAnswerMutation from '../../mutations/CreateAnswerMutation';
@@ -191,33 +193,35 @@ class Answers extends Component {
 
   render() {
     return (
-      <div className='smart-answers-container'>
-        <div className='col-xs content-body'>
-        <div className='title-section'>
-            <div className='row between-xs middle-xs no-margin'>
-              <h1>Smart answers</h1>
-              {this.renderAddAnswer()}
+      <DocumentTitle title='Smart answers'>
+        <div className='smart-answers-container'>
+          <div className='col-xs content-body'>
+          <div className='section-title'>
+              <div className='row between-xs middle-xs no-margin'>
+                <h1>Smart answers</h1>
+                {this.renderAddAnswer()}
+              </div>
+              <hr />
+              <p>
+                  Use smart answers to scale yourself and answer common questions. Your Luno Bot will search these smart answers and intelligently reply in any channel that its added to.
+              </p>
             </div>
-            <hr />
-            <p>
-                Use smart answers to scale yourself and answer common questions. Your Luno Bot will search these smart answers and intelligently reply in any channel that its added to.
-            </p>
+            {this.renderContent()}
           </div>
-          {this.renderContent()}
+          <Form
+            answer={this.state.answerToBeEdited}
+            onClose={this.hideForm}
+            onSubmit={this.handleSubmitAnswer}
+            open={this.state.open}
+          />
+          <DeleteDialog
+            answer={this.state.answerToBeDeleted}
+            onClose={this.hideDeleteDialog}
+            onSubmit={this.handleDeleteAnswer}
+            open={this.state.showDeleteDialog}
+          />
         </div>
-        <Form
-          answer={this.state.answerToBeEdited}
-          onClose={this.hideForm}
-          onSubmit={this.handleSubmitAnswer}
-          open={this.state.open}
-        />
-        <DeleteDialog
-          answer={this.state.answerToBeDeleted}
-          onClose={this.hideDeleteDialog}
-          onSubmit={this.handleDeleteAnswer}
-          open={this.state.showDeleteDialog}
-        />
-      </div>
+      </DocumentTitle>
     );
   }
 }

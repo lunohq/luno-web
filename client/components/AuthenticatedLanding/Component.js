@@ -1,22 +1,18 @@
 import React, { PropTypes } from 'react';
 
-import DocumentTitle from '../DocumentTitle';
-
 import Navigation from './Navigation';
 
 import './style.scss';
 
 const AuthenticatedLanding = ({ children, onLogout }) => (
-  <DocumentTitle title='Smart answers'>
-    <div className='app'>
-      <section className='row content-container'>
-        <Navigation onLogout={onLogout} />
-        <main className='row col-xs content'>
-          {children}
-        </main>
-      </section>
-    </div>
-  </DocumentTitle>
+  <div className='app'>
+    <section className='row content-container'>
+      <Navigation onLogout={onLogout} />
+      <main className='row col-xs content'>
+        {children}
+      </main>
+    </section>
+  </div>
 );
 
 AuthenticatedLanding.propTypes = {
