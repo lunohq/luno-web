@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 
 import LogoutIcon from '../LogoutIcon';
 import QuestionAnswerIcon from '../QuestionAnswerIcon';
+import SettingsIcon from '../SettingsIcon';
 
 const Navigation = ({ onLogout }) => {
   const isSelected = (path) => {
@@ -13,6 +14,9 @@ const Navigation = ({ onLogout }) => {
       <div className='top-buttons col middle-xs'>
         <a className={`nav-button ${isSelected('/')}`} href='/'>
           <QuestionAnswerIcon />
+        </a>
+        <a className={`nav-button ${isSelected('/bot-settings')}`} href='/bot-settings'>
+          <SettingsIcon />
         </a>
       </div>
       <div className='bottom-buttons col middle-xs'>
