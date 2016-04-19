@@ -7,6 +7,7 @@ import {
 } from 'material-ui';
 
 import DocumentTitle from '../DocumentTitle';
+import Divider from '../Divider';
 
 import './style.scss';
 
@@ -201,7 +202,7 @@ class Answers extends Component {
                 <h1>Smart answers</h1>
                 {this.renderAddAnswer()}
               </div>
-              <hr />
+              <Divider />
               <p>
                   Use smart answers to scale yourself and answer common questions. Your Luno Bot will search these smart answers and intelligently reply in any channel that its added to.
               </p>
