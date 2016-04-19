@@ -22,7 +22,7 @@ const AnonymousLanding = () => (
         <div className='row mt centered'>
           <div className='col-xs-12'>
             <h1>A HELPDESK BOT FOR YOUR<br />SLACK TEAM</h1>
-            <h3>Scale yourself &mdash; train your Lunobot to handle common questions for you.</h3>
+            <h3>Train your Lunobot to deal with common questions that you keep answering over and over and over again.</h3>
             <a href='/login'>
               <img
                 alt='Add to Slack'
@@ -39,7 +39,7 @@ const AnonymousLanding = () => (
     <div className='container'>
       <div className='row mt centered'>
         <div className='col-xs-12'>
-          <h2>Let your Lunobot field all those common questions that you keep answering over and over again.</h2>
+          <h2>Employees can self-serve with FAQ answers from <span style={{ fontWeight: '500' }}>@luno</span> instead of bugging you.</h2>
         </div>
         <div style={{ width: '100%' }}>
           <img className='demo-img' src={require('../../assets/travel.gif')} />
@@ -61,7 +61,7 @@ const AnonymousLanding = () => (
             <img height='22px' src={require('../../assets/emoji-computer.png')} />
              1. Train your Lunobot
           </h4>
-          <p>Use the admin webapp to teach him the answers to common HR, IT, and other common FAQs.</p>
+          <p>Use the admin webapp to teach him the answers to common HR, IT, and other FAQs.</p>
         </div>
 
         <div className='col-lg-4 margin-centered'>
