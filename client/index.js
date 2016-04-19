@@ -5,7 +5,6 @@ import ReactDOM from 'react-dom';
 import { RelayRouter } from 'react-router-relay';
 import Relay from 'react-relay';
 
-import '../node_modules/react-mdl/extra/material.js';
 import Route from './routes/Route';
 
 Relay.injectNetworkLayer(
