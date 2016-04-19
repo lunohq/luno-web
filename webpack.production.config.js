@@ -40,7 +40,7 @@ module.exports = {
       }
     }),
     new HtmlWebpackPlugin({
-      title: 'Helpdesk bot for Slack teams - Luno',
+      title: 'Luno',
       template: './client/index.html',
       mobile: true,
       inject: false,
