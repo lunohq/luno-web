@@ -129,6 +129,14 @@ const GraphQLBot = new GraphQLObjectType({
   description: 'Bot within our system',
   fields: () => ({
     id: globalIdField('Bot', obj => db.client.compositeId(obj.teamId, obj.id)),
+    purpose: {
+      type: GraphQLString,
+      description: 'Purpose of the Bot',
+    },
+    pointsOfContact: {
+      type: new GraphQLList(GraphQLString),
+      description: 'Points of contact of the Bot for escalation',
+    },
     answers: {
       type: AnswersConnection,
       description: 'Answers configured for the Bot',
