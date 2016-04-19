@@ -17,10 +17,10 @@ SettingsIcon.propTypes = {
   width: PropTypes.number,
 };
 SettingsIcon.defaultProps = {
-  height: 30,
+  height: 26,
   stroke: '#FFFFFF',
   strokeWidth: 1,
-  width: 30,
+  width: 26,
 };
 
 export default SettingsIcon;
