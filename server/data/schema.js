@@ -37,6 +37,9 @@ const { nodeInterface, nodeField } = nodeDefinitions(
     } else if (type === 'Answer') {
       const [partitionKey, sortKey] = db.client.deconstructId(id);
       return db.answer.getAnswer(partitionKey, sortKey);
+    } else if (type === 'Regex') {
+      const [partitionKey, sortKey] = db.client.deconstructId(id);
+      return db.regex.getRegex(partitionKey, sortKey);
     }
     return null;
   },
@@ -49,6 +52,8 @@ const { nodeInterface, nodeField } = nodeDefinitions(
       return GraphQLBot;
     } else if (obj instanceof db.answer.Answer) {
       return GraphQLAnswer;
+    } else if (obj instanceof db.regex.Regex) {
+      return GraphQLRegex;
     }
     return null;
   },
@@ -146,6 +151,15 @@ const GraphQLBot = new GraphQLObjectType({
         return connectionFromArray(answers, args);
       },
     },
+    regexes: {
+      type: RegexesConnection,
+      description: 'Regexes that have been configured for the Bot',
+      args: connectionArgs,
+      resolve: async (bot, args) => {
+        const regexes = await db.regex.getRegexes(bot.id);
+        return connectionFromArray(regexes, args);
+      },
+    },
   }),
   interfaces: [nodeInterface],
 });
@@ -167,6 +181,23 @@ const GraphQLAnswer = new GraphQLObjectType({
   interfaces: [nodeInterface],
 });
 
+const GraphQLRegex = new GraphQLObjectType({
+  name: 'Regex',
+  description: 'A regex that is tied to a Bot',
+  fields: () => ({
+    id: globalIdField('Regex', obj => db.client.compositeId(obj.botId, obj.id)),
+    regex: {
+      type: GraphQLString,
+      description: 'Regex to trigger this response',
+    },
+    body: {
+      type: GraphQLString,
+      description: 'Response body if the regex is matched',
+    },
+  }),
+  interfaces: [nodeInterface],
+});
+
 // Our Relay GraphQL Connection Types
 
 const { connectionType: UsersConnection } = connectionDefinitions({
@@ -182,6 +213,11 @@ const { connectionType: BotsConnection } = connectionDefinitions({
 const { connectionType: AnswersConnection, edgeType: GraphQLAnswerEdge } = connectionDefinitions({
   name: 'Answer',
   nodeType: GraphQLAnswer,
+});
+
+const { connectionType: RegexesConnection, edgeType: GraphQLRegexEdge } = connectionDefinitions({
+  name: 'Regex',
+  nodeType: GraphQLRegex,
 });
 
 const GraphQLQuery = new GraphQLObjectType({
@@ -337,6 +373,139 @@ const GraphQLUpdateAnswerMutation = mutationWithClientMutationId({
       id,
     });
     return answer;
+  },
+});
+
+const GraphQLCreateRegexMutation = mutationWithClientMutationId({
+  name: 'CreateRegex',
+  inputFields: {
+    regex: {
+      description: 'Value of the regex',
+      type: new GraphQLNonNull(GraphQLString),
+    },
+    body: {
+      description: 'Body of the response if the regex matches',
+      type: new GraphQLNonNull(GraphQLString),
+    },
+    botId: {
+      description: 'ID of the Bot for this Regex',
+      type: new GraphQLNonNull(GraphQLString),
+    },
+    position: {
+      description: 'The position of the Regex for the bot',
+      type: new GraphQLNonNull(GraphQLInt),
+    },
+  },
+  outputFields: {
+    bot: {
+      type: GraphQLBot,
+      resolve: ({ teamId, botId }) => db.bot.getBot(teamId, botId),
+    },
+    regexEdge: {
+      type: GraphQLRegexEdge,
+      resolve: ({ regex, botId }) => {
+        return new Promise(async (resolve, reject) => {
+          // XXX need to have a way to do this that doesn't require fetching
+          // all regexes
+          let regexes;
+          try {
+            regexes = await db.regex.getRegexes(botId);
+          } catch (err) {
+            return reject(err);
+          }
+
+          let cursor;
+          for (const index in regexes) {
+            const r = regexes[index];
+            if (r.id === regex.id) {
+              cursor = offsetToCursor(index);
+              break;
+            }
+          }
+
+          return resolve({ cursor, node: regex });
+        });
+      }
+    },
+  },
+  mutateAndGetPayload: ({ regex, body, botId: globalId, position }, { rootValue: { uid: createdBy } }) => {
+    return new Promise(async (resolve, reject) => {
+      const { id: compositeId } = fromGlobalId(globalId);
+      const [teamId, botId] = db.client.deconstructId(compositeId);
+
+      let regex;
+      try {
+        regex = await db.regex.createRegex({
+          regex,
+          body,
+          botId,
+          teamId,
+          createdBy,
+          position,
+        });
+      } catch (err) {
+        return reject(err);
+      }
+
+      return resolve({ regex, teamId, botId });
+    });
+  },
+});
+
+const GraphQLDeleteRegexMutation = mutationWithClientMutationId({
+  name: 'DeleteRegex',
+  inputFields: {
+    id: { type: new GraphQLNonNull(GraphQLID) },
+  },
+  outputFields: {
+    bot: {
+      type: GraphQLBot,
+      resolve: ({ teamId, botId }) => db.bot.getBot(teamId, botId),
+    },
+    deletedId: {
+      type: GraphQLID,
+      resolve: ({ globalId }) => globalId,
+    },
+  },
+  mutateAndGetPayload: async ({ id: globalId }) => {
+    const { id: compositeId } = fromGlobalId(globalId);
+    const [botId, id] = db.client.deconstructId(compositeId);
+    const { teamId } = await db.regex.deleteRegex(botId, id);
+    return {
+      botId,
+      globalId,
+      teamId,
+    };
+  },
+});
+
+// TODO look into bulk updates
+const GraphQLUpdateRegexMutation = mutationWithClientMutationId({
+  name: 'UpdateRegex',
+  inputFields: {
+    id: { type: new GraphQLNonNull(GraphQLID) },
+    regex: { type: new GraphQLNonNull(GraphQLString) },
+    body: { type: new GraphQLNonNull(GraphQLString) },
+    position: { type: new GraphQLNonNull(GraphQLInt) },
+  },
+  outputFields: {
+    regex: {
+      type: GraphQLRegex,
+      resolve: regex => regex,
+    },
+  },
+  mutateAndGetPayload: async ({ id: globalId, regex, body, position }) => {
+    const { id: compositeId } = fromGlobalId(globalId);
+    const [botId, id] = db.client.deconstructId(compositeId);
+
+    const r = await db.regex.updateRegex({
+      body,
+      regex,
+      botId,
+      id,
+      position,
+    });
+    return r;
   },
 });
 
