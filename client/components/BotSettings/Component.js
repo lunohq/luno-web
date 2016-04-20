@@ -1,43 +1,14 @@
 import React, { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
-import { Snackbar, TextField } from 'material-ui';
+import { Snackbar } from 'material-ui';
 
 import UpdateBotMutation from '../../mutations/UpdateBotMutation';
 
 import DocumentTitle from '../DocumentTitle';
-import Divider from '../Divider';
 
+import Expertise from './Expertise';
+import PointsOfContact from './PointsOfContact';
 import './style.scss';
-
-const Expertise = ({ bot, onSave }) => {
-  return (
-    <div className='bot-settings-section'>
-      <div className='section-title'>
-        <div className='row between-xs middle-xs no-margin'>
-          <h1>Expertise</h1>
-        </div>
-        <Divider />
-        <p>
-            What types of questions can your Luno Bot answer? Configure your Luno Bot to tell others what it’s an expert in by completing the sentence below.
-        </p>
-      </div>
-      <div className='section-body'>&ldquo;I can answer basic questions related to
-        <TextField
-          className='expertise-text'
-          hintText='E.g., travel or HR and benefits'
-          defaultValue={bot.purpose}
-          multiLine={false}
-          onBlur={onSave}
-        />&rdquo;
-      </div>
-    </div>
-  );
-};
-
-Expertise.propTypes = {
-  bot: PropTypes.object.isRequired,
-  onSave: PropTypes.func.isRequired,
-};
 
 class BotSettings extends Component {
 
@@ -54,14 +25,30 @@ class BotSettings extends Component {
   handleSaveExpertise = (event) => {
     const purpose = event.target.value;
     const bot = this.getBot();
+    const pointsOfContact = bot.pointsOfContact;
     const mutation = new UpdateBotMutation({
       bot,
       purpose,
-      pointsOfContact: bot.pointsOfContact,
+      pointsOfContact,
     });
 
     Relay.Store.commitUpdate(mutation, {
       onSuccess: () => this.showSnackbar('Saved expertise info!')
+    });
+  }
+
+  handleSavePointsOfContact = (pointsOfContact) => {
+    console.log(pointsOfContact);
+    const bot = this.getBot();
+    const purpose = bot.purpose;
+    const mutation = new UpdateBotMutation({
+      bot,
+      purpose,
+      pointsOfContact,
+    });
+
+    Relay.Store.commitUpdate(mutation, {
+      onSuccess: () => this.showSnackbar('Saved points of contact!')
     });
   }
 
@@ -79,26 +66,18 @@ class BotSettings extends Component {
     });
   }
 
-  renderExpertiseBody() {
-    return (
-      <div className='bot-settings-section-body'>&ldquo;I can answer basic questions related to
-        <TextField
-          className='expertise-text'
-          hintText='E.g., travel or HR and benefits'
-          multiLine={false}
-        />&rdquo;
-      </div>
-    );
-  }
-
   render() {
     return (
-      <DocumentTitle title='Bot Settings'>
+      <DocumentTitle title='Bot settings'>
         <div className='smart-answers-container'>
           <div className='col-xs content-body'>
             <Expertise
               bot={this.getBot()}
               onSave={this.handleSaveExpertise}
+            />
+            <PointsOfContact
+              bot={this.getBot()}
+              onSave={this.handleSavePointsOfContact}
             />
             <Snackbar
               open={this.state.showSnackbar}
