@@ -19,6 +19,7 @@ type Bot implements Node {
   purpose: String
   pointsOfContact: [String]
   answers(after: String, first: Int, before: String, last: Int): AnswerConnection
+  regexes(after: String, first: Int, before: String, last: Int): RegexConnection
 }
 
 type BotConnection {
@@ -86,6 +87,22 @@ type PageInfo {
 type Query {
   node(id: ID!): Node
   viewer: User
+}
+
+type Regex implements Node {
+  id: ID!
+  regex: String
+  body: String
+}
+
+type RegexConnection {
+  pageInfo: PageInfo!
+  edges: [RegexEdge]
+}
+
+type RegexEdge {
+  node: Regex
+  cursor: String!
 }
 
 type SlackBot {
