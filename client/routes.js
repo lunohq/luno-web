@@ -1,11 +1,11 @@
 import React from 'react';
 import { IndexRoute, Route } from 'react-router';
 
-import ViewerQueries from '../queries/Viewer';
+import ViewerQueries from './queries/Viewer';
 
-import AppContainer from '../components/App/Container';
-import AnswersContainer from '../components/Answers/Container';
-import BotSettingsContainer from '../components/BotSettings/Container';
+import AppContainer from './components/App/Container';
+import AnswersContainer from './components/Answers/Container';
+import BotSettingsContainer from './components/BotSettings/Container';
 
 export default (
   <Route path='/' component={AppContainer} queries={ViewerQueries}>
