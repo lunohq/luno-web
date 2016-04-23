@@ -1,8 +1,8 @@
-import { browserHistory } from 'react-router';
+import { applyRouterMiddleware, browserHistory, Router } from 'react-router';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { RelayRouter } from 'react-router-relay';
+import useRelay from 'react-router-relay';
 import Relay from 'react-relay';
 
 import Route from './routes/Route';
@@ -14,9 +14,12 @@ Relay.injectNetworkLayer(
 const rootNode = document.createElement('div');
 document.body.appendChild(rootNode);
 
-ReactDOM.render(
-  <RelayRouter history={browserHistory} routes={Route} />,
-  rootNode
-);
+ReactDOM.render((
+  <Router
+    history={browserHistory}
+    routes={Route}
+    render={applyRouterMiddleware(useRelay)}
+  />
+), rootNode);
 
 injectTapEventPlugin();

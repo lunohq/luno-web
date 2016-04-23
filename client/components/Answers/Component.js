@@ -1,10 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
-import {
-  Dialog,
-  FlatButton,
-  RaisedButton,
-} from 'material-ui';
+
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
 
 import CreateAnswerMutation from '../../mutations/CreateAnswerMutation';
 import DeleteAnswerMutation from '../../mutations/DeleteAnswerMutation';

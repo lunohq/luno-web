@@ -1,5 +1,7 @@
 import React, { PropTypes } from 'react';
 import Relay from 'react-relay';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import AnonymousLanding from '../AnonymousLanding/Component';
 import AuthenticatedLanding from '../AuthenticatedLanding/Component';
@@ -12,14 +14,22 @@ const App = ({ children, viewer }) => {
     );
   }
 
+  let main;
   if (viewer.anonymous) {
-    return <AnonymousLanding />;
+    main = <AnonymousLanding />;
+  } else {
+    main = (
+      <AuthenticatedLanding
+        children={children}
+        onLogout={handleLogout}
+      />
+    );
   }
+
   return (
-    <AuthenticatedLanding
-      children={children}
-      onLogout={handleLogout}
-    />
+    <MuiThemeProvider muiTheme={getMuiTheme()}>
+      {main}
+    </MuiThemeProvider>
   );
 };
 
