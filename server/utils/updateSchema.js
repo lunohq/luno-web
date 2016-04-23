@@ -4,7 +4,7 @@ import fs from 'fs';
 import { graphql } from 'graphql';
 import chalk from 'chalk';
 import { introspectionQuery, printSchema } from 'graphql/utilities';
-import requireUncached from '../utils/requireUncached';
+import requireUncached from '../helpers/requireUncached';
 
 const schemaFile = path.join(__dirname, '../data/schema.js');
 const jsonFile = path.join(__dirname, '../data/schema.json');

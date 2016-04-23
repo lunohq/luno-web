@@ -5,8 +5,8 @@ import {
   TextField,
 } from 'material-ui';
 
-import { answerValidator } from '../../utils/validators';
-import FormComponent from '../../utils/FormComponent';
+import { answerValidator } from '../../helpers/validators';
+import FormComponent from '../../helpers/FormComponent';
 
 class Form extends FormComponent {
 

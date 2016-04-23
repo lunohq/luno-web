@@ -13,10 +13,10 @@ import morgan from 'morgan';
 import { HTTPS as enforceHttps } from 'express-sslify';
 
 import webpackConfig from '../webpack.config';
-import requireUncached from './utils/requireUncached';
+import requireUncached from './helpers/requireUncached';
 import config from './config/environment';
 import schema from './data/schema';
-import updateSchema from './utils/updateSchema';
+import updateSchema from './helpers/updateSchema';
 import auth from './middleware/auth';
 
 let graphQLServer;
