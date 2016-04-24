@@ -8,69 +8,21 @@ import RaisedButton from 'material-ui/RaisedButton';
 import CreateAnswerMutation from '../../mutations/CreateAnswerMutation';
 import DeleteAnswerMutation from '../../mutations/DeleteAnswerMutation';
 import UpdateAnswerMutation from '../../mutations/UpdateAnswerMutation';
+import t from '../../utils/gettext';
 
 import DocumentTitle from '../DocumentTitle';
 import Divider from '../Divider';
 
 import AnswersTable from './AnswersTable';
-import Form from './Form';
+import CreateEditDialog from './CreateEditDialog';
+import DeleteDialog from './DeleteDialog';
 import './style.scss';
-
-const AddAnswer = ({ handleAddAnswer, label }) => (
-  <RaisedButton
-    label={label}
-    onTouchTap={handleAddAnswer}
-    primary
-  />
-);
-
-AddAnswer.propTypes = {
-  handleAddAnswer: PropTypes.func.isRequired,
-  label: PropTypes.string.isRequired,
-};
-
-const DeleteDialog = ({ answer, open, onClose, onSubmit }) => {
-  const actions = [
-    <FlatButton
-      label='Cancel'
-      secondary
-      onClick={onClose}
-    />,
-    <FlatButton
-      label='Yes'
-      primary
-      onClick={onSubmit}
-    />,
-  ];
-
-  const answerTitle = answer ? answer.title : 'answer';
-  return (
-    <Dialog
-      title='Confirm delete answer?'
-      actions={actions}
-      modal={false}
-      open={open}
-      onRequestClose={onClose}
-    >
-      <div style={{ fontSize: '1.4rem' }}>
-        {`Are you sure you want to delete "${answerTitle}"? This action cannot be undone.`}
-      </div>
-    </Dialog>
-  );
-};
-
-DeleteDialog.propTypes = {
-  answer: PropTypes.object,
-  open: PropTypes.bool,
-  onClose: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func.isRequired,
-};
 
 const EmptyState = ({ handleAddAnswer }) => (
   <div className='row-xs middle-xs center-xs empty-state'>
     <h3>Add your first smart answer</h3>
     <AddAnswer
-      label='Add smart answer'
+      label={t('Add smart answer')}
       handleAddAnswer={handleAddAnswer}
     />
   </div>
@@ -143,7 +95,7 @@ class Answers extends Component {
     });
   }
 
-  handleSubmitAnswer = ({ title, body }, answer) => {
+  handleSubmitAnswer = ({ answer, title, body }) => {
     const bot = this.getBot();
     let mutation;
     if (!answer) {
@@ -164,50 +116,49 @@ class Answers extends Component {
     this.hideForm();
   }
 
-  renderAddAnswer() {
+  render() {
+    let addAnswer;
     if (this.hasAnswers()) {
-      return (<AddAnswer
-        label='Add'
-        handleAddAnswer={this.handleAddAnswer}
-      />);
+      addAnswer = (
+        <RaisedButton
+          label={t('Add')}
+          onTouchTap={this.handleAddAnswer}
+          primary
+        />
+      );
     }
 
-    return <span />;
-  }
-
-  renderContent() {
+    let content;
     const bot = this.getBot();
     if (this.hasAnswers()) {
-      return (
+      content = (
         <AnswersTable
           bot={bot}
           handleDelete={this.showDeleteDialog}
           handleEdit={this.handleEditAnswer}
         />
       );
+    } else {
+      content = <EmptyState handleAddAnswer={this.handleAddAnswer} />;
     }
 
-    return <EmptyState handleAddAnswer={this.handleAddAnswer} />;
-  }
-
-  render() {
     return (
-      <DocumentTitle title='Smart answers'>
+      <DocumentTitle title={t('Smart answers')}>
         <div className='smart-answers-container'>
           <div className='col-xs content-body'>
           <div className='section-title'>
               <div className='row between-xs middle-xs no-margin'>
-                <h1>Smart answers</h1>
-                {this.renderAddAnswer()}
+                <h1>{t('Smart answers')}</h1>
+                {addAnswer}
               </div>
               <Divider />
               <p>
-                  Use smart answers to scale yourself and answer common questions. Your Luno Bot will search these smart answers and intelligently reply in any channel that its added to.
+                {t('Use smart answers to scale yourself and answer common questions. Your Luno Bot will search these smart answers and intelligently reply in any channel that its added to.')}
               </p>
             </div>
-            {this.renderContent()}
+            {content}
           </div>
-          <Form
+          <CreateEditDialog
             answer={this.state.answerToBeEdited}
             onClose={this.hideForm}
             onSubmit={this.handleSubmitAnswer}
