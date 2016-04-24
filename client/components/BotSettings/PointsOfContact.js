@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import { TextField } from 'material-ui'
 
+import t from '../../utils/gettext';
 import Divider from '../Divider'
 
 class PointsOfContact extends Component {
@@ -27,7 +28,7 @@ class PointsOfContact extends Component {
     const contacts = values.split(',')
     // Remove spaces and add an explicit @ before each one
     let cleanedContacts = contacts.map(contact => {
-      return `@${contact.trim().replace(/@|\s/g, '')}`
+      return contact.trim().replace(/@|\s/g, '')
     })
 
     cleanedContacts = cleanedContacts.filter(contact => contact.length)
@@ -48,17 +49,16 @@ class PointsOfContact extends Component {
       <div className='bot-settings-section'>
         <div className='section-title'>
           <div className='row between-xs middle-xs no-margin'>
-            <h1>Points of contact</h1>
+            <h1>{t('Points of contact')}</h1>
           </div>
           <Divider />
           <p>
-              To avoid a frustrating “phone tree / OPERATOR!!!” experience, whenever your Luno Bot can’t provide a great answer, it will immediately escalate the question to real humans.
+              {t('To avoid a frustrating phone tree OPERATOR!!! experience, whenever your Lunobot can’t provide a great answer, it will immediately escalate the question to real people.')}
           </p>
         </div>
         <div className='section-body'>
           <TextField
-            floatingLabelText='Points of contact'
-            hintText='@username'
+            hintText={t('@username')}
             defaultValue={bot.pointsOfContact.join(', ')}
             multiLine={false}
             onBlur={this.onBlur}
@@ -68,7 +68,7 @@ class PointsOfContact extends Component {
             style={{ width: '80%' }}
             value={validContacts}
           />
-          <div className='hint-text'>Add Slack usernames of people who should be mentioned when escalating. E.g., @ravi, @allen, @michael</div>
+          <div className='hint-text'>{t('Add Slack usernames of people who should be mentioned when escalating.')}</div>
         </div>
       </div>
     )

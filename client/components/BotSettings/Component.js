@@ -3,6 +3,7 @@ import Relay from 'react-relay'
 import { Snackbar } from 'material-ui'
 
 import UpdateBotMutation from '../../mutations/UpdateBotMutation'
+import t from '../../utils/gettext';
 
 import DocumentTitle from '../DocumentTitle'
 
@@ -68,7 +69,7 @@ class BotSettings extends Component {
 
   render() {
     return (
-      <DocumentTitle title='Bot settings'>
+      <DocumentTitle title={t('Bot settings')}>
         <div className='smart-answers-container'>
           <div className='col-xs content-body'>
             <Expertise
