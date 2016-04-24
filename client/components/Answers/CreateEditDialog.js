@@ -5,7 +5,7 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 
 import t from '../../utils/gettext';
-import Form, { FORM_NAME } from './FormV2';
+import Form, { FORM_NAME } from './Form';
 
 class CreateEditDialog extends Component {
 
@@ -63,9 +63,16 @@ class CreateEditDialog extends Component {
       />,
     ];
 
+    let title;
+    if (answer) {
+      title = t('Edit answer');
+    } else {
+      title = t('Add an answer');
+    }
+
     return (
       <Dialog
-        title={t('Add an answer')}
+        title={title}
         actions={actions}
         modal={false}
         open={open}
