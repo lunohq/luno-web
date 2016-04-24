@@ -1,7 +1,7 @@
-import React, { Component, PropTypes } from 'react';
-import { TextField } from 'material-ui';
+import React, { Component, PropTypes } from 'react'
+import { TextField } from 'material-ui'
 
-import Divider from '../Divider';
+import Divider from '../Divider'
 
 class PointsOfContact extends Component {
 
@@ -9,40 +9,40 @@ class PointsOfContact extends Component {
     contacts: undefined,
   }
 
-  onBlur = (event) => this.saveContacts(event);
+  onBlur = (event) => this.saveContacts(event)
 
   onChange = (event) => {
     this.setState({
       contacts: this.getValidContacts(event.target.value)
-    });
+    })
   }
 
   onKeyDown = (event) => {
     if (event.keyCode === 13) {
-      this.saveContacts(event);
+      this.saveContacts(event)
     }
   }
 
   getValidContacts(values) {
-    const contacts = values.split(',');
+    const contacts = values.split(',')
     // Remove spaces and add an explicit @ before each one
     let cleanedContacts = contacts.map(contact => {
-      return `@${contact.trim().replace(/@|\s/g, '')}`;
-    });
+      return `@${contact.trim().replace(/@|\s/g, '')}`
+    })
 
-    cleanedContacts = cleanedContacts.filter(contact => contact.length);
-    return cleanedContacts;
+    cleanedContacts = cleanedContacts.filter(contact => contact.length)
+    return cleanedContacts
   }
 
   saveContacts(event) {
-    const contacts = this.getValidContacts(event.target.value);
-    const { onSave } = this.props;
-    onSave(contacts);
+    const contacts = this.getValidContacts(event.target.value)
+    const { onSave } = this.props
+    onSave(contacts)
   }
 
   render() {
-    const { bot } = this.props;
-    const validContacts = this.state.contacts ? this.state.contacts.join(', ') : undefined;
+    const { bot } = this.props
+    const validContacts = this.state.contacts ? this.state.contacts.join(', ') : undefined
 
     return (
       <div className='bot-settings-section'>
@@ -71,13 +71,13 @@ class PointsOfContact extends Component {
           <div className='hint-text'>Add Slack usernames of people who should be mentioned when escalating. E.g., @ravi, @allen, @michael</div>
         </div>
       </div>
-    );
+    )
   }
 }
 
 PointsOfContact.propTypes = {
   bot: PropTypes.object.isRequired,
   onSave: PropTypes.func.isRequired,
-};
+}
 
-export default PointsOfContact;
+export default PointsOfContact

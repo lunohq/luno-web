@@ -1,20 +1,20 @@
-import React, { Component, PropTypes } from 'react';
-import Relay from 'react-relay';
+import React, { Component, PropTypes } from 'react'
+import Relay from 'react-relay'
 
-import RaisedButton from 'material-ui/RaisedButton';
+import RaisedButton from 'material-ui/RaisedButton'
 
-import CreateAnswerMutation from '../../mutations/CreateAnswerMutation';
-import DeleteAnswerMutation from '../../mutations/DeleteAnswerMutation';
-import UpdateAnswerMutation from '../../mutations/UpdateAnswerMutation';
-import t from '../../utils/gettext';
+import CreateAnswerMutation from '../../mutations/CreateAnswerMutation'
+import DeleteAnswerMutation from '../../mutations/DeleteAnswerMutation'
+import UpdateAnswerMutation from '../../mutations/UpdateAnswerMutation'
+import t from '../../utils/gettext'
 
-import DocumentTitle from '../DocumentTitle';
-import Divider from '../Divider';
+import DocumentTitle from '../DocumentTitle'
+import Divider from '../Divider'
 
-import AnswersTable from './AnswersTable';
-import CreateEditDialog from './CreateEditDialog';
-import DeleteDialog from './DeleteDialog';
-import './style.scss';
+import AnswersTable from './AnswersTable'
+import CreateEditDialog from './CreateEditDialog'
+import DeleteDialog from './DeleteDialog'
+import './style.scss'
 
 const AddAnswer = ({ label, onAddAnswer }) => {
   return (
@@ -23,13 +23,13 @@ const AddAnswer = ({ label, onAddAnswer }) => {
       onTouchTap={onAddAnswer}
       primary
     />
-  );
-};
+  )
+}
 
 AddAnswer.propTypes = {
   label: PropTypes.string.isRequired,
   onAddAnswer: PropTypes.func,
-};
+}
 
 const EmptyState = ({ onAddAnswer }) => (
   <div className='row-xs middle-xs center-xs empty-state'>
@@ -39,11 +39,11 @@ const EmptyState = ({ onAddAnswer }) => (
       onAddAnswer={onAddAnswer}
     />
   </div>
-);
+)
 
 EmptyState.propTypes = {
   onAddAnswer: PropTypes.func.isRequired,
-};
+}
 
 class Answers extends Component {
   state = {
@@ -54,89 +54,89 @@ class Answers extends Component {
   }
 
   getBot() {
-    const { viewer: { bots } } = this.props;
-    return bots.edges[0].node;
+    const { viewer: { bots } } = this.props
+    return bots.edges[0].node
   }
 
   hasAnswers() {
-    const bot = this.getBot();
-    return !!bot.answers.edges.length;
+    const bot = this.getBot()
+    return !!bot.answers.edges.length
   }
 
   displayForm = () => {
-    this.setState({ open: true });
+    this.setState({ open: true })
   }
 
   hideForm = () => {
-    this.setState({ open: false, answerToBeEdited: null });
+    this.setState({ open: false, answerToBeEdited: null })
   }
 
   handleAddAnswer = () => {
-    this.setState({ answerToBeEdited: null }, () => this.displayForm());
+    this.setState({ answerToBeEdited: null }, () => this.displayForm())
   }
 
   handleEditAnswer = (answer) => {
-    this.setState({ answerToBeEdited: answer }, () => this.displayForm());
+    this.setState({ answerToBeEdited: answer }, () => this.displayForm())
   }
 
   handleDeleteAnswer = () => {
-    const answer = this.state.answerToBeDeleted;
+    const answer = this.state.answerToBeDeleted
     if (answer) {
-      const bot = this.getBot();
+      const bot = this.getBot()
       Relay.Store.commitUpdate(
         new DeleteAnswerMutation({
           answer,
           bot,
         })
-      );
+      )
     }
 
-    this.hideDeleteDialog();
+    this.hideDeleteDialog()
   }
 
   showDeleteDialog = (answer) => {
     this.setState({
       showDeleteDialog: true,
       answerToBeDeleted: answer,
-    });
+    })
   }
 
   hideDeleteDialog = () => {
     this.setState({
       showDeleteDialog: false,
       answerToBeDeleted: null,
-    });
+    })
   }
 
   handleSubmitAnswer = ({ answer, title, body }) => {
-    const bot = this.getBot();
-    let mutation;
+    const bot = this.getBot()
+    let mutation
     if (!answer) {
       mutation = new CreateAnswerMutation({
         title,
         body,
         bot,
-      });
+      })
     } else {
       mutation = new UpdateAnswerMutation({
         answer,
         title,
         body,
-      });
+      })
     }
 
-    Relay.Store.commitUpdate(mutation);
-    this.hideForm();
+    Relay.Store.commitUpdate(mutation)
+    this.hideForm()
   }
 
   render() {
-    let addAnswer;
+    let addAnswer
     if (this.hasAnswers()) {
-      addAnswer = <AddAnswer label={t('Add')} onAddAnswer={this.handleAddAnswer} />;
+      addAnswer = <AddAnswer label={t('Add')} onAddAnswer={this.handleAddAnswer} />
     }
 
-    let content;
-    const bot = this.getBot();
+    let content
+    const bot = this.getBot()
     if (this.hasAnswers()) {
       content = (
         <AnswersTable
@@ -144,9 +144,9 @@ class Answers extends Component {
           handleDelete={this.showDeleteDialog}
           handleEdit={this.handleEditAnswer}
         />
-      );
+      )
     } else {
-      content = <EmptyState onAddAnswer={this.handleAddAnswer} />;
+      content = <EmptyState onAddAnswer={this.handleAddAnswer} />
     }
 
     return (
@@ -179,12 +179,12 @@ class Answers extends Component {
           />
         </div>
       </DocumentTitle>
-    );
+    )
   }
 }
 
 Answers.propTypes = {
   viewer: PropTypes.object.isRequired,
-};
+}
 
-export default Answers;
+export default Answers

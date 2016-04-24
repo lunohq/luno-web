@@ -1,26 +1,26 @@
 /* eslint-disable no-console, no-shadow */
-import path from 'path';
-import webpack from 'webpack';
-import express from 'express';
-import graphQLHTTP from 'express-graphql';
-import WebpackDevServer from 'webpack-dev-server';
-import historyApiFallback from 'connect-history-api-fallback';
-import gaze from 'gaze';
-import chalk from 'chalk';
-import Botkit from 'botkit';
-import { botkit as bk, events } from 'luno-core';
-import morgan from 'morgan';
-import { HTTPS as enforceHttps } from 'express-sslify';
+import path from 'path'
+import webpack from 'webpack'
+import express from 'express'
+import graphQLHTTP from 'express-graphql'
+import WebpackDevServer from 'webpack-dev-server'
+import historyApiFallback from 'connect-history-api-fallback'
+import gaze from 'gaze'
+import chalk from 'chalk'
+import Botkit from 'botkit'
+import { botkit as bk, events } from 'luno-core'
+import morgan from 'morgan'
+import { HTTPS as enforceHttps } from 'express-sslify'
 
-import webpackConfig from '../webpack.config';
-import requireUncached from './utils/requireUncached';
-import config from './config/environment';
-import schema from './data/schema';
-import updateSchema from './utils/updateSchema';
-import auth from './middleware/auth';
+import webpackConfig from '../webpack.config'
+import requireUncached from './utils/requireUncached'
+import config from './config/environment'
+import schema from './data/schema'
+import updateSchema from './utils/updateSchema'
+import auth from './middleware/auth'
 
-let graphQLServer;
-let relayServer;
+let graphQLServer
+let relayServer
 
 const botkit = Botkit.slackbot({
   storage: bk.storage,
@@ -28,19 +28,19 @@ const botkit = Botkit.slackbot({
   clientId: config.slack.clientId,
   clientSecret: config.slack.clientSecret,
   scopes: ['bot'],
-});
+})
 
 botkit.on('create_bot', (bot) => {
   try {
-    events.publish.createBot(bot.config.id);
+    events.publish.createBot(bot.config.id)
   } catch (err) {
-    console.error('FAILURE TO PUBLISH:', err);
+    console.error('FAILURE TO PUBLISH:', err)
   }
-});
+})
 
 function startGraphQLServer(schema) {
-  const graphql = express();
-  auth(graphql);
+  const graphql = express()
+  auth(graphql)
   graphql.use('/', graphQLHTTP(request => {
     return {
       graphiql: true,
@@ -48,12 +48,12 @@ function startGraphQLServer(schema) {
       context: { auth: request.auth },
       rootValue: request.auth,
       schema,
-    };
-  }));
+    }
+  }))
   graphQLServer = graphql.listen(
     config.graphql.port,
     () => console.log(chalk.green(`GraphQL is listening on port ${config.graphql.port}`)),
-  );
+  )
 }
 
 function startRelayServer() {
@@ -76,58 +76,58 @@ function startRelayServer() {
         { from: /\/oauth/, to: '/oauth' },
       ],
     },
-  });
+  })
 
-  relayServer.use(morgan('short'));
-  auth(relayServer.app, botkit);
+  relayServer.use(morgan('short'))
+  auth(relayServer.app, botkit)
   // Serve static resources
-  relayServer.use('/', express.static(path.join(__dirname, '../build')));
+  relayServer.use('/', express.static(path.join(__dirname, '../build')))
 
   relayServer.listen(config.port, () => {
-    console.log(chalk.green(`Relay is listening on port ${config.port}`));
-  });
+    console.log(chalk.green(`Relay is listening on port ${config.port}`))
+  })
 }
 
 if (config.env === 'development') {
   // Start GraphQL and Relay servers
-  startGraphQLServer(schema);
-  startRelayServer();
+  startGraphQLServer(schema)
+  startRelayServer()
 
   // Watch JavaScript files in the data folder for changes, and update schema.json and schema.graphql
   gaze(path.join(__dirname, 'data/*.js'), (err, watcher) => {
-    if (err) console.error(chalk.red('Error: Watching files in data folder'));
+    if (err) console.error(chalk.red('Error: Watching files in data folder'))
     watcher.on('all', async () => {
       try {
         // Close the GraphQL server, update the schema.json and schema.graphql, and start the server again
-        graphQLServer.close();
-        await updateSchema();
-        const newSchema = requireUncached(path.join(__dirname, './data/schema')).default;
-        startGraphQLServer(newSchema);
+        graphQLServer.close()
+        await updateSchema()
+        const newSchema = requireUncached(path.join(__dirname, './data/schema')).default
+        startGraphQLServer(newSchema)
 
         // Close the Relay server, and start it again
-        relayServer.listeningApp.close();
-        startRelayServer();
+        relayServer.listeningApp.close()
+        startRelayServer()
       } catch (e) {
-        console.error(chalk.red(e.stack));
+        console.error(chalk.red(e.stack))
       }
-    });
-  });
+    })
+  })
 } else if (config.env === 'production') {
   // Launch Relay by creating a normal express server
-  relayServer = express();
+  relayServer = express()
 
   if (config.ssl) {
-    relayServer.use(enforceHttps({ trustProtoHeader: true }));
+    relayServer.use(enforceHttps({ trustProtoHeader: true }))
   }
 
-  relayServer.use(morgan('short'));
-  auth(relayServer, botkit);
-  relayServer.use(historyApiFallback());
-  relayServer.use('/', express.static(path.join(__dirname, '../build')));
+  relayServer.use(morgan('short'))
+  auth(relayServer, botkit)
+  relayServer.use(historyApiFallback())
+  relayServer.use('/', express.static(path.join(__dirname, '../build')))
   relayServer.use('/graphql', graphQLHTTP(request => ({
     schema,
     context: { auth: request.auth },
     rootValue: request.auth,
-  })));
-  relayServer.listen(config.port, () => console.log(chalk.green(`Relay is listening on port ${config.port}`)));
+  })))
+  relayServer.listen(config.port, () => console.log(chalk.green(`Relay is listening on port ${config.port}`)))
 }

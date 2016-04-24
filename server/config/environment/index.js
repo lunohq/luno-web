@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from 'lodash'
 
 const config = {
   env: process.env.NODE_ENV || 'development',
@@ -19,6 +19,6 @@ const config = {
     clientSecret: process.env.SLACK_CLIENT_SECRET,
   },
   ssl: process.env.FORCE_SSL || false,
-};
+}
 
-export default _.merge(config, require(`./${config.env}`).default);
+export default _.merge(config, require(`./${config.env}`).default)

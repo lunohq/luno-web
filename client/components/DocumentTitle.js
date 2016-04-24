@@ -1,5 +1,5 @@
-import { default as ReactDocumentTitle } from 'react-document-title';
-import React, { Component, PropTypes } from 'react';
+import { default as ReactDocumentTitle } from 'react-document-title'
+import React, { Component, PropTypes } from 'react'
 
 class DocumentTitle extends Component {
 
@@ -13,32 +13,32 @@ class DocumentTitle extends Component {
   }
 
   static rewind() {
-    return ReactDocumentTitle.rewind();
+    return ReactDocumentTitle.rewind()
   }
 
   getAppName() {
-    const suffix = '';
+    const suffix = ''
     // if (__LOCAL__) {
-    //   suffix = 'Local';
+    //   suffix = 'Local'
     // } else if (__DEVELOPMENT__) {
-    //   suffix = 'Dev';
+    //   suffix = 'Dev'
     // }
 
-    return `Luno ${suffix}`;
+    return `Luno ${suffix}`
   }
 
   getTitle() {
-    const { title } = this.props;
+    const { title } = this.props
 
-    return (title ? `${title}  \u2013  ` : '') + this.getAppName();
+    return (title ? `${title}  \u2013  ` : '') + this.getAppName()
   }
 
   renderChildren() {
     if (this.props.children) {
-      return React.Children.only(this.props.children);
+      return React.Children.only(this.props.children)
     }
 
-    return null;
+    return null
   }
 
   render() {
@@ -46,9 +46,9 @@ class DocumentTitle extends Component {
       <ReactDocumentTitle title={this.getTitle()}>
         {this.renderChildren()}
       </ReactDocumentTitle>
-    );
+    )
   }
 
 }
 
-export default DocumentTitle;
+export default DocumentTitle

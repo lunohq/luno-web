@@ -1,8 +1,8 @@
-import React from 'react';
+import React from 'react'
 
-import DocumentTitle from '../DocumentTitle';
+import DocumentTitle from '../DocumentTitle'
 
-import './style.scss';
+import './style.scss'
 
 const AnonymousLanding = () => (
   <DocumentTitle title='Helpdesk bot for Slack teams'>
@@ -107,10 +107,10 @@ const AnonymousLanding = () => (
       </div>
       <div className='container'>
         <hr />
-        <p className='centered'>Handcrafted with ❤ in San Francisco. &copy; Luno {(new Date()).getFullYear()}</p>
+        <p className='centered'>Handcrafted with ❤ in San Francisco. &copy Luno {(new Date()).getFullYear()}</p>
       </div>
     </div>
   </DocumentTitle>
-);
+)
 
-export default AnonymousLanding;
+export default AnonymousLanding

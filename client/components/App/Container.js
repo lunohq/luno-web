@@ -1,8 +1,8 @@
-import Relay from 'react-relay';
+import Relay from 'react-relay'
 
-import AppComponent from './Component';
+import AppComponent from './Component'
 
-import LogoutMutation from '../../mutations/LogoutMutation';
+import LogoutMutation from '../../mutations/LogoutMutation'
 
 export default Relay.createContainer(AppComponent, {
   fragments: {
@@ -14,4 +14,4 @@ export default Relay.createContainer(AppComponent, {
       }
     `
   }
-});
+})

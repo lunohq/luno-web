@@ -1,11 +1,11 @@
-import FlatButton from 'material-ui/lib/flat-button';
-import React from 'react';
-import Table from 'material-ui/lib/table/table';
-import TableBody from 'material-ui/lib/table/table-body';
-import TableHeader from 'material-ui/lib/table/table-header';
-import TableHeaderColumn from 'material-ui/lib/table/table-header-column';
-import TableRow from 'material-ui/lib/table/table-row';
-import TableRowColumn from 'material-ui/lib/table/table-row-column';
+import FlatButton from 'material-ui/lib/flat-button'
+import React from 'react'
+import Table from 'material-ui/lib/table/table'
+import TableBody from 'material-ui/lib/table/table-body'
+import TableHeader from 'material-ui/lib/table/table-header'
+import TableHeaderColumn from 'material-ui/lib/table/table-header-column'
+import TableRow from 'material-ui/lib/table/table-row'
+import TableRowColumn from 'material-ui/lib/table/table-row-column'
 
 export default class MessageLog extends React.Component {
   render() {
@@ -66,6 +66,6 @@ export default class MessageLog extends React.Component {
               </Table>
         </div>
       </div>
-    );
+    )
   }
 }

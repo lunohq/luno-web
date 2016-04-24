@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React, { PropTypes } from 'react'
 
 const QuestionAnswerIcon = ({ height, stroke, strokeWidth, width, ...other }) => (
   <svg width={width} height={height} viewBox='0 0 48 48' {...other}>
@@ -8,20 +8,20 @@ const QuestionAnswerIcon = ({ height, stroke, strokeWidth, width, ...other }) =>
       strokeWidth={strokeWidth}
     />
   </svg>
-);
+)
 
 QuestionAnswerIcon.propTypes = {
   height: PropTypes.number,
   stroke: PropTypes.string,
   strokeWidth: PropTypes.number,
   width: PropTypes.number,
-};
+}
 
 QuestionAnswerIcon.defaultProps = {
   height: 26,
   stroke: '#FFF',
   strokeWidth: 1,
   width: 26,
-};
+}
 
-export default QuestionAnswerIcon;
+export default QuestionAnswerIcon

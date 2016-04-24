@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React, { PropTypes } from 'react'
 
 const MessagesIcon = ({ height, stroke, strokeWidth, width, ...other }) => (
   <svg width={width} height={height} viewBox='0 0 48 48' {...other}>
@@ -8,20 +8,20 @@ const MessagesIcon = ({ height, stroke, strokeWidth, width, ...other }) => (
       strokeWidth={strokeWidth}
     />
   </svg>
-);
+)
 
 MessagesIcon.propTypes = {
   height: PropTypes.number,
   stroke: PropTypes.string,
   strokeWidth: PropTypes.number,
   width: PropTypes.number,
-};
+}
 
 MessagesIcon.defaultProps = {
   height: 26,
   stroke: '#FFF',
   strokeWidth: 1,
   width: 26,
-};
+}
 
-export default MessagesIcon;
+export default MessagesIcon

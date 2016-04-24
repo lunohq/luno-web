@@ -1,53 +1,53 @@
 class FormField {
 
   constructor(fieldKey, onValueChange, onFieldBlur) {
-    this.fieldKey = fieldKey;
-    this.value = undefined;
-    this.defaultValue = '';
-    this.touched = false;
-    this.errorText = '';
-    this.onValueChange = onValueChange;
-    this.onFieldBlur = onFieldBlur;
+    this.fieldKey = fieldKey
+    this.value = undefined
+    this.defaultValue = ''
+    this.touched = false
+    this.errorText = ''
+    this.onValueChange = onValueChange
+    this.onFieldBlur = onFieldBlur
   }
 
   setDefaultValue(defaultValue) {
-    this.defaultValue = defaultValue;
+    this.defaultValue = defaultValue
   }
 
   setValue(value) {
-    this.value = value;
+    this.value = value
   }
 
   setError(errorText) {
-    this.errorText = errorText;
+    this.errorText = errorText
   }
 
   resetError() {
-    this.errorText = '';
+    this.errorText = ''
   }
 
   getDefaultValue() {
-    return this.defaultValue;
+    return this.defaultValue
   }
 
   getValue() {
     if (!this.touched || this.value === undefined) {
-      return this.defaultValue;
+      return this.defaultValue
     }
 
-    return this.value;
+    return this.value
   }
 
   onChange = (event) => {
-    this.touched = true;
-    this.value = event.target.value;
-    this.onValueChange(this.fieldKey, this.value);
+    this.touched = true
+    this.value = event.target.value
+    this.onValueChange(this.fieldKey, this.value)
   }
 
   onBlur = () => {
-    this.touched = true;
+    this.touched = true
     if (this.onFieldBlur) {
-      this.onFieldBlur(this.fieldKey, this.value);
+      this.onFieldBlur(this.fieldKey, this.value)
     }
   }
 
@@ -59,15 +59,15 @@ class FormField {
       touched: this.touched,
       value: this.value,
       errorText: this.errorText,
-    };
+    }
   }
 
   reset() {
-    this.defaultValue = '';
-    this.value = undefined;
-    this.errorText = '';
-    this.touched = false;
+    this.defaultValue = ''
+    this.value = undefined
+    this.errorText = ''
+    this.touched = false
   }
 }
 
-export default FormField;
+export default FormField

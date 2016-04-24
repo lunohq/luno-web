@@ -1,6 +1,6 @@
-import { Component, PropTypes } from 'react';
+import { Component, PropTypes } from 'react'
 
-import FormField from './FormField';
+import FormField from './FormField'
 
 class FormComponent extends Component {
 
@@ -14,98 +14,98 @@ class FormComponent extends Component {
   }
 
   componentWillMount() {
-    const { fields } = this.props;
+    const { fields } = this.props
     for (const field of fields) {
       this.formFields[field] = new FormField(field, () => this.fillFormState(), () => {
-        this.fillFormState();
-        this.validate(true);
-      });
+        this.fillFormState()
+        this.validate(true)
+      })
     }
 
-    this.fillFormState();
+    this.fillFormState()
   }
 
   componentWillReceiveProps() {
-    this.fillFormState();
+    this.fillFormState()
   }
 
   getValue(field) {
     if (field && this.formFields[field]) {
-      return this.formFields[field].getValue();
+      return this.formFields[field].getValue()
     }
 
-    return null;
+    return null
   }
 
   initializeWithValues(fieldNameValuesObject) {
     for (const field in fieldNameValuesObject) {
-      this.formFields[field].setDefaultValue(fieldNameValuesObject[field]);
+      this.formFields[field].setDefaultValue(fieldNameValuesObject[field])
     }
 
-    this.fillFormState();
+    this.fillFormState()
   }
 
   validate(showErrorForTouchedFields) {
-    const { fields, validate } = this.props;
+    const { fields, validate } = this.props
 
     if (validate) {
-      const errorsObject = validate(this.state._values);
+      const errorsObject = validate(this.state._values)
 
       if (errorsObject && Object.keys(errorsObject).length) {
         for (const field of fields) {
-          this.formFields[field].resetError();
+          this.formFields[field].resetError()
           if (errorsObject[field] &&
               (!showErrorForTouchedFields || (showErrorForTouchedFields && this.formFields[field].touched))
           ) {
-            this.formFields[field].setError(errorsObject[field]);
+            this.formFields[field].setError(errorsObject[field])
           }
         }
 
-        this.fillFormState();
-        return false;
+        this.fillFormState()
+        return false
       }
 
-      this.resetErrors();
+      this.resetErrors()
     }
 
-    return true;
+    return true
   }
 
   isFormValid() {
-    return this.validate(false);
+    return this.validate(false)
   }
 
   resetErrors() {
-    const { fields } = this.props;
-    fields.map(field => this.formFields[field].resetError());
-    this.fillFormState();
+    const { fields } = this.props
+    fields.map(field => this.formFields[field].resetError())
+    this.fillFormState()
   }
 
   formFields = {}
 
   fillFormState() {
-    const stateObject = {};
-    const valuesObject = {};
-    const { fields } = this.props;
+    const stateObject = {}
+    const valuesObject = {}
+    const { fields } = this.props
 
     for (const field of fields) {
-      stateObject[field] = this.formFields[field].getProperties();
-      valuesObject[field] = this.formFields[field].getValue();
+      stateObject[field] = this.formFields[field].getProperties()
+      valuesObject[field] = this.formFields[field].getValue()
     }
 
-    stateObject._values = valuesObject;
-    this.setState(stateObject);
+    stateObject._values = valuesObject
+    this.setState(stateObject)
   }
 
   resetFormState() {
-    const { fields } = this.props;
+    const { fields } = this.props
 
     for (const field of fields) {
-      this.formFields[field].reset();
+      this.formFields[field].reset()
     }
 
-    this.fillFormState();
+    this.fillFormState()
   }
 }
 
-export default FormComponent;
+export default FormComponent

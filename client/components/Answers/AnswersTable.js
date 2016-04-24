@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React, { PropTypes } from 'react'
 
 import {
   Table,
@@ -6,9 +6,9 @@ import {
   TableHeader,
   TableHeaderColumn,
   TableRow,
-} from 'material-ui';
+} from 'material-ui'
 
-import AnswerRow from './AnswerRow';
+import AnswerRow from './AnswerRow'
 
 const AnswersTable = ({ bot, handleDelete, handleEdit }) => {
   const answerRows = bot.answers.edges.map(({ node }, index) => <AnswerRow
@@ -16,7 +16,7 @@ const AnswersTable = ({ bot, handleDelete, handleEdit }) => {
     handleDelete={handleDelete}
     handleEdit={handleEdit}
     key={index}
-  />);
+  />)
   return (
     <Table
       selectable={false}
@@ -39,13 +39,13 @@ const AnswersTable = ({ bot, handleDelete, handleEdit }) => {
         {answerRows}
       </TableBody>
     </Table>
-  );
-};
+  )
+}
 
 AnswersTable.propTypes = {
   bot: PropTypes.object.isRequired,
   handleDelete: PropTypes.func.isRequired,
   handleEdit: PropTypes.func.isRequired,
-};
+}
 
-export default AnswersTable;
+export default AnswersTable

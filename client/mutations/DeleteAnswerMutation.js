@@ -1,4 +1,4 @@
-import Relay from 'react-relay';
+import Relay from 'react-relay'
 
 export default class DeleteAnswerMutation extends Relay.Mutation {
   static fragments = {
@@ -7,10 +7,10 @@ export default class DeleteAnswerMutation extends Relay.Mutation {
         id
       }
     `,
-  };
+  }
 
   getMutation() {
-    return Relay.QL`mutation { deleteAnswer }`;
+    return Relay.QL`mutation { deleteAnswer }`
   }
 
   getFatQuery() {
@@ -19,7 +19,7 @@ export default class DeleteAnswerMutation extends Relay.Mutation {
         deletedId
         bot { answers }
       }
-    `;
+    `
   }
 
   getConfigs() {
@@ -29,21 +29,21 @@ export default class DeleteAnswerMutation extends Relay.Mutation {
       parentID: this.props.bot.id,
       connectionName: 'answers',
       deletedIDFieldName: 'deletedId',
-    }];
+    }]
   }
 
   getVariables() {
-    const { answer: { id } } = this.props;
+    const { answer: { id } } = this.props
     return {
       id,
-    };
+    }
   }
 
   getOptimisticResponse() {
-    const { answer: { id } } = this.props;
+    const { answer: { id } } = this.props
     return {
       deletedId: id,
-    };
+    }
   }
 
 }

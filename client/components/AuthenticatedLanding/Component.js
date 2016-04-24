@@ -1,8 +1,8 @@
-import React, { PropTypes } from 'react';
+import React, { PropTypes } from 'react'
 
-import Navigation from './Navigation';
+import Navigation from './Navigation'
 
-import './style.scss';
+import './style.scss'
 
 const AuthenticatedLanding = ({ children, onLogout }) => (
   <div className='app'>
@@ -13,11 +13,11 @@ const AuthenticatedLanding = ({ children, onLogout }) => (
       </main>
     </section>
   </div>
-);
+)
 
 AuthenticatedLanding.propTypes = {
   children: PropTypes.node,
   onLogout: PropTypes.func,
-};
+}
 
-export default AuthenticatedLanding;
+export default AuthenticatedLanding

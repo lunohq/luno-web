@@ -1,13 +1,13 @@
-import React, { PropTypes } from 'react';
+import React, { PropTypes } from 'react'
 
-import LogoutIcon from '../LogoutIcon';
-import QuestionAnswerIcon from '../QuestionAnswerIcon';
-import SettingsIcon from '../SettingsIcon';
+import LogoutIcon from '../LogoutIcon'
+import QuestionAnswerIcon from '../QuestionAnswerIcon'
+import SettingsIcon from '../SettingsIcon'
 
 const Navigation = ({ onLogout }) => {
   const isSelected = (path) => {
-    return window.location.pathname === path ? 'selected' : '';
-  };
+    return window.location.pathname === path ? 'selected' : ''
+  }
 
   return (
     <nav className='col left-nav between-xs'>
@@ -25,11 +25,11 @@ const Navigation = ({ onLogout }) => {
         </a>
       </div>
     </nav>
-  );
-};
+  )
+}
 
 Navigation.propTypes = {
   onLogout: PropTypes.func.isRequired,
-};
+}
 
-export default Navigation;
+export default Navigation

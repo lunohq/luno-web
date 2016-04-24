@@ -1,4 +1,4 @@
-import Relay from 'react-relay';
+import Relay from 'react-relay'
 
 export default class CreateAnswerMutation extends Relay.Mutation {
   static fragments = {
@@ -7,10 +7,10 @@ export default class CreateAnswerMutation extends Relay.Mutation {
         id
       }
     `,
-  };
+  }
 
   getMutation() {
-    return Relay.QL`mutation { createAnswer }`;
+    return Relay.QL`mutation { createAnswer }`
   }
 
   getFatQuery() {
@@ -19,7 +19,7 @@ export default class CreateAnswerMutation extends Relay.Mutation {
         bot { answers }
         answerEdge
       }
-    `;
+    `
   }
 
   getConfigs() {
@@ -32,20 +32,20 @@ export default class CreateAnswerMutation extends Relay.Mutation {
       rangeBehaviors: {
         '': 'prepend',
       },
-    }];
+    }]
   }
 
   getVariables() {
-    const { title, body, bot: { id: botId } } = this.props;
+    const { title, body, bot: { id: botId } } = this.props
     return {
       body,
       title,
       botId,
-    };
+    }
   }
 
   getOptimisticResponse() {
-    const { body, title } = this.props;
+    const { body, title } = this.props
     return {
       answerEdge: {
         node: {
@@ -53,7 +53,7 @@ export default class CreateAnswerMutation extends Relay.Mutation {
           title,
         },
       },
-    };
+    }
   }
 
 }

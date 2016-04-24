@@ -1,21 +1,21 @@
-import React from 'react';
-import { Field, reduxForm } from 'redux-form';
-import t from '../../utils/gettext';
+import React from 'react'
+import { Field, reduxForm } from 'redux-form'
+import t from '../../utils/gettext'
 
-import TextField from 'material-ui/TextField';
+import TextField from 'material-ui/TextField'
 
-export const FORM_NAME = 'form/answers/answer';
+export const FORM_NAME = 'form/answers/answer'
 
 const validate = values => {
-  const errors = {};
+  const errors = {}
   if (!values.title) {
-    errors.title = 'Required';
+    errors.title = 'Required'
   }
   if (!values.body) {
-    errors.body = 'Required';
+    errors.body = 'Required'
   }
-  return errors;
-};
+  return errors
+}
 
 const Form = () => {
   return (
@@ -43,10 +43,10 @@ const Form = () => {
         />
       </div>
     </form>
-  );
-};
+  )
+}
 
 export default reduxForm({
   form: FORM_NAME,
   validate,
-})(Form);
+})(Form)

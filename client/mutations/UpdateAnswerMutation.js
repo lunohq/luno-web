@@ -1,4 +1,4 @@
-import Relay from 'react-relay';
+import Relay from 'react-relay'
 
 export default class UpdateAnswerMutation extends Relay.Mutation {
   static fragments = {
@@ -7,10 +7,10 @@ export default class UpdateAnswerMutation extends Relay.Mutation {
         id
       }
     `,
-  };
+  }
 
   getMutation() {
-    return Relay.QL`mutation { updateAnswer }`;
+    return Relay.QL`mutation { updateAnswer }`
   }
 
   getFatQuery() {
@@ -18,7 +18,7 @@ export default class UpdateAnswerMutation extends Relay.Mutation {
       fragment on UpdateAnswerPayload {
         answer
       }
-    `;
+    `
   }
 
   getConfigs() {
@@ -27,27 +27,27 @@ export default class UpdateAnswerMutation extends Relay.Mutation {
       fieldIDs: {
         answer: this.props.answer.id,
       }
-    }];
+    }]
   }
 
   getVariables() {
-    const { answer: { id }, title, body } = this.props;
+    const { answer: { id }, title, body } = this.props
     return {
       body,
       id,
       title,
-    };
+    }
   }
 
   getOptimisticResponse() {
-    const { answer: { id }, title, body } = this.props;
+    const { answer: { id }, title, body } = this.props
     return {
       answer: {
         body,
         id,
         title,
       }
-    };
+    }
   }
 
 }

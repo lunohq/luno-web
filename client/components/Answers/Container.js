@@ -1,9 +1,9 @@
-import Relay from 'react-relay';
-import Component from './Component';
+import Relay from 'react-relay'
+import Component from './Component'
 
-import CreateAnswerMutation from '../../mutations/CreateAnswerMutation';
-import DeleteAnswerMutation from '../../mutations/DeleteAnswerMutation';
-import UpdateAnswerMutation from '../../mutations/UpdateAnswerMutation';
+import CreateAnswerMutation from '../../mutations/CreateAnswerMutation'
+import DeleteAnswerMutation from '../../mutations/DeleteAnswerMutation'
+import UpdateAnswerMutation from '../../mutations/UpdateAnswerMutation'
 
 export default Relay.createContainer(Component, {
   initialVariables: {
@@ -35,4 +35,4 @@ export default Relay.createContainer(Component, {
     `,
   },
 
-});
+})

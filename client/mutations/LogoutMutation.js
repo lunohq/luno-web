@@ -1,4 +1,4 @@
-import Relay from 'react-relay';
+import Relay from 'react-relay'
 
 export default class LogoutMutation extends Relay.Mutation {
 
@@ -8,12 +8,12 @@ export default class LogoutMutation extends Relay.Mutation {
         id
       }
     `,
-  };
+  }
 
   getVariables() {}
 
   getMutation() {
-    return Relay.QL`mutation { logout }`;
+    return Relay.QL`mutation { logout }`
   }
 
   getFatQuery() {
@@ -21,7 +21,7 @@ export default class LogoutMutation extends Relay.Mutation {
       fragment on LogoutPayload {
         viewer
       }
-    `;
+    `
   }
 
   getConfigs() {
@@ -30,7 +30,7 @@ export default class LogoutMutation extends Relay.Mutation {
       fieldIDs: {
         viewer: this.props.viewer.id,
       },
-    }];
+    }]
   }
 
 }

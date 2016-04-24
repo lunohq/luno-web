@@ -9,7 +9,7 @@ import {
   GraphQLObjectType,
   GraphQLSchema,
   GraphQLString
-} from 'graphql';
+} from 'graphql'
 
 import {
   connectionArgs,
@@ -20,44 +20,44 @@ import {
   globalIdField,
   mutationWithClientMutationId,
   nodeDefinitions
-} from 'graphql-relay';
+} from 'graphql-relay'
 
-import { db } from 'luno-core';
+import { db } from 'luno-core'
 
 const { nodeInterface, nodeField } = nodeDefinitions(
   (globalId) => {
-    const { type, id } = fromGlobalId(globalId);
+    const { type, id } = fromGlobalId(globalId)
     if (type === 'Team') {
-      return db.team.getTeam(id);
+      return db.team.getTeam(id)
     } else if (type === 'User') {
-      return db.user.getUser(id);
+      return db.user.getUser(id)
     } else if (type === 'Bot') {
-      const [partitionKey, sortKey] = db.client.deconstructId(id);
-      return db.bot.getBot(partitionKey, sortKey);
+      const [partitionKey, sortKey] = db.client.deconstructId(id)
+      return db.bot.getBot(partitionKey, sortKey)
     } else if (type === 'Answer') {
-      const [partitionKey, sortKey] = db.client.deconstructId(id);
-      return db.answer.getAnswer(partitionKey, sortKey);
+      const [partitionKey, sortKey] = db.client.deconstructId(id)
+      return db.answer.getAnswer(partitionKey, sortKey)
     } else if (type === 'Regex') {
-      const [partitionKey, sortKey] = db.client.deconstructId(id);
-      return db.regex.getRegex(partitionKey, sortKey);
+      const [partitionKey, sortKey] = db.client.deconstructId(id)
+      return db.regex.getRegex(partitionKey, sortKey)
     }
-    return null;
+    return null
   },
   (obj) => {
     if (obj instanceof db.team.Team) {
-      return GraphQLTeam;
+      return GraphQLTeam
     } else if (obj instanceof db.user.User) {
-      return GraphQLUser;
+      return GraphQLUser
     } else if (obj instanceof db.bot.Bot) {
-      return GraphQLBot;
+      return GraphQLBot
     } else if (obj instanceof db.answer.Answer) {
-      return GraphQLAnswer;
+      return GraphQLAnswer
     } else if (obj instanceof db.regex.Regex) {
-      return GraphQLRegex;
+      return GraphQLRegex
     }
-    return null;
+    return null
   },
-);
+)
 
 // Our GraphQL Types
 
@@ -69,7 +69,7 @@ const GraphQLSlackBot = new GraphQLObjectType({
       description: 'Our main slack bot id for the Team',
     },
   },
-});
+})
 
 const GraphQLSlackInfo = new GraphQLObjectType({
   name: 'SlackInfo',
@@ -77,7 +77,7 @@ const GraphQLSlackInfo = new GraphQLObjectType({
   fields: {
     bot: { type: GraphQLSlackBot },
   },
-});
+})
 
 const GraphQLTeam = new GraphQLObjectType({
   name: 'Team',
@@ -93,7 +93,7 @@ const GraphQLTeam = new GraphQLObjectType({
     },
   }),
   interfaces: [nodeInterface],
-});
+})
 
 const GraphQLUser = new GraphQLObjectType({
   name: 'User',
@@ -115,10 +115,10 @@ const GraphQLUser = new GraphQLObjectType({
       args: connectionArgs,
       resolve: async (user, args) => {
         if (!user.anonymous) {
-          const bots = await db.bot.getBots(user.teamId);
-          return connectionFromArray(bots, args);
+          const bots = await db.bot.getBots(user.teamId)
+          return connectionFromArray(bots, args)
         }
-        return null;
+        return null
       },
     },
     anonymous: {
@@ -127,7 +127,7 @@ const GraphQLUser = new GraphQLObjectType({
     },
   }),
   interfaces: [nodeInterface],
-});
+})
 
 const GraphQLBot = new GraphQLObjectType({
   name: 'Bot',
@@ -147,8 +147,8 @@ const GraphQLBot = new GraphQLObjectType({
       description: 'Answers configured for the Bot',
       args: connectionArgs,
       resolve: async (bot, args) => {
-        const answers = await db.answer.getAnswers(bot.id);
-        return connectionFromArray(answers, args);
+        const answers = await db.answer.getAnswers(bot.id)
+        return connectionFromArray(answers, args)
       },
     },
     regexes: {
@@ -156,13 +156,13 @@ const GraphQLBot = new GraphQLObjectType({
       description: 'Regexes that have been configured for the Bot',
       args: connectionArgs,
       resolve: async (bot, args) => {
-        const regexes = await db.regex.getRegexes(bot.id);
-        return connectionFromArray(regexes, args);
+        const regexes = await db.regex.getRegexes(bot.id)
+        return connectionFromArray(regexes, args)
       },
     },
   }),
   interfaces: [nodeInterface],
-});
+})
 
 const GraphQLAnswer = new GraphQLObjectType({
   name: 'Answer',
@@ -179,7 +179,7 @@ const GraphQLAnswer = new GraphQLObjectType({
     },
   }),
   interfaces: [nodeInterface],
-});
+})
 
 const GraphQLRegex = new GraphQLObjectType({
   name: 'Regex',
@@ -196,29 +196,29 @@ const GraphQLRegex = new GraphQLObjectType({
     },
   }),
   interfaces: [nodeInterface],
-});
+})
 
 // Our Relay GraphQL Connection Types
 
 const { connectionType: UsersConnection } = connectionDefinitions({
   name: 'User',
   nodeType: GraphQLUser,
-});
+})
 
 const { connectionType: BotsConnection } = connectionDefinitions({
   name: 'Bot',
   nodeType: GraphQLBot,
-});
+})
 
 const { connectionType: AnswersConnection, edgeType: GraphQLAnswerEdge } = connectionDefinitions({
   name: 'Answer',
   nodeType: GraphQLAnswer,
-});
+})
 
 const { connectionType: RegexesConnection, edgeType: GraphQLRegexEdge } = connectionDefinitions({
   name: 'Regex',
   nodeType: GraphQLRegex,
-});
+})
 
 const GraphQLQuery = new GraphQLObjectType({
   name: 'Query',
@@ -228,23 +228,23 @@ const GraphQLQuery = new GraphQLObjectType({
       type: GraphQLUser,
       resolve: (source, args, { rootValue }) => {
         return new Promise(async (resolve, reject) => {
-          let user = new db.user.AnonymousUser();
+          let user = new db.user.AnonymousUser()
 
           if (!rootValue) {
-            return resolve(user);
+            return resolve(user)
           }
 
           try {
-            user = await db.user.getUser(rootValue.uid);
+            user = await db.user.getUser(rootValue.uid)
           } catch (err) {
-            return reject(err);
+            return reject(err)
           }
-          return resolve(user);
-        });
+          return resolve(user)
+        })
       },
     },
   },
-});
+})
 
 // Our Relay Mutations
 
@@ -275,36 +275,36 @@ const GraphQLCreateAnswerMutation = mutationWithClientMutationId({
         return new Promise(async (resolve, reject) => {
           // XXX need to have a way to do this that doesn't require fetching
           // all answers
-          let answers;
+          let answers
           try {
-            answers = await db.answer.getAnswers(botId);
+            answers = await db.answer.getAnswers(botId)
           } catch (err) {
-            return reject(err);
+            return reject(err)
           }
 
           // TODO: maybe we make this our own function?
           // cursorForObjectInConnection indexOf was returning -1 even though the
           // item was there, something to do with ===
-          let cursor;
+          let cursor
           for (const index in answers) {
-            const a = answers[index];
+            const a = answers[index]
             if (a.id === answer.id) {
-              cursor = offsetToCursor(index);
-              break;
+              cursor = offsetToCursor(index)
+              break
             }
           }
 
-          return resolve({ cursor, node: answer });
-        });
+          return resolve({ cursor, node: answer })
+        })
       }
     },
   },
   mutateAndGetPayload: ({ title, body, botId: globalId }, { rootValue: { uid: createdBy } }) => {
     return new Promise(async (resolve, reject) => {
-      const { id: compositeId } = fromGlobalId(globalId);
-      const [teamId, botId] = db.client.deconstructId(compositeId);
+      const { id: compositeId } = fromGlobalId(globalId)
+      const [teamId, botId] = db.client.deconstructId(compositeId)
 
-      let answer;
+      let answer
       try {
         answer = await db.answer.createAnswer({
           title,
@@ -312,15 +312,15 @@ const GraphQLCreateAnswerMutation = mutationWithClientMutationId({
           botId,
           teamId,
           createdBy,
-        });
+        })
       } catch (err) {
-        return reject(err);
+        return reject(err)
       }
 
-      return resolve({ answer, teamId, botId });
-    });
+      return resolve({ answer, teamId, botId })
+    })
   },
-});
+})
 
 const GraphQLDeleteAnswerMutation = mutationWithClientMutationId({
   name: 'DeleteAnswer',
@@ -338,16 +338,16 @@ const GraphQLDeleteAnswerMutation = mutationWithClientMutationId({
     },
   },
   mutateAndGetPayload: async ({ id: globalId }) => {
-    const { id: compositeId } = fromGlobalId(globalId);
-    const [botId, id] = db.client.deconstructId(compositeId);
-    const { teamId } = await db.answer.deleteAnswer(botId, id);
+    const { id: compositeId } = fromGlobalId(globalId)
+    const [botId, id] = db.client.deconstructId(compositeId)
+    const { teamId } = await db.answer.deleteAnswer(botId, id)
     return {
       botId,
       globalId,
       teamId,
-    };
+    }
   },
-});
+})
 
 const GraphQLUpdateAnswerMutation = mutationWithClientMutationId({
   name: 'UpdateAnswer',
@@ -363,18 +363,18 @@ const GraphQLUpdateAnswerMutation = mutationWithClientMutationId({
     },
   },
   mutateAndGetPayload: async ({ id: globalId, title, body }) => {
-    const { id: compositeId } = fromGlobalId(globalId);
-    const [botId, id] = db.client.deconstructId(compositeId);
+    const { id: compositeId } = fromGlobalId(globalId)
+    const [botId, id] = db.client.deconstructId(compositeId)
 
     const answer = await db.answer.updateAnswer({
       body,
       title,
       botId,
       id,
-    });
-    return answer;
+    })
+    return answer
   },
-});
+})
 
 const GraphQLCreateRegexMutation = mutationWithClientMutationId({
   name: 'CreateRegex',
@@ -407,33 +407,33 @@ const GraphQLCreateRegexMutation = mutationWithClientMutationId({
         return new Promise(async (resolve, reject) => {
           // XXX need to have a way to do this that doesn't require fetching
           // all regexes
-          let regexes;
+          let regexes
           try {
-            regexes = await db.regex.getRegexes(botId);
+            regexes = await db.regex.getRegexes(botId)
           } catch (err) {
-            return reject(err);
+            return reject(err)
           }
 
-          let cursor;
+          let cursor
           for (const index in regexes) {
-            const r = regexes[index];
+            const r = regexes[index]
             if (r.id === regex.id) {
-              cursor = offsetToCursor(index);
-              break;
+              cursor = offsetToCursor(index)
+              break
             }
           }
 
-          return resolve({ cursor, node: regex });
-        });
+          return resolve({ cursor, node: regex })
+        })
       }
     },
   },
   mutateAndGetPayload: ({ regex, body, botId: globalId, position }, { rootValue: { uid: createdBy } }) => {
     return new Promise(async (resolve, reject) => {
-      const { id: compositeId } = fromGlobalId(globalId);
-      const [teamId, botId] = db.client.deconstructId(compositeId);
+      const { id: compositeId } = fromGlobalId(globalId)
+      const [teamId, botId] = db.client.deconstructId(compositeId)
 
-      let regex;
+      let regex
       try {
         regex = await db.regex.createRegex({
           regex,
@@ -442,15 +442,15 @@ const GraphQLCreateRegexMutation = mutationWithClientMutationId({
           teamId,
           createdBy,
           position,
-        });
+        })
       } catch (err) {
-        return reject(err);
+        return reject(err)
       }
 
-      return resolve({ regex, teamId, botId });
-    });
+      return resolve({ regex, teamId, botId })
+    })
   },
-});
+})
 
 const GraphQLDeleteRegexMutation = mutationWithClientMutationId({
   name: 'DeleteRegex',
@@ -468,16 +468,16 @@ const GraphQLDeleteRegexMutation = mutationWithClientMutationId({
     },
   },
   mutateAndGetPayload: async ({ id: globalId }) => {
-    const { id: compositeId } = fromGlobalId(globalId);
-    const [botId, id] = db.client.deconstructId(compositeId);
-    const { teamId } = await db.regex.deleteRegex(botId, id);
+    const { id: compositeId } = fromGlobalId(globalId)
+    const [botId, id] = db.client.deconstructId(compositeId)
+    const { teamId } = await db.regex.deleteRegex(botId, id)
     return {
       botId,
       globalId,
       teamId,
-    };
+    }
   },
-});
+})
 
 // TODO look into bulk updates
 const GraphQLUpdateRegexMutation = mutationWithClientMutationId({
@@ -495,8 +495,8 @@ const GraphQLUpdateRegexMutation = mutationWithClientMutationId({
     },
   },
   mutateAndGetPayload: async ({ id: globalId, regex, body, position }) => {
-    const { id: compositeId } = fromGlobalId(globalId);
-    const [botId, id] = db.client.deconstructId(compositeId);
+    const { id: compositeId } = fromGlobalId(globalId)
+    const [botId, id] = db.client.deconstructId(compositeId)
 
     const r = await db.regex.updateRegex({
       body,
@@ -504,10 +504,10 @@ const GraphQLUpdateRegexMutation = mutationWithClientMutationId({
       botId,
       id,
       position,
-    });
-    return r;
+    })
+    return r
   },
-});
+})
 
 const GraphQLUpdateBotMutation = mutationWithClientMutationId({
   name: 'UpdateBot',
@@ -523,18 +523,18 @@ const GraphQLUpdateBotMutation = mutationWithClientMutationId({
     },
   },
   mutateAndGetPayload: async ({ id: globalId, purpose, pointsOfContact }) => {
-    const { id: compositeId } = fromGlobalId(globalId);
-    const [teamId, id] = db.client.deconstructId(compositeId);
+    const { id: compositeId } = fromGlobalId(globalId)
+    const [teamId, id] = db.client.deconstructId(compositeId)
 
     const bot = await db.bot.updateBot({
       pointsOfContact,
       purpose,
       teamId,
       id,
-    });
-    return bot;
+    })
+    return bot
   },
-});
+})
 
 const GraphQLLogoutMutation = mutationWithClientMutationId({
   name: 'Logout',
@@ -547,19 +547,19 @@ const GraphQLLogoutMutation = mutationWithClientMutationId({
   mutateAndGetPayload: (_, { rootValue }) => {
     return new Promise(async (resolve, reject) => {
       try {
-        await db.token.deleteToken(rootValue.t.id, rootValue.uid);
+        await db.token.deleteToken(rootValue.t.id, rootValue.uid)
       } catch (err) {
-        return reject(err);
+        return reject(err)
       }
 
-      const user = new db.user.AnonymousUser();
+      const user = new db.user.AnonymousUser()
       // this value is needed to invalidate the relay cache for the currently
       // logged in user
-      user.id = rootValue.uid;
-      return resolve(user);
-    });
+      user.id = rootValue.uid
+      return resolve(user)
+    })
   },
-});
+})
 
 const GraphQLMutation = new GraphQLObjectType({
   name: 'Mutation',
@@ -570,11 +570,11 @@ const GraphQLMutation = new GraphQLObjectType({
     updateBot: GraphQLUpdateBotMutation,
     logout: GraphQLLogoutMutation,
   }),
-});
+})
 
 // Our Relay Schema
 
 export default new GraphQLSchema({
   query: GraphQLQuery,
   mutation: GraphQLMutation,
-});
+})

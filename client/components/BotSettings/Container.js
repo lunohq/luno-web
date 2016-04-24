@@ -1,8 +1,8 @@
-import Relay from 'react-relay';
+import Relay from 'react-relay'
 
-import UpdateBotMutation from '../../mutations/UpdateBotMutation';
+import UpdateBotMutation from '../../mutations/UpdateBotMutation'
 
-import Component from './Component';
+import Component from './Component'
 
 export default Relay.createContainer(Component, {
   initialVariables: {
@@ -26,4 +26,4 @@ export default Relay.createContainer(Component, {
     `,
   },
 
-});
+})

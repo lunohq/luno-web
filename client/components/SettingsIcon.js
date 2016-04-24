@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React, { PropTypes } from 'react'
 
 const SettingsIcon = ({ height, stroke, strokeWidth, width, ...other }) => (
   <svg width={width} height={height} viewBox='0 0 48 48' {...other}>
@@ -8,19 +8,19 @@ const SettingsIcon = ({ height, stroke, strokeWidth, width, ...other }) => (
       strokeWidth={strokeWidth}
     />
   </svg>
-);
+)
 
 SettingsIcon.propTypes = {
   height: PropTypes.number,
   stroke: PropTypes.string,
   strokeWidth: PropTypes.number,
   width: PropTypes.number,
-};
+}
 SettingsIcon.defaultProps = {
   height: 26,
   stroke: '#FFFFFF',
   strokeWidth: 1,
   width: 26,
-};
+}
 
-export default SettingsIcon;
+export default SettingsIcon

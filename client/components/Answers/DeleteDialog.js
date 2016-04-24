@@ -1,9 +1,9 @@
-import React, { PropTypes } from 'react';
+import React, { PropTypes } from 'react'
 
-import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
+import Dialog from 'material-ui/Dialog'
+import FlatButton from 'material-ui/FlatButton'
 
-import t from '../../utils/gettext';
+import t from '../../utils/gettext'
 
 const DeleteDialog = ({ answer, open, onClose, onSubmit }) => {
   const actions = [
@@ -17,9 +17,9 @@ const DeleteDialog = ({ answer, open, onClose, onSubmit }) => {
       primary
       onClick={onSubmit}
     />,
-  ];
+  ]
 
-  const answerTitle = answer ? answer.title : t('answer');
+  const answerTitle = answer ? answer.title : t('answer')
   return (
     <Dialog
       title={t('Confirm delete answer?')}
@@ -32,14 +32,14 @@ const DeleteDialog = ({ answer, open, onClose, onSubmit }) => {
         {t(`Are you sure you want to delete "${answerTitle}"? This action cannot be undone.`)}
       </div>
     </Dialog>
-  );
-};
+  )
+}
 
 DeleteDialog.propTypes = {
   answer: PropTypes.object,
   open: PropTypes.bool,
   onClose: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
-};
+}
 
-export default DeleteDialog;
+export default DeleteDialog
