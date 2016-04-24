@@ -1,8 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
 
-import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 
 import CreateAnswerMutation from '../../mutations/CreateAnswerMutation';
@@ -18,18 +16,33 @@ import CreateEditDialog from './CreateEditDialog';
 import DeleteDialog from './DeleteDialog';
 import './style.scss';
 
-const EmptyState = ({ handleAddAnswer }) => (
+const AddAnswer = ({ label, onAddAnswer }) => {
+  return (
+    <RaisedButton
+      label={label}
+      onTouchTap={onAddAnswer}
+      primary
+    />
+  );
+};
+
+AddAnswer.propTypes = {
+  label: PropTypes.string.isRequired,
+  onAddAnswer: PropTypes.func,
+};
+
+const EmptyState = ({ onAddAnswer }) => (
   <div className='row-xs middle-xs center-xs empty-state'>
-    <h3>Add your first smart answer</h3>
+    <h3>{t('Add your first smart answer')}</h3>
     <AddAnswer
       label={t('Add smart answer')}
-      handleAddAnswer={handleAddAnswer}
+      onAddAnswer={onAddAnswer}
     />
   </div>
 );
 
 EmptyState.propTypes = {
-  handleAddAnswer: PropTypes.func.isRequired,
+  onAddAnswer: PropTypes.func.isRequired,
 };
 
 class Answers extends Component {
@@ -119,13 +132,7 @@ class Answers extends Component {
   render() {
     let addAnswer;
     if (this.hasAnswers()) {
-      addAnswer = (
-        <RaisedButton
-          label={t('Add')}
-          onTouchTap={this.handleAddAnswer}
-          primary
-        />
-      );
+      addAnswer = <AddAnswer label={t('Add')} onAddAnswer={this.handleAddAnswer} />;
     }
 
     let content;
@@ -139,7 +146,7 @@ class Answers extends Component {
         />
       );
     } else {
-      content = <EmptyState handleAddAnswer={this.handleAddAnswer} />;
+      content = <EmptyState onAddAnswer={this.handleAddAnswer} />;
     }
 
     return (

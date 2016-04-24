@@ -35,7 +35,7 @@ class CreateEditDialog extends Component {
 
   handleSubmit = (values) => {
     const { answer, onSubmit } = this.props;
-    this.props.onSubmit({ answer, ...values });
+    onSubmit({ answer, ...values });
   }
 
   cancelForm = () => {
@@ -48,7 +48,7 @@ class CreateEditDialog extends Component {
   }
 
   render() {
-    const { answer, children, open } = this.props;
+    const { answer, open } = this.props;
 
     const actions = [
       <FlatButton
@@ -80,12 +80,12 @@ class CreateEditDialog extends Component {
       >
         <Form
           onSubmit={this.handleSubmit}
-          ref="form"
+          ref='form'
         />
       </Dialog>
     );
   }
-};
+}
 
 CreateEditDialog.propTypes = {
   answer: PropTypes.object,
