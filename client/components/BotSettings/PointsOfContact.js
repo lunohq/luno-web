@@ -13,9 +13,7 @@ class PointsOfContact extends Component {
   onBlur = (event) => this.saveContacts(event)
 
   onChange = (event) => {
-    this.setState({
-      contacts: this.getValidContacts(event.target.value)
-    })
+    this.setState({ contacts: event.target.value })
   }
 
   onKeyDown = (event) => {
@@ -43,7 +41,6 @@ class PointsOfContact extends Component {
 
   render() {
     const { bot } = this.props
-    const validContacts = this.state.contacts ? this.state.contacts.join(', ') : undefined
     const pointsOfContact = bot.pointsOfContact ? bot.pointsOfContact.join(', ') : ''
 
     return (
@@ -67,7 +64,7 @@ class PointsOfContact extends Component {
             onKeyDown={this.onKeyDown}
             ref='pointsOfContact'
             style={{ width: '80%' }}
-            value={validContacts}
+            value={this.state.contacts}
           />
           <div className='hint-text'>{t('Add Slack usernames of people who should be mentioned when escalating.')}</div>
         </div>

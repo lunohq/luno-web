@@ -39,7 +39,6 @@ class BotSettings extends Component {
   }
 
   handleSavePointsOfContact = (pointsOfContact) => {
-    console.log(pointsOfContact)
     const bot = this.getBot()
     const purpose = bot.purpose
     const mutation = new UpdateBotMutation({
