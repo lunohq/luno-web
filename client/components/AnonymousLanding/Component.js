@@ -70,7 +70,7 @@ const AnonymousLanding = () => (
           <div className='col-lg-4 margin-centered'>
             <h4>
               <img height='22px' src={require('../../assets/emoji-slack.png')} />
-               2. /invite @luno
+               2. Publish your Lunobot
             </h4>
             <p>Invite your Lunobot to your team's dedicated help channel in Slack.</p>
           </div>
