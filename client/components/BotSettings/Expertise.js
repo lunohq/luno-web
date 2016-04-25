@@ -10,7 +10,7 @@ const Expertise = ({ bot, onSave }) => {
     <div className='bot-settings-section'>
       <div className='section-title'>
         <div className='row between-xs middle-xs no-margin'>
-          <h1>{t('Expertise')}</h1>
+          <h1>{t('Domain Expertise')}</h1>
         </div>
         <Divider />
         <p>
