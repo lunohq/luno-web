@@ -44,6 +44,7 @@ class PointsOfContact extends Component {
   render() {
     const { bot } = this.props
     const validContacts = this.state.contacts ? this.state.contacts.join(', ') : undefined
+    const pointsOfContact = bot.pointsOfContact ? bot.pointsOfContact.join(', ') : ''
 
     return (
       <div className='bot-settings-section'>
@@ -59,7 +60,7 @@ class PointsOfContact extends Component {
         <div className='section-body'>
           <TextField
             hintText={t('@username')}
-            defaultValue={bot.pointsOfContact.join(', ')}
+            defaultValue={pointsOfContact}
             multiLine={false}
             onBlur={this.onBlur}
             onChange={this.onChange}
