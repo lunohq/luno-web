@@ -513,7 +513,7 @@ const GraphQLUpdateBotMutation = mutationWithClientMutationId({
   name: 'UpdateBot',
   inputFields: {
     id: { type: new GraphQLNonNull(GraphQLID) },
-    purpose: { type: new GraphQLNonNull(GraphQLString) },
+    purpose: { type: GraphQLString },
     pointsOfContact: { type: new GraphQLList(GraphQLString) },
   },
   outputFields: {
@@ -528,9 +528,9 @@ const GraphQLUpdateBotMutation = mutationWithClientMutationId({
 
     const bot = await db.bot.updateBot({
       pointsOfContact,
-      purpose,
       teamId,
       id,
+      purpose: purpose || null,
     })
     return bot
   },

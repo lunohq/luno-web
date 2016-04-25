@@ -133,7 +133,7 @@ type UpdateAnswerPayload {
 
 input UpdateBotInput {
   id: ID!
-  purpose: String!
+  purpose: String
   pointsOfContact: [String]
   clientMutationId: String!
 }
