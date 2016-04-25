@@ -21,7 +21,7 @@ export default class MessageLog extends React.Component {
             </div>
             <hr />
             <p>
-                These are the full logs for every message that your Luno Bot replied to. Use the Export button in the upper right to download a csv if you want to do further analysis.
+                These are the full logs for every message that your Lunobot replied to. Use the Export button in the upper right to download a csv if you want to do further analysis.
             </p>
             <Table
               fixedFooter

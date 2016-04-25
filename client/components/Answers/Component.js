@@ -160,7 +160,7 @@ class Answers extends Component {
               </div>
               <Divider />
               <p>
-                {t('Use smart answers to scale yourself and answer common questions. Your Luno Bot will search these smart answers and intelligently reply in any channel that its added to.')}
+                {t('Use smart answers to scale yourself and answer common questions. Your Lunobot will search these smart answers and intelligently reply in any channel that its added to.')}
               </p>
             </div>
             {content}
