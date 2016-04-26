@@ -30,9 +30,9 @@ const botkit = Botkit.slackbot({
   scopes: ['bot'],
 })
 
-botkit.on('create_bot', (bot) => {
+botkit.on('create_team', (bot) => {
   try {
-    events.publish.createBot(bot.config.id)
+    events.publish.createTeam(bot.config.id)
   } catch (err) {
     console.error('FAILURE TO PUBLISH:', err)
   }
