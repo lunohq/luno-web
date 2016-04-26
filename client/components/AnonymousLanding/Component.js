@@ -107,7 +107,7 @@ const AnonymousLanding = () => (
       </div>
       <div className='container'>
         <hr />
-        <p className='centered'>Handcrafted with ❤ in San Francisco. &copy Luno {(new Date()).getFullYear()}</p>
+        <p className='centered'>Handcrafted with ❤ in San Francisco. copy; Luno {(new Date()).getFullYear()}</p>
       </div>
     </div>
   </DocumentTitle>
