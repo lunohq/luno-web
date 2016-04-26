@@ -45,7 +45,7 @@ const AnonymousLanding = () => (
             <h2>Employees can self-serve with FAQ answers from <span style={{ fontWeight: '500' }}>@luno</span> instead of bugging you.</h2>
           </div>
           <div style={{ width: '100%' }}>
-            <img className='demo-img' src={require('../../assets/travel.gif')} />
+            <img className='demo-img' src={require('../../assets/demo.gif')} />
           </div>
         </div>
       </div>
