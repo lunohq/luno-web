@@ -35,6 +35,7 @@ class CreateEditDialog extends Component {
 
   handleSubmit = (values) => {
     const { answer, onSubmit } = this.props
+    this.context.store.dispatch(destroy(FORM_NAME))
     onSubmit({ answer, ...values })
   }
 
