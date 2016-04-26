@@ -45,7 +45,10 @@ module.exports = {
       mobile: true,
       inject: false,
       favicon: './client/assets/favicon.ico'
-    })
+    }),
+    new webpack.DefinePlugin({
+      __SENTRY_DSN__: JSON.stringify('https://e797ece0159c474ea264041392b714f7@app.getsentry.com/75750')
+    }),
   ]
 };
 

@@ -36,6 +36,7 @@
     "gaze": "^1.0.0",
     "html-webpack-plugin": "^2.15.0",
     "node-sass": "^3.4.2",
+    "raven-js": "^2.3.0",
     "react-transform-catch-errors": "^1.0.2",
     "react-transform-hmr": "^1.0.4",
     "redbox-react": "^1.2.2",
@@ -65,6 +66,7 @@
     "luno-core": "git+https://1d0cdee693b540fb3b9cd603b01834ec45976ce9:x-oauth-basic@github.com/lunohq/luno-core.git#v0.6.26",
     "material-ui": "v0.15.0-beta.2",
     "morgan": "^1.7.0",
+    "raven": "^0.10.0",
     "react": "^15.0.1",
     "react-document-title": "^2.0.1",
     "react-dom": "^15.0.1",
@@ -73,7 +75,7 @@
     "react-router": "^2.3.0",
     "react-router-relay": "^0.12.2",
     "react-tap-event-plugin": "^1.0.0",
-    "redux-form": "v6.0.0-alpha.5",
-    "redux": "^3.5.1"
+    "redux": "^3.5.1",
+    "redux-form": "v6.0.0-alpha.5"
   }
 }

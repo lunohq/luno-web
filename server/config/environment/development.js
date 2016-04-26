@@ -9,4 +9,7 @@ export default {
     clientId: '22618016311.26511459793',
     clientSecret: '3dad74e3d7874065041063f4571639db',
   },
+  sentry: {
+    dsn: 'https://f440b668d21b4853852a183f7ecd7710:6b485fbc28424242a3db69e845528d13@app.getsentry.com/75742',
+  },
 }

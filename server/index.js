@@ -11,6 +11,7 @@ import Botkit from 'botkit'
 import { botkit as bk, events } from 'luno-core'
 import morgan from 'morgan'
 import { HTTPS as enforceHttps } from 'express-sslify'
+import raven from 'raven'
 
 import webpackConfig from '../webpack.config'
 import requireUncached from './utils/requireUncached'
@@ -116,6 +117,8 @@ if (config.env === 'development') {
   // Launch Relay by creating a normal express server
   relayServer = express()
 
+  relayServer.use(raven.middleware.express.requestHandler(config.sentry.dsn))
+
   if (config.ssl) {
     relayServer.use(enforceHttps({ trustProtoHeader: true }))
   }
@@ -129,5 +132,6 @@ if (config.env === 'development') {
     context: { auth: request.auth },
     rootValue: request.auth,
   })))
+  relayServer.use(raven.middleware.express.errorHandler(config.sentry.dsn))
   relayServer.listen(config.port, () => console.log(chalk.green(`Relay is listening on port ${config.port}`)))
 }

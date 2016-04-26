@@ -19,6 +19,9 @@ const config = {
     clientSecret: process.env.SLACK_CLIENT_SECRET,
   },
   ssl: process.env.FORCE_SSL || false,
+  sentry: {
+    dsn: process.env.SENTRY_DSN,
+  },
 }
 
 export default _.merge(config, require(`./${config.env}`).default)
