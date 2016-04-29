@@ -19,6 +19,7 @@ import config from './config/environment'
 import schema from './data/schema'
 import updateSchema from './utils/updateSchema'
 import auth from './middleware/auth'
+import logger from './logger'
 
 let graphQLServer
 let relayServer
@@ -35,7 +36,7 @@ botkit.on('create_team', (bot) => {
   try {
     events.publish.createTeam(bot.config.id)
   } catch (err) {
-    console.error('FAILURE TO PUBLISH:', err)
+    logger.error('Error publishing `create_team`', { err, teamId: bot.config.id })
   }
 })
 

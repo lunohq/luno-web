@@ -6,6 +6,13 @@ const config = {
   token: {
     secret: process.env.TOKEN_SECRET,
   },
+  winston: {
+    logger: {
+      console: {
+        level: process.env.WINSTON_LOGGER_CONSOLE_LEVEL || 'info',
+      },
+    },
+  },
   cookie: {
     key: process.env.COOKIE_KEY || 'atv1',
     maxAge: process.env.COOKIE_MAX_AGE || 1000 * 60 * 60 * 24 * 365,
