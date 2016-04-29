@@ -6,7 +6,7 @@
     "start": "npm run update && babel-node server/index.js",
     "dev": "npm run update && ./bin/server",
     "update": "babel-node server/utils/updateSchema.js",
-    "deploy": "eval \"$(docker-machine env dev)\" && npm unlink luno-core && NODE_ENV=production npm install && NODE_ENV=production webpack --config webpack.production.config.js && npm run docker",
+    "deploy": "eval \"$(docker-machine env default)\" && npm unlink luno-core && NODE_ENV=production npm install && NODE_ENV=production webpack --config webpack.production.config.js && npm run docker",
     "lint": "eslint --ignore-path .gitignore client server",
     "docker-build": "docker build -t lunohq/luno-web . && docker tag lunohq/luno-web lunohq/luno-web:`git log -n 1 --pretty=format:'%H'`",
     "docker-push": "docker push lunohq/luno-web",
