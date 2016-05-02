@@ -4,6 +4,7 @@ import { db } from 'luno-core'
 
 import config from '../config/environment'
 import { generateToken } from '../actions'
+import logger from '../logger'
 
 /**
  * Use botkit to handle the oauth process.
@@ -17,23 +18,25 @@ import { generateToken } from '../actions'
 function oauth(botkit, app) {
   botkit.createOauthEndpoints(app, async (err, req, res) => {
     if (err) {
-      // TODO better logging (more consistent)
-      console.error('Failure', err)
-      res.status(500).send(err)
-    } else {
-      let token
-      try {
-        token = await generateToken(config.token.secret, { user: res.locals.user })
-      } catch (err) {
-        // TODO we should be redirecting to '/' with error=<something>
-        console.error('Failure', err)
-        return res.status(500).send(err)
-      }
-
-      res.cookie(config.cookie.key, token, { maxAge: config.cookie.maxAge, signed: true })
-      res.redirect('/')
+      logger.error('OAuth Failure', { query: req.query }, err)
+      return res.redirect('/')
     }
-    return res
+
+    if (req.query.error) {
+      logger.error('OAuth Error', { error: req.query.error, query: req.query })
+      return res.redirect('/')
+    }
+
+    let token
+    try {
+      token = await generateToken(config.token.secret, { user: res.locals.user })
+    } catch (err) {
+      logger.error('OAuth Token Transfer Failure', { query: req.query.error }, err)
+      return res.redirect('/')
+    }
+
+    res.cookie(config.cookie.key, token, { maxAge: config.cookie.maxAge, signed: true })
+    return res.redirect('/')
   })
 }
 
