@@ -1,1 +1,31 @@
 @import '../../styles/landing.scss';
+
+.brand,
+.brand:focus,
+.brand:visited,
+.brand:hover {
+  font-family: sofia;
+  font-size: 32px;
+  color: white;
+}
+
+a.brand,
+a.brand:focus,
+a.brand:visited,
+a.brand:hover {
+  color: white;
+}
+
+.landing {
+    padding-top: 200px;
+    background-color: #484959;
+}
+
+.landing h1 {
+    color: white;
+    font-weight: 400;
+}
+
+body {
+    background-color: #484959;
+}
