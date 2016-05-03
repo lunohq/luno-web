@@ -17,8 +17,8 @@ a.brand:hover {
 }
 
 .landing {
-    padding-top: 200px;
     background-color: #484959;
+    height: 100vh;
 }
 
 .landing h1 {
@@ -26,6 +26,11 @@ a.brand:hover {
     font-weight: 400;
 }
 
-body {
-    background-color: #484959;
+.landing .content {
+    padding-top: 200px;
 }
+
+.landing .header {
+    padding-top: 15px;
+}
+
