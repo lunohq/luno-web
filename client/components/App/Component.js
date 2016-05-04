@@ -12,6 +12,7 @@ import s from './style.scss'
 class App extends Component {
 
   handleLogout = () => {
+    const { viewer } = this.props;
     Relay.Store.commitUpdate(
       new LogoutMutation({ viewer })
     )
