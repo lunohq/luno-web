@@ -4,6 +4,17 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
+const AUTOPREFIXER_BROWSERS = [
+  'Android 2.3',
+  'Android >= 4',
+  'Chrome >= 35',
+  'Firefox >= 31',
+  'Explorer >= 9',
+  'iOS >= 7',
+  'Opera >= 12',
+  'Safari >= 7.1',
+];
+
 module.exports = {
   entry: {
     app: [
@@ -25,7 +36,15 @@ module.exports = {
       exclude: /node_modules/
     }, {
       test: /\.scss$/,
-      loader: 'style!css!sass'
+      loaders: [
+        `css-loader?${JSON.stringify({
+          sourceMap: true,
+          modules: true,
+          localIdentName: '[name]_[local]_[hash:base64:3]',
+          minimize: false,
+        })}`,
+        'postcss-loader?parser=postcss-scss',
+      ]
     }, {
       test: /\.(png|jpg|jpeg|ico|gif|svg|woff|woff2)$/,
       loader: 'url-loader?limit=10000&name=assets/[hash].[ext]'
@@ -45,6 +64,13 @@ module.exports = {
     new webpack.DefinePlugin({
       __SENTRY_DSN__: JSON.stringify('https://f440b668d21b4853852a183f7ecd7710@app.getsentry.com/75742')
     }),
-  ]
+  ],
+  postcss(bundler) {
+    return [
+      require('postcss-import')({ addDependencyTo: bundler }),
+      require('precss')(),
+      require('autoprefixer')({ browsers: AUTOPREFIXER_BROWSERS }),
+    ];
+  },
 };
 

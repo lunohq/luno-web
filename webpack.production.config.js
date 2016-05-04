@@ -4,6 +4,17 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
+const AUTOPREFIXER_BROWSERS = [
+  'Android 2.3',
+  'Android >= 4',
+  'Chrome >= 35',
+  'Firefox >= 31',
+  'Explorer >= 9',
+  'iOS >= 7',
+  'Opera >= 12',
+  'Safari >= 7.1',
+];
+
 module.exports = {
   entry: {
     app: [
@@ -23,7 +34,15 @@ module.exports = {
       exclude: /node_modules/
     }, {
       test: /\.scss$/,
-      loader: 'style!css!sass'
+      loaders: [
+        `css-loader?${JSON.stringify({
+          sourceMap: false,
+          modules: true,
+          minimize: true,
+          localIdentName: '[hash:base64:4]',
+        })}`,
+        'postcss-loader?parser=postcss-scss',
+      ]
     }, {
       test: /\.(png|jpg|jpeg|ico|gif|svg|woff|woff2)$/,
       loader: 'url-loader?limit=10000&name=assets/[hash].[ext]'
