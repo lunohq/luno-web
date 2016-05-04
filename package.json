@@ -36,6 +36,7 @@
     "file-loader": "^0.8.5",
     "gaze": "^1.0.0",
     "html-webpack-plugin": "^2.15.0",
+    "isomorphic-style-loader": "^1.0.0",
     "node-sass": "^3.4.2",
     "postcss": "^5.0.21",
     "postcss-import": "^8.1.1",

@@ -1,14 +1,15 @@
 import React, { PropTypes } from 'react'
+import withStyles from 'isomorphic-style-loader/lib/withStyles'
 
 import Navigation from './Navigation'
 
-import './style.scss'
+import s from './style.scss'
 
 const AuthenticatedLanding = ({ children, onLogout }) => (
-  <div className='app'>
-    <section className='row content-container'>
+  <div className={s.root}>
+    <section>
       <Navigation onLogout={onLogout} />
-      <main className='row col-xs content'>
+      <main className={s.main}>
         {children}
       </main>
     </section>
@@ -20,4 +21,4 @@ AuthenticatedLanding.propTypes = {
   onLogout: PropTypes.func,
 }
 
-export default AuthenticatedLanding
+export default withStyles(s)(AuthenticatedLanding)

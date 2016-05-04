@@ -1,30 +1,30 @@
 $leftNavWidth: 60px;
 
-.app {
+.root {
+    overflow-x: hidden;
+}
 
-  overflow-x: hidden;
-
-  .content {
+.main {
     left: $leftNavWidth;
     margin: 0;
-    overflow-x: hidden;
     padding: 0;
     position: absolute;
     top: 0px;
-  }
-
-  .content-body {
-    background: #FFF;
-    padding: 30px 40px;
-    margin: 0;
-  }
 }
 
-.top-buttons {
-  margin-top: 35px;
+.buttons {
+    composes: middle-xs from '../../styles/vendor/flexboxgrid.css';
+    composes: col from '../../styles/layout.scss';
 }
 
-.left-nav {
+.topButtons {
+    composes: buttons;
+    margin-top: 35px;
+}
+
+.nav {
+    composes: between-xs from '../../styles/vendor/flexboxgrid.css';
+    composes: col from '../../styles/layout.scss';
     background: #393F44;
     bottom: 0;
     height: 100%;
@@ -36,15 +36,23 @@ $leftNavWidth: 60px;
     width: $leftNavWidth;
 }
 
-.nav-button {
-  border-radius: 2px;
-  margin-bottom: 10px;
-  opacity: 0.6;
-  padding: 10px;
-  position: relative;
+.navButton {
+    border-radius: 2px;
+    margin-bottom: 10px;
+    opacity: 0.6;
+    padding: 10px;
+    position: relative;
 }
 
-.nav-button.selected::before {
+.navButton:hover, .selectedNavButton {
+    opacity: 1;
+}
+
+.selectedNavButton {
+    composes: navButton;
+}
+
+.selectedNavButton::before {
   content: "";
   position: absolute;
   height: 36px;
@@ -54,11 +62,7 @@ $leftNavWidth: 60px;
   top: 4px;
 }
 
-.nav-button:hover, .nav-button.selected {
-  opacity: 1;
-}
-
-.nav-button:hover {
+.navButton:hover {
   background: #2F3437;
   cursor: pointer;
 }

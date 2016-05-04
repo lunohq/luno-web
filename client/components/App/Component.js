@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react'
+import React, { Component, PropTypes } from 'react'
 import Relay from 'react-relay'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
@@ -7,30 +7,56 @@ import AnonymousLanding from '../AnonymousLanding/Component'
 import AuthenticatedLanding from '../AuthenticatedLanding/Component'
 import LogoutMutation from '../../mutations/LogoutMutation'
 
-const App = ({ children, viewer }) => {
-  function handleLogout() {
+import s from './style.scss'
+
+class App extends Component {
+
+  handleLogout = () => {
     Relay.Store.commitUpdate(
       new LogoutMutation({ viewer })
     )
   }
 
-  let main
-  if (viewer.anonymous) {
-    main = <AnonymousLanding />
-  } else {
-    main = (
-      <AuthenticatedLanding
-        children={children}
-        onLogout={handleLogout}
-      />
-    )
+  getChildContext() {
+    return {
+      insertCss: styles => styles._insertCss(),
+    }
   }
 
-  return (
-    <MuiThemeProvider muiTheme={getMuiTheme()}>
-      {main}
-    </MuiThemeProvider>
-  )
+  componentWillMount() {
+    // _insertCss comes from https://github.com/kriasoft/isomorphic-style-loader
+    this.removeCss = s._insertCss()
+  }
+
+  componentWillUnmount() {
+    this.removeCss()
+  }
+
+  render() {
+    const { children, viewer } = this.props
+
+    let main
+    if (viewer.anonymous) {
+      main = <AnonymousLanding />
+    } else {
+      main = (
+        <AuthenticatedLanding
+          children={children}
+          onLogout={this.handleLogout}
+        />
+      )
+    }
+
+    return (
+      <MuiThemeProvider muiTheme={getMuiTheme()}>
+        {main}
+      </MuiThemeProvider>
+    )
+  }
+}
+
+App.childContextTypes = {
+  insertCss: PropTypes.func.isRequired,
 }
 
 App.propTypes = {

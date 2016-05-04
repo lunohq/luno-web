@@ -37,6 +37,7 @@ module.exports = {
     }, {
       test: /\.scss$/,
       loaders: [
+        'isomorphic-style-loader',
         `css-loader?${JSON.stringify({
           sourceMap: true,
           modules: true,
