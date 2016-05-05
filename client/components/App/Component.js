@@ -20,7 +20,11 @@ class App extends Component {
 
   getChildContext() {
     return {
-      insertCss: styles => styles._insertCss(),
+      insertCss: (...styles) => {
+        for (const style of styles) {
+          style._insertCss()
+        }
+      },
     }
   }
 
