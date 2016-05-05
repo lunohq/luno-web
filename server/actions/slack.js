@@ -53,6 +53,10 @@ export function getMembers(teamId) {
 
     const members = []
     for (const user of response.members) {
+      if (user.deleted || user.is_bot || user.name === 'slackbot') {
+        continue
+      }
+
       const member = new SlackMember()
       Object.assign(member, user, { teamId })
       members.push(member)
