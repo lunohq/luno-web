@@ -35,7 +35,6 @@ class PointsOfContactForm extends Component {
   }
 
   componentWillReceiveProps(nextProps, nextState) {
-    this.initialize(nextProps)
     if (nextProps.existing !== this.props.existing) {
       this.initializeData(nextProps, this.state)
     }
@@ -48,9 +47,7 @@ class PointsOfContactForm extends Component {
   initializeData({ existing, members }, state) {
     const contacts = []
     for (const contact of existing) {
-
       let matched
-
       // On initial invocation we pull out members from the state that have
       // already been selected so the user can't select them again. Subsequent
       // invocations will pull the contact object from the members property
@@ -80,7 +77,7 @@ class PointsOfContactForm extends Component {
         }
       }
     }
-    this.setState({ members })
+    this.setState({ members: state.members })
     this.props.initialize({ contacts })
   }
 
@@ -134,7 +131,6 @@ class PointsOfContactForm extends Component {
     const { existing } = this.props
     const { members, searchText } = this.state
     const dataSource = createDataSource(members)
-
     return (
       <form>
         <div>
@@ -160,7 +156,9 @@ class PointsOfContactForm extends Component {
 }
 
 PointsOfContactForm.propTypes = {
+  // Existing points of contact
   existing: PropTypes.array.isRequired,
+  // All slack team members
   members: PropTypes.array.isRequired,
   onSubmit: PropTypes.func.isRequired,
 }
