@@ -7,14 +7,17 @@ import CreateAnswerMutation from '../../mutations/CreateAnswerMutation'
 import DeleteAnswerMutation from '../../mutations/DeleteAnswerMutation'
 import UpdateAnswerMutation from '../../mutations/UpdateAnswerMutation'
 import t from '../../utils/gettext'
+import withStyles from '../../utils/withStyles'
 
 import DocumentTitle from '../DocumentTitle'
-import Divider from '../Divider'
+import Divider from '../Divider/Component'
 
 import AnswersTable from './AnswersTable'
 import CreateEditDialog from './CreateEditDialog'
 import DeleteDialog from './DeleteDialog'
-import './style.scss'
+
+import s from './style.scss'
+import es from './empty-state-style.scss'
 
 const AddAnswer = ({ label, onAddAnswer }) => {
   return (
@@ -32,12 +35,16 @@ AddAnswer.propTypes = {
 }
 
 const EmptyState = ({ onAddAnswer }) => (
-  <div className='row-xs middle-xs center-xs empty-state'>
-    <h3>{t('Add your first smart answer')}</h3>
-    <AddAnswer
-      label={t('Add smart answer')}
-      onAddAnswer={onAddAnswer}
-    />
+  <div className={es.root}>
+    <div className={es.row}>
+      <h3>{t('Add your first smart answer')}</h3>
+    </div>
+    <div className={es.row}>
+      <AddAnswer
+        label={t('Add smart answer')}
+        onAddAnswer={onAddAnswer}
+      />
+    </div>
   </div>
 )
 
@@ -151,10 +158,10 @@ class Answers extends Component {
 
     return (
       <DocumentTitle title={t('Smart answers')}>
-        <div className='smart-answers-container'>
-          <div className='col-xs content-body'>
-          <div className='section-title'>
-              <div className='row between-xs middle-xs no-margin'>
+        <div className={s.root}>
+          <div className={s.content}>
+            <div>
+              <div className={s.title}>
                 <h1>{t('Smart answers')}</h1>
                 {addAnswer}
               </div>
@@ -187,4 +194,4 @@ Answers.propTypes = {
   viewer: PropTypes.object.isRequired,
 }
 
-export default Answers
+export default withStyles(s, es)(Answers)

@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import { TextField } from 'material-ui'
 
 import t from '../../utils/gettext';
-import Divider from '../Divider'
+import Divider from '../Divider/Component'
 
 class PointsOfContact extends Component {
 

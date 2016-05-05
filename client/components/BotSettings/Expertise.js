@@ -3,7 +3,7 @@ import { TextField } from 'material-ui'
 
 import t from '../../utils/gettext'
 
-import Divider from '../Divider'
+import Divider from '../Divider/Component'
 
 const Expertise = ({ bot, onSave }) => {
   return (
