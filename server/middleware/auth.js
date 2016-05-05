@@ -3,7 +3,7 @@ import jwt from 'express-jwt'
 import { db } from 'luno-core'
 
 import config from '../config/environment'
-import { generateToken } from '../actions'
+import { generateToken } from '../actions/auth'
 import logger from '../logger'
 
 /**
