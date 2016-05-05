@@ -113,10 +113,33 @@ type SlackInfo {
   bot: SlackBot
 }
 
+type SlackMember implements Node {
+  id: ID!
+  userId: String
+  name: String
+  profile: SlackMemberProfile
+}
+
+type SlackMemberConnection {
+  pageInfo: PageInfo!
+  edges: [SlackMemberEdge]
+}
+
+type SlackMemberEdge {
+  node: SlackMember
+  cursor: String!
+}
+
+type SlackMemberProfile {
+  realName: String
+  email: String
+}
+
 type Team implements Node {
   id: ID!
   name: String
   slack: SlackInfo
+  members(after: String, first: Int, before: String, last: Int): SlackMemberConnection
 }
 
 input UpdateAnswerInput {

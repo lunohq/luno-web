@@ -24,6 +24,8 @@ import {
 
 import { db } from 'luno-core'
 
+import { getMember, getMembers, SlackMember } from '../actions/slack'
+
 const { nodeInterface, nodeField } = nodeDefinitions(
   (globalId) => {
     const { type, id } = fromGlobalId(globalId)
@@ -40,6 +42,9 @@ const { nodeInterface, nodeField } = nodeDefinitions(
     } else if (type === 'Regex') {
       const [partitionKey, sortKey] = db.client.deconstructId(id)
       return db.regex.getRegex(partitionKey, sortKey)
+    } else if (type === 'SlackMember') {
+      const [teamId, id] = db.client.deconstructId(id)
+      return getMember(teamId, id)
     }
     return null
   },
@@ -54,6 +59,8 @@ const { nodeInterface, nodeField } = nodeDefinitions(
       return GraphQLAnswer
     } else if (obj instanceof db.regex.Regex) {
       return GraphQLRegex
+    } else if (obj instanceof SlackMember) {
+      return GraphQLSlackMember
     }
     return null
   },
@@ -79,6 +86,22 @@ const GraphQLSlackInfo = new GraphQLObjectType({
   },
 })
 
+const GraphQLSlackMemberProfile = new GraphQLObjectType({
+  name: 'SlackMemberProfile',
+  description: 'Slack member profile object',
+  fields: {
+    realName: {
+      type: GraphQLString,
+      description: 'Slack user\'s full name',
+      resolve: obj => obj.real_name,
+    },
+    email: {
+      type: GraphQLString,
+      description: 'Slack user email',
+    },
+  },
+})
+
 const GraphQLTeam = new GraphQLObjectType({
   name: 'Team',
   fields: () => ({
@@ -90,6 +113,36 @@ const GraphQLTeam = new GraphQLObjectType({
     slack: {
       type: GraphQLSlackInfo,
       description: 'Slack info related to the Team',
+    },
+    members: {
+      type: SlackMembersConnection,
+      description: 'Members of the slack team',
+      args: connectionArgs,
+      resolve: async (team, args) => {
+        const members = await getMembers(team.id)
+        return connectionFromArray(members, args)
+      },
+    },
+  }),
+  interfaces: [nodeInterface],
+})
+
+const GraphQLSlackMember = new GraphQLObjectType({
+  name: 'SlackMember',
+  fields: () => ({
+    id: globalIdField('SlackMember', obj => db.client.compositeId(obj.teamId, obj.id)),
+    userId: {
+      type: GraphQLString,
+      description: 'Slack user id',
+      resolve: obj => obj.id,
+    },
+    name: {
+      type: GraphQLString,
+      description: 'Member\'s slack username',
+    },
+    profile: {
+      type: GraphQLSlackMemberProfile,
+      description: 'Member\'s slack profile',
     },
   }),
   interfaces: [nodeInterface],
@@ -218,6 +271,11 @@ const { connectionType: AnswersConnection, edgeType: GraphQLAnswerEdge } = conne
 const { connectionType: RegexesConnection, edgeType: GraphQLRegexEdge } = connectionDefinitions({
   name: 'Regex',
   nodeType: GraphQLRegex,
+})
+
+const { connectionType: SlackMembersConnection } = connectionDefinitions({
+  name: 'SlackMember',
+  nodeType: GraphQLSlackMember,
 })
 
 const GraphQLQuery = new GraphQLObjectType({
