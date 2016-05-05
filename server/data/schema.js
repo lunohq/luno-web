@@ -567,12 +567,12 @@ const GraphQLUpdateRegexMutation = mutationWithClientMutationId({
   },
 })
 
-const GraphQLUpdateBotMutation = mutationWithClientMutationId({
-  name: 'UpdateBot',
+const GraphQLUpdateBotPurposeMutation = mutationWithClientMutationId({
+  name: 'UpdateBotPurpose',
   inputFields: {
     id: { type: new GraphQLNonNull(GraphQLID) },
+    // TODO this should be required once we properly default when the user is created
     purpose: { type: GraphQLString },
-    pointsOfContact: { type: new GraphQLList(GraphQLString) },
   },
   outputFields: {
     bot: {
@@ -580,15 +580,45 @@ const GraphQLUpdateBotMutation = mutationWithClientMutationId({
       resolve: (bot) => bot,
     },
   },
-  mutateAndGetPayload: async ({ id: globalId, purpose, pointsOfContact }) => {
+  mutateAndGetPayload: async ({ id: globalId, purpose }) => {
     const { id: compositeId } = fromGlobalId(globalId)
     const [teamId, id] = db.client.deconstructId(compositeId)
 
-    const bot = await db.bot.updateBot({
-      pointsOfContact,
+    const bot = await db.bot.updatePurpose({
       teamId,
       id,
       purpose: purpose || null,
+    })
+    return bot
+  },
+})
+
+const GraphQLUpdateBotPointsOfContactMutation = mutationWithClientMutationId({
+  name: 'UpdateBotPointsOfContact',
+  inputFields: {
+    id: {
+      type: new GraphQLNonNull(GraphQLID),
+      description: 'Bot ID',
+    },
+    pointsOfContact: {
+      type: new GraphQLList(GraphQLString),
+      description: 'Points of contact for the bot. Should be a list of Slack user ids',
+    },
+  },
+  outputFields: {
+    bot: {
+      type: GraphQLBot,
+      resolve: bot => bot,
+    },
+  },
+  mutateAndGetPayload: async ({ id: globalId, pointsOfContact }) => {
+    const { id: compositeId } = fromGlobalId(globalId)
+    const [teamId, id] = db.client.deconstructId(compositeId)
+
+    const bot = await db.bot.updatePointsOfContact({
+      pointsOfContact,
+      teamId,
+      id,
     })
     return bot
   },
@@ -625,7 +655,8 @@ const GraphQLMutation = new GraphQLObjectType({
     createAnswer: GraphQLCreateAnswerMutation,
     deleteAnswer: GraphQLDeleteAnswerMutation,
     updateAnswer: GraphQLUpdateAnswerMutation,
-    updateBot: GraphQLUpdateBotMutation,
+    updateBotPurpose: GraphQLUpdateBotPurposeMutation,
+    updateBotPointsOfContact: GraphQLUpdateBotPointsOfContactMutation,
     logout: GraphQLLogoutMutation,
   }),
 })

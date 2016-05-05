@@ -2,7 +2,8 @@ import React, { Component, PropTypes } from 'react'
 import Relay from 'react-relay'
 import { Snackbar } from 'material-ui'
 
-import UpdateBotMutation from '../../mutations/UpdateBotMutation'
+import UpdateBotPurposeMutation from '../../mutations/UpdateBotPurposeMutation'
+import UpdateBotPointsOfContactMutation from '../../mutations/UpdateBotPointsOfContactMutation'
 import t from '../../utils/gettext'
 import withStyles from '../../utils/withStyles'
 
@@ -28,11 +29,9 @@ class BotSettings extends Component {
   handleSaveExpertise = (event) => {
     const purpose = event.target.value
     const bot = this.getBot()
-    const pointsOfContact = bot.pointsOfContact
-    const mutation = new UpdateBotMutation({
+    const mutation = new UpdateBotPurposeMutation({
       bot,
       purpose,
-      pointsOfContact,
     })
 
     Relay.Store.commitUpdate(mutation, {
@@ -40,17 +39,16 @@ class BotSettings extends Component {
     })
   }
 
-  handleSavePointsOfContact = (pointsOfContact) => {
+  handleSavePointsOfContact = ({ contacts }) => {
+    const pointsOfContact = contacts.map(contact => contact.node.userId)
     const bot = this.getBot()
-    const purpose = bot.purpose
-    const mutation = new UpdateBotMutation({
+    const mutation = new UpdateBotPointsOfContactMutation({
       bot,
-      purpose,
       pointsOfContact,
     })
 
     Relay.Store.commitUpdate(mutation, {
-      onSuccess: () => this.showSnackbar('Saved points of contact!')
+      onSuccess: () => this.showSnackbar('Saved points of contact!'),
     })
   }
 
@@ -69,6 +67,7 @@ class BotSettings extends Component {
   }
 
   render() {
+    const { viewer: { team: { members: { edges: members } } } } = this.props;
     return (
       <DocumentTitle title={t('Bot settings')}>
         <div className={s.root}>
@@ -78,6 +77,7 @@ class BotSettings extends Component {
           />
           <PointsOfContact
             bot={this.getBot()}
+            members={members}
             onSave={this.handleSavePointsOfContact}
           />
           <Snackbar

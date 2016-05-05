@@ -1,6 +1,6 @@
 import Relay from 'react-relay'
 
-export default class UpdateBotMutation extends Relay.Mutation {
+export default class UpdateBotPointsOfContactMutation extends Relay.Mutation {
   static fragments = {
     bot: () => Relay.QL`
       fragment on Bot {
@@ -10,12 +10,12 @@ export default class UpdateBotMutation extends Relay.Mutation {
   }
 
   getMutation() {
-    return Relay.QL`mutation { updateBot }`
+    return Relay.QL`mutation { updateBotPointsOfContact }`
   }
 
   getFatQuery() {
     return Relay.QL`
-      fragment on UpdateBotPayload {
+      fragment on UpdateBotPointsOfContactPayload {
         bot
       }
     `
@@ -31,23 +31,20 @@ export default class UpdateBotMutation extends Relay.Mutation {
   }
 
   getVariables() {
-    const { bot: { id }, pointsOfContact, purpose } = this.props
+    const { bot: { id }, pointsOfContact } = this.props
     return {
       id,
       pointsOfContact,
-      purpose
     }
   }
 
   getOptimisticResponse() {
-    const { bot: { id }, purpose, pointsOfContact } = this.props
+    const { bot: { id }, pointsOfContact } = this.props
     return {
       bot: {
         id,
         pointsOfContact,
-        purpose
       }
     }
   }
-
 }

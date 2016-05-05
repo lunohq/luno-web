@@ -1302,7 +1302,7 @@
               "deprecationReason": null
             },
             {
-              "name": "updateBot",
+              "name": "updateBotPurpose",
               "description": null,
               "args": [
                 {
@@ -1313,7 +1313,7 @@
                     "name": null,
                     "ofType": {
                       "kind": "INPUT_OBJECT",
-                      "name": "UpdateBotInput",
+                      "name": "UpdateBotPurposeInput",
                       "ofType": null
                     }
                   },
@@ -1322,7 +1322,34 @@
               ],
               "type": {
                 "kind": "OBJECT",
-                "name": "UpdateBotPayload",
+                "name": "UpdateBotPurposePayload",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "updateBotPointsOfContact",
+              "description": null,
+              "args": [
+                {
+                  "name": "input",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "UpdateBotPointsOfContactInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "UpdateBotPointsOfContactPayload",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -1677,7 +1704,7 @@
         },
         {
           "kind": "INPUT_OBJECT",
-          "name": "UpdateBotInput",
+          "name": "UpdateBotPurposeInput",
           "description": null,
           "fields": null,
           "inputFields": [
@@ -1706,8 +1733,86 @@
               "defaultValue": null
             },
             {
-              "name": "pointsOfContact",
+              "name": "clientMutationId",
               "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ],
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "UpdateBotPurposePayload",
+          "description": null,
+          "fields": [
+            {
+              "name": "bot",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "OBJECT",
+                "name": "Bot",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "clientMutationId",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "UpdateBotPointsOfContactInput",
+          "description": null,
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id",
+              "description": "Bot ID",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "pointsOfContact",
+              "description": "Points of contact for the bot. Should be a list of Slack user ids",
               "type": {
                 "kind": "LIST",
                 "name": null,
@@ -1740,7 +1845,7 @@
         },
         {
           "kind": "OBJECT",
-          "name": "UpdateBotPayload",
+          "name": "UpdateBotPointsOfContactPayload",
           "description": null,
           "fields": [
             {

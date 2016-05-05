@@ -1,6 +1,7 @@
 import Relay from 'react-relay'
 
-import UpdateBotMutation from '../../mutations/UpdateBotMutation'
+import UpdateBotPurposeMutation from '../../mutations/UpdateBotPurposeMutation'
+import UpdateBotPointsOfContactMutation from '../../mutations/UpdateBotPointsOfContactMutation'
 
 import Component from './Component'
 
@@ -15,10 +16,24 @@ export default Relay.createContainer(Component, {
         bots(first: 1) {
           edges {
             node {
-              ${UpdateBotMutation.getFragment('bot')}
+              ${UpdateBotPurposeMutation.getFragment('bot')}
+              ${UpdateBotPointsOfContactMutation.getFragment('bot')}
               id
               purpose
               pointsOfContact
+            }
+          }
+        }
+        team {
+          members(first: 999999) {
+            edges {
+              node {
+                userId
+                name
+                profile {
+                  realName
+                }
+              }
             }
           }
         }
