@@ -1,6 +1,6 @@
 import React from 'react'
-import withStyles from 'isomorphic-style-loader/lib/withStyles'
 
+import withStyles from '../../utils/withStyles'
 import DocumentTitle from '../DocumentTitle'
 
 import s from './style.scss'
