@@ -1,36 +1,36 @@
-@import '../../styles/landing.scss';
-
-.brand,
-.brand:focus,
-.brand:visited,
-.brand:hover {
-  font-family: sofia;
-  font-size: 32px;
-  color: white;
-}
-
-a.brand,
-a.brand:focus,
-a.brand:visited,
-a.brand:hover {
-  color: white;
-}
-
-.landing {
+.root {
     background-color: #484959;
     height: 100vh;
 }
 
-.landing h1 {
-    color: white;
-    font-weight: 400;
+.container {
+    composes: container from '../../styles/layout.scss';
 }
 
-.landing .content {
+.title {
+    color: white;
+    font-weight: 400;
+    font-size: 4rem;
+}
+
+.content {
+    composes: row center-xs from '../../styles/vendor/flexboxgrid.css';
     padding-top: 200px;
 }
 
-.landing .header {
+.header {
+    composes: row from '../../styles/vendor/flexboxgrid.css';
     padding-top: 15px;
 }
 
+.brand {
+    composes: brand from '../../styles/typography.scss';
+}
+
+.brandContainer {
+    composes: col-xs-6 from '../../styles/vendor/flexboxgrid.css';
+}
+
+.loginContainer {
+    composes: col-xs-12 from '../../styles/vendor/flexboxgrid.css';
+}
