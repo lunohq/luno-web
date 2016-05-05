@@ -1,8 +1,13 @@
 import React, { Component, PropTypes } from 'react'
 import { TextField } from 'material-ui'
 
-import t from '../../utils/gettext';
+import t from '../../utils/gettext'
+import withStyles from '../../utils/withStyles'
+
 import Divider from '../Divider/Component'
+import SectionTitle from '../SectionTitle/Component'
+
+import s from './points-of-contact-style.scss'
 
 class PointsOfContact extends Component {
 
@@ -44,17 +49,17 @@ class PointsOfContact extends Component {
     const pointsOfContact = bot.pointsOfContact ? bot.pointsOfContact.join(', ') : ''
 
     return (
-      <div className='bot-settings-section'>
-        <div className='section-title'>
-          <div className='row between-xs middle-xs no-margin'>
-            <h1>{t('Points of contact')}</h1>
+      <div>
+        <div>
+          <div className={s.titleContainer}>
+            <SectionTitle title={t('Points of contact')} />
           </div>
           <Divider />
-          <p>
+          <p className={s.text}>
               {t('To avoid a frustrating phone tree OPERATOR!!! experience, whenever your Lunobot can’t provide a great answer, it will immediately escalate the question to real people.')}
           </p>
         </div>
-        <div className='section-body'>
+        <div className={s.body}>
           <TextField
             hintText={t('@username')}
             defaultValue={pointsOfContact}
@@ -66,7 +71,7 @@ class PointsOfContact extends Component {
             style={{ width: '80%' }}
             value={this.state.contacts}
           />
-          <div className='hint-text'>{t('Add Slack usernames of people who should be mentioned when escalating.')}</div>
+          <div className={s.hintText}>{t('Add Slack usernames of people who should be mentioned when escalating.')}</div>
         </div>
       </div>
     )
@@ -78,4 +83,4 @@ PointsOfContact.propTypes = {
   onSave: PropTypes.func.isRequired,
 }
 
-export default PointsOfContact
+export default withStyles(s)(PointsOfContact)

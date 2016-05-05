@@ -11,6 +11,7 @@ import withStyles from '../../utils/withStyles'
 
 import DocumentTitle from '../DocumentTitle'
 import Divider from '../Divider/Component'
+import SectionTitle from '../SectionTitle/Component'
 
 import AnswersTable from './AnswersTable'
 import CreateEditDialog from './CreateEditDialog'
@@ -162,11 +163,11 @@ class Answers extends Component {
           <div className={s.content}>
             <div>
               <div className={s.title}>
-                <h1>{t('Smart answers')}</h1>
+                <SectionTitle title={t('Smart Answers')} />
                 {addAnswer}
               </div>
               <Divider />
-              <p>
+              <p className={s.text}>
                 {t('Use smart answers to scale yourself and answer common questions. Your Lunobot will search these smart answers and intelligently reply in any channel that its added to.')}
               </p>
             </div>

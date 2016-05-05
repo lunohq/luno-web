@@ -1,15 +1,14 @@
-.bot-settings-section {
-  .section-body {
+.root {
+    composes: col-xs from '../../styles/vendor/flexboxgrid.css';
+    composes: content from '../../styles/layout.scss';
+}
+
+.body {
     font-size: 1.6rem;
     margin-bottom: 60px;
-  }
+}
 
-  .expertise-text {
-    margin: 0 10px;
-  }
-
-  .hint-text {
-    font-size: 1.3rem;
-    color: rgba(0, 0, 0, 0.5);
-  }
+.titleContainer {
+    composes: row between-xs middle-xs from '../../styles/vendor/flexboxgrid.css';
+    margin: 0;
 }

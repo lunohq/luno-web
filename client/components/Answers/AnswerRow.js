@@ -6,6 +6,10 @@ import {
   TableRowColumn,
 } from 'material-ui'
 
+import withStyles from '../../utils/withStyles'
+
+import s from './answer-row-style.scss'
+
 const AnswerRow = ({ answer, handleDelete, handleEdit }) => {
   const cellStyle = { fontSize: '1.4rem', whiteSpace: 'pre-wrap' }
   const actionsCellStyle = { textAlign: 'right' }
@@ -46,4 +50,4 @@ AnswerRow.propTypes = {
   handleEdit: PropTypes.func.isRequired,
 }
 
-export default AnswerRow
+export default withStyles(s)(AnswerRow)

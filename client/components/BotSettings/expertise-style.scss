@@ -1,0 +1,15 @@
+.text {
+    composes: text from '../../styles/typography.scss';
+}
+
+.expertise {
+    margin: 0 10px;
+}
+
+.titleContainer {
+    composes: titleContainer from './style.scss';
+}
+
+.body {
+    composes: body from './style.scss';
+}

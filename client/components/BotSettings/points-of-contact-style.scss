@@ -1,0 +1,16 @@
+.text {
+    composes: text from '../../styles/typography.scss';
+}
+
+.hintText {
+    font-size: 1.3rem;
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.body {
+    composes: body from './style.scss';
+}
+
+.titleContainer {
+    composes: titleContainer from './style.scss';
+}

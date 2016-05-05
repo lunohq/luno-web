@@ -3,13 +3,15 @@ import Relay from 'react-relay'
 import { Snackbar } from 'material-ui'
 
 import UpdateBotMutation from '../../mutations/UpdateBotMutation'
-import t from '../../utils/gettext';
+import t from '../../utils/gettext'
+import withStyles from '../../utils/withStyles'
 
 import DocumentTitle from '../DocumentTitle'
 
 import Expertise from './Expertise'
 import PointsOfContact from './PointsOfContact'
-import './style.scss'
+
+import s from './style.scss'
 
 class BotSettings extends Component {
 
@@ -69,23 +71,21 @@ class BotSettings extends Component {
   render() {
     return (
       <DocumentTitle title={t('Bot settings')}>
-        <div className='smart-answers-container'>
-          <div className='col-xs content-body'>
-            <Expertise
-              bot={this.getBot()}
-              onSave={this.handleSaveExpertise}
-            />
-            <PointsOfContact
-              bot={this.getBot()}
-              onSave={this.handleSavePointsOfContact}
-            />
-            <Snackbar
-              open={this.state.showSnackbar}
-              message={this.state.snackbarMessage}
-              autoHideDuration={4000}
-              onRequestClose={this.hideSnackbar}
-            />
-          </div>
+        <div className={s.root}>
+          <Expertise
+            bot={this.getBot()}
+            onSave={this.handleSaveExpertise}
+          />
+          <PointsOfContact
+            bot={this.getBot()}
+            onSave={this.handleSavePointsOfContact}
+          />
+          <Snackbar
+            open={this.state.showSnackbar}
+            message={this.state.snackbarMessage}
+            autoHideDuration={4000}
+            onRequestClose={this.hideSnackbar}
+          />
         </div>
       </DocumentTitle>
     )
@@ -96,4 +96,4 @@ BotSettings.propTypes = {
   viewer: PropTypes.object.isRequired,
 }
 
-export default BotSettings
+export default withStyles(s)(BotSettings)
