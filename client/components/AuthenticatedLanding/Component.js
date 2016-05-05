@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
-import withStyles from 'isomorphic-style-loader/lib/withStyles'
 
+import withStyles from '../../utils/withStyles'
 import Navigation from './Navigation'
 
 import s from './style.scss'
