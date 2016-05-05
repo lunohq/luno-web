@@ -160,7 +160,12 @@ const GraphQLUser = new GraphQLObjectType({
     team: {
       type: GraphQLTeam,
       description: 'The Team the User belongs to',
-      resolve: user => db.team.getTeam(user.teamId),
+      resolve: user => {
+        if (!user.anonymous) {
+          return db.team.getTeam(user.teamId)
+        }
+        return null
+      },
     },
     bots: {
       type: BotsConnection,
