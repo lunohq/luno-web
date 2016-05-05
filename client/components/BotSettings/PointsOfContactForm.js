@@ -18,7 +18,7 @@ function getItemName(item) {
 function createDataSource(members) {
   const dataSource = []
   for (const member of members) {
-    let text = member.node.name
+    let text = `@${member.node.name}`
     if (member.node.profile.realName) {
       text = `${text} (${member.node.profile.realName})`
     }
@@ -146,7 +146,7 @@ class PointsOfContactForm extends Component {
               <AutoComplete
                 dataSource={dataSource}
                 filter={AutoComplete.caseInsensitiveFilter}
-                hintText={t('username')}
+                hintText={t('@username')}
                 onNewRequest={this.handleNewRequest}
                 onUpdateInput={this.handleUpdateInput}
                 searchText={searchText}
