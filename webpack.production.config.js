@@ -69,6 +69,13 @@ module.exports = {
     new webpack.DefinePlugin({
       __SENTRY_DSN__: JSON.stringify('https://e797ece0159c474ea264041392b714f7@app.getsentry.com/75750')
     }),
-  ]
+  ],
+  postcss(bundler) {
+    return [
+      require('postcss-import')({ addDependencyTo: bundler }),
+      require('precss')(),
+      require('autoprefixer')({ browsers: AUTOPREFIXER_BROWSERS }),
+    ];
+  },
 };
 
