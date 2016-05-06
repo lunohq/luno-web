@@ -157,10 +157,14 @@ class PointsOfContactForm extends Component {
 
 PointsOfContactForm.propTypes = {
   // Existing points of contact
-  existing: PropTypes.array.isRequired,
+  existing: PropTypes.array,
   // All slack team members
   members: PropTypes.array.isRequired,
   onSubmit: PropTypes.func.isRequired,
+}
+
+PointsOfContactForm.defaultProps = {
+  existing: [],
 }
 
 export default reduxForm({

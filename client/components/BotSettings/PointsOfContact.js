@@ -22,7 +22,7 @@ const PointsOfContact = ({ bot, members, onSave }) => (
       </p>
     </div>
     <div className={s.body}>
-      <PointsOfContactForm existing={bot.pointsOfContact} members={members} onSubmit={onSave} />
+      <PointsOfContactForm existing={bot.pointsOfContact || undefined} members={members} onSubmit={onSave} />
       <div className={s.hintText}>{t('Add Slack usernames of people who should be mentioned when escalating.')}</div>
     </div>
   </div>
