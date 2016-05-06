@@ -26,8 +26,7 @@ class BotSettings extends Component {
     return bots.edges[0].node
   }
 
-  handleSaveExpertise = (event) => {
-    const purpose = event.target.value
+  handleSaveExpertise = ({ purpose }) => {
     const bot = this.getBot()
     const mutation = new UpdateBotPurposeMutation({
       bot,

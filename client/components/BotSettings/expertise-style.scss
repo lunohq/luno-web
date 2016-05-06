@@ -12,4 +12,5 @@
 
 .body {
     composes: body from './style.scss';
+    composes: row middle-xs from '../../styles/vendor/flexboxgrid.css'
 }
