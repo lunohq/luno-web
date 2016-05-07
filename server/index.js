@@ -33,19 +33,23 @@ const botkit = Botkit.slackbot({
 })
 
 botkit.on('create_team', async (bot) => {
+  let result
   try {
-    await events.publish.createTeam(bot.config.id)
+    result = await events.publish.createTeam(bot.config.id)
   } catch (err) {
     logger.error('Error publishing `create_team`', { teamId: bot.config.id }, err)
   }
+  logger.info('Published `create_team` notification', { result })
 })
 
 botkit.on('create_user', async (bot, user) => {
+  let result
   try {
-    await events.publish.createUser(user.teamId, user.id)
+    result = await events.publish.createUser(user.teamId, user.id)
   } catch (err) {
     logger.error('Error publishing `create_user`', { user }, err)
   }
+  logger.info('Published `create_user` notification', { result })
 })
 
 function startGraphQLServer(schema) {
