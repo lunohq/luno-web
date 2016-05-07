@@ -34,9 +34,19 @@ const botkit = Botkit.slackbot({
 
 botkit.on('create_team', (bot) => {
   try {
+    console.log('publishing create team', bot.config.id)
     events.publish.createTeam(bot.config.id)
   } catch (err) {
-    logger.error('Error publishing `create_team`', { err, teamId: bot.config.id })
+    logger.error('Error publishing `create_team`', { teamId: bot.config.id }, err)
+  }
+})
+
+botkit.on('create_user', (bot, user) => {
+  try {
+    console.log('publishing create user', user.teamId, user.id)
+    events.publish.createUser(user.teamId, user.id)
+  } catch (err) {
+    logger.error('Error publishing `create_user`', { user }, err)
   }
 })
 
