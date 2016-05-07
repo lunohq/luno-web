@@ -33,6 +33,7 @@ const botkit = Botkit.slackbot({
 })
 
 botkit.on('create_team', async (bot) => {
+  logger.info('Publishing `create_team` notification')
   let result
   try {
     result = await events.publish.createTeam(bot.config.id)
@@ -43,6 +44,7 @@ botkit.on('create_team', async (bot) => {
 })
 
 botkit.on('create_user', async (bot, user) => {
+  logger.info('Publishing `create_user` notification')
   let result
   try {
     result = await events.publish.createUser(user.teamId, user.id)
