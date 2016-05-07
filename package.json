@@ -85,7 +85,7 @@
     "react-router-relay": "^0.12.2",
     "react-tap-event-plugin": "^1.0.0",
     "redux": "^3.5.1",
-    "redux-form": "v6.0.0-alpha.7",
+    "redux-form": "git+https://github.com/lunohq/redux-form.git#1039e7c8262c746cc0a7f3acb7c59d3a9aaf282d",
     "winston": "^2.2.0"
   }
 }

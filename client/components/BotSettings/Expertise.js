@@ -46,17 +46,13 @@ class Expertise extends Component {
           <Field name='purpose' component={purpose => {
             const { onBlur, ...other } = purpose
 
-            // TODO: don't check for purpose value once this is resolved:
-            // https://github.com/erikras/redux-form/issues/921
             function handleBlur(event) {
               onBlur(event)
-              if (purpose.value && purpose.value.trim()) {
-                handleSubmit(onSave)()
-              }
+              handleSubmit(onSave)()
             }
 
             function handleKeyDown(event) {
-              if (purpose.value && purpose.value.trim() && event.key === 'Enter') {
+              if (event.key === 'Enter') {
                 handleSubmit(onSave)()
               }
             }
