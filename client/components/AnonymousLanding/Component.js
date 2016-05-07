@@ -12,19 +12,18 @@ const AnonymousLanding = () => (
         <div>
           <div className={s.header}>
             <div className={s.brandContainer}>
-              <a className={s.brand} href='#'>luno</a>
+              <a className={s.brand} href='https://www.lunohq.com'>luno</a>
             </div>
           </div>
         </div>
         <div className={s.content}>
           <div className={s.loginContainer}>
-            <h1 className={s.title}>Log in to your Slack team</h1>
             <a href='/login'>
               <img
-                alt='Add to Slack'
+                alt='Sign in with Slack'
                 height='60'
                 style={{ marginTop: '40px', marginBottom: '40px' }}
-                src={require('../../assets/add-to-slack-button.png')}
+                src={require('../../assets/sign-in-with-slack-button.png')}
               />
             </a>
           </div>

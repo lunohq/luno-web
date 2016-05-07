@@ -7,12 +7,6 @@
     composes: container from '../../styles/layout.scss';
 }
 
-.title {
-    color: white;
-    font-weight: 400;
-    font-size: 4rem;
-}
-
 .content {
     composes: row center-xs from '../../styles/vendor/flexboxgrid.css';
     padding-top: 200px;
