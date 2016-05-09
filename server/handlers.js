@@ -1,6 +1,7 @@
-import logger, { metadata } from './logger'
+import { es } from 'luno-core'
 
-import { search, uploadResult } from './actions/search'
+import logger, { metadata } from './logger'
+import { uploadResult } from './actions/bot'
 
 export function handleSlashCommand(bot, message) {
   let command
@@ -8,12 +9,17 @@ export function handleSlashCommand(bot, message) {
   const parts = message.text.split(' ')
   if (parts) {
     command = parts[0]
-    text = parts.slice(1).join(' ')
+    text = parts.slice(1).join(' ').trim()
   }
 
   if (command.startsWith('explain')) {
-    const verbose = command.endsWith('[v]')
-    return handleExplain({ bot, message, text, verbose })
+    const verbose = command.includes('[v]')
+    const match = command.match(/\[id:([^\]]+)\]/)
+    if (match) {
+      return handleExplainId({ bot, message, text, id: match[1] })
+    } else {
+      return handleExplain({ bot, message, text, verbose })
+    }
   } else {
     return handleDefault({ bot, message })
   }
@@ -52,7 +58,7 @@ function explainResults({ bot, message, query, result, verbose }) {
 export async function handleExplain({ bot, message, text, verbose }) {
   let result
   try {
-    result = await search(bot.config.luno.botId, text)
+    result = await es.answer.search(bot.config.luno.botId, text)
   } catch (err) {
     logger.error('Error executing search', metadata({ err, bot, message }))
   }
@@ -61,6 +67,38 @@ export async function handleExplain({ bot, message, text, verbose }) {
   } catch (err) {
     logger.error('Error explaining results', metadata({ err, bot, message, result }))
   }
+}
+
+export async function handleExplainId({ bot, message, text, id }) {
+  let answerId
+  try {
+    answerId = new Buffer(id, 'base64').toString('ascii').split('_')[1]
+  } catch (err) {
+    logger.error('Error parsing id', metadata({ err, bot, message, id }))
+    return reject(err)
+  }
+
+  let result
+  try {
+    result = await es.answer.explain(bot.config.luno.botId, text, answerId)
+  } catch (err) {
+    logger.error('Error executing explain', metadata({ err, bot, message }))
+    return reject(err)
+  }
+
+  let upload
+  try {
+    upload = await uploadResult({ bot, message, query: text, result })
+  } catch (err) {
+    logger.error('Error uploading result', metadata({ err, bot, message, result }))
+    return reject(err)
+  }
+
+  bot.replyPrivate(message, `Full explanation: ${upload.permalink}`, (err) => {
+    if (err) {
+      logger.error('Error sending delayed message', metadata({ err, message }))
+    }
+  })
 }
 
 export function handleDefault({ bot, message }) {

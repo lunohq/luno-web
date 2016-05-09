@@ -1,17 +1,4 @@
 import Bluebird from 'bluebird'
-import { es } from 'luno-core'
-
-export function search(botId, query) {
-  return new Promise(async (resolve, reject) => {
-    let result
-    try {
-      result = await es.answer.search(botId, query)
-    } catch (err) {
-      return reject(err)
-    }
-    return resolve(result)
-  })
-}
 
 export function uploadResult({ bot, message, result, query }) {
   return new Promise(async (resolve, reject) => {
