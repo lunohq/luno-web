@@ -25,7 +25,7 @@ const AnswerRow = ({ answer, handleDelete, handleEdit }) => {
 
   const { id, title, body } = answer
   return (
-    <TableRow key={id}>
+    <TableRow key={id} data-id={id}>
       <TableRowColumn style={cellStyle}>{title}</TableRowColumn>
       <TableRowColumn style={cellStyle}>{body}</TableRowColumn>
       <TableRowColumn style={actionsCellStyle}>
