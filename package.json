@@ -59,6 +59,7 @@
   },
   "dependencies": {
     "@slack/client": "^3.1.0",
+    "body-parser": "^1.15.1",
     "botkit": "git+https://github.com/lunohq/botkit.git#6ad2ddef652f25db80b6ef9fe52db69c4739de62",
     "connect-history-api-fallback": "^1.2.0",
     "cookie-parser": "^1.4.1",

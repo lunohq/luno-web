@@ -24,6 +24,7 @@ const config = {
   slack: {
     clientId: process.env.SLACK_CLIENT_ID,
     clientSecret: process.env.SLACK_CLIENT_SECRET,
+    slashCommandToken: process.env.SLACK_SLASH_COMMAND_TOKEN,
   },
   ssl: process.env.FORCE_SSL || false,
   sentry: {

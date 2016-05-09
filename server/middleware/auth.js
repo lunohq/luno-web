@@ -4,7 +4,7 @@ import { db } from 'luno-core'
 
 import config from '../config/environment'
 import { generateToken } from '../actions/auth'
-import logger from '../logger'
+import logger, { metadata } from '../logger'
 
 /**
  * Use botkit to handle the oauth process.
@@ -18,7 +18,7 @@ import logger from '../logger'
 function oauth(botkit, app) {
   botkit.createOauthEndpoints(app, async (err, req, res) => {
     if (err) {
-      logger.error('OAuth Failure', { query: req.query }, err)
+      logger.error('OAuth Failure', metadata({ query: req.query, err }))
       return res.redirect('/')
     }
 
@@ -31,7 +31,7 @@ function oauth(botkit, app) {
     try {
       token = await generateToken(config.token.secret, { user: res.locals.user })
     } catch (err) {
-      logger.error('OAuth Token Transfer Failure', { query: req.query.error }, err)
+      logger.error('OAuth Token Transfer Failure', metadata({ query: req.query.error, err }))
       return res.redirect('/')
     }
 

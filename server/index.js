@@ -8,7 +8,7 @@ import historyApiFallback from 'connect-history-api-fallback'
 import gaze from 'gaze'
 import chalk from 'chalk'
 import Botkit from 'botkit'
-import { botkit as bk, events } from 'luno-core'
+import { botkit as bk, events, db } from 'luno-core'
 import morgan from 'morgan'
 import { HTTPS as enforceHttps } from 'express-sslify'
 import raven from 'raven'
@@ -19,7 +19,9 @@ import config from './config/environment'
 import schema from './data/schema'
 import updateSchema from './utils/updateSchema'
 import auth from './middleware/auth'
+import slashCommands from './middleware/slashCommands'
 import logger from './logger'
+import { handleSlashCommand } from './handlers'
 
 let graphQLServer
 let relayServer
@@ -29,8 +31,22 @@ const botkit = Botkit.slackbot({
 }).configureSlackApp({
   clientId: config.slack.clientId,
   clientSecret: config.slack.clientSecret,
-  scopes: ['bot'],
+  scopes: ['bot', 'commands'],
 })
+
+// Customize findTeamById to include our internal bot id
+botkit.findTeamById = async (id, cb) => {
+  let bots
+  try {
+    bots = await db.bot.getBots(id)
+  } catch (err) {
+    return cb(err)
+  }
+  botkit.storage.teams.get(id, (err, team) => {
+    const slackTeam = db.team.toSlackTeam(team, bots[0])
+    cb(err, Object.assign({}, slackTeam, team))
+  })
+}
 
 botkit.on('create_team', async (bot) => {
   logger.info('Publishing `create_team` notification')
@@ -52,6 +68,15 @@ botkit.on('create_user', async (bot, user) => {
     logger.error('Error publishing `create_user`', { user }, err)
   }
   logger.info('Published `create_user` notification', { result })
+})
+
+botkit.on('slash_command', (bot, message) => {
+  if (message.token !== config.slack.slashCommandToken) {
+    logger.error('Invalid token received for slash command', { message })
+    return
+  }
+
+  handleSlashCommand(bot, message)
 })
 
 function startGraphQLServer(schema) {
@@ -96,6 +121,7 @@ function startRelayServer() {
 
   relayServer.use(morgan('short'))
   auth(relayServer.app, botkit)
+  slashCommands(relayServer.app, botkit)
   // Serve static resources
   relayServer.use('/', express.static(path.join(__dirname, '../build')))
 
@@ -140,6 +166,7 @@ if (config.env === 'development') {
 
   relayServer.use(morgan('short'))
   auth(relayServer, botkit)
+  slashCommands(relayServer, botkit)
   relayServer.use(historyApiFallback())
   relayServer.use('/', express.static(path.join(__dirname, '../build')))
   relayServer.use('/graphql', graphQLHTTP(request => ({
