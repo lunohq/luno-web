@@ -58,7 +58,7 @@ class CreateEditDialog extends Component {
         onTouchTap={this.cancelForm}
       />,
       <FlatButton
-        label={t('Add')}
+        label={answer ? t('Update') : t('Add')}
         primary
         onTouchTap={this.submitForm}
       />,
