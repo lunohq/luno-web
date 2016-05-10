@@ -73,7 +73,7 @@
     "graphql-relay": "^0.3.6",
     "jsonwebtoken": "^5.7.0",
     "lodash": "^4.7.0",
-    "luno-core": "git+https://1d0cdee693b540fb3b9cd603b01834ec45976ce9:x-oauth-basic@github.com/lunohq/luno-core.git#v0.9.6",
+    "luno-core": "git+https://1d0cdee693b540fb3b9cd603b01834ec45976ce9:x-oauth-basic@github.com/lunohq/luno-core.git#v0.9.7",
     "material-ui": "v0.15.0-beta.2",
     "morgan": "^1.7.0",
     "raven": "^0.10.0",
