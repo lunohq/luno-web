@@ -73,11 +73,12 @@ class CreateEditDialog extends Component {
 
     return (
       <Dialog
-        title={title}
         actions={actions}
+        autoScrollBodyContent={true}
         modal={false}
         open={open}
         onRequestClose={this.cancelForm}
+        title={title}
       >
         <Form
           onSubmit={this.handleSubmit}
