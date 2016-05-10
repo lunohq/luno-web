@@ -3,6 +3,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const AUTOPREFIXER_BROWSERS = [
   'Android 2.3',
@@ -69,6 +70,9 @@ module.exports = {
     new webpack.DefinePlugin({
       __SENTRY_DSN__: JSON.stringify('https://e797ece0159c474ea264041392b714f7@app.getsentry.com/75750')
     }),
+    new CopyWebpackPlugin([
+      { from: 'client/.well-known', to: '.well-known' },
+    ]),
   ],
   postcss(bundler) {
     return [
