@@ -20,6 +20,8 @@ export function handleSlashCommand(bot, message) {
     } else {
       return handleExplain({ bot, message, text, verbose })
     }
+  } else if (command.startsWith('validate')) {
+    return handleValidate({ bot, message, text })
   } else {
     return handleDefault({ bot, message })
   }
@@ -99,6 +101,17 @@ export async function handleExplainId({ bot, message, text, id }) {
       logger.error('Error sending delayed message', metadata({ err, message }))
     }
   })
+}
+
+export async function handleValidate({ bot, message, text }) {
+  let result
+  try {
+    result = await es.answer.validate(bot.config.luno.botId, text)
+  } catch (err) {
+    logger.error('Error executing validate', metadata({ err, bot, message }))
+  }
+
+  bot.replyPrivate(message, `Results of validating query:\n\`\`\`${JSON.stringify(result, undefined, '  ')}\`\`\``)
 }
 
 export function handleDefault({ bot, message }) {
