@@ -22,6 +22,8 @@ export function handleSlashCommand(bot, message) {
     }
   } else if (command.startsWith('validate')) {
     return handleValidate({ bot, message, text })
+  } else if (command.startsWith('analyze')) {
+    return handleAnalyze({ bot, message, text })
   } else {
     return handleDefault({ bot, message })
   }
@@ -32,7 +34,7 @@ function formatResult({ _source: source, _score: score }) {
 }
 
 function explainResults({ bot, message, query, result, verbose }) {
-  return new Promise(async (resolve) => {
+  return new Promise(async (resolve, reject) => {
     const parts = [`Found the following results for: *${query}*`]
     const formattedResults = result.hits.hits.map(hit => formatResult(hit))
     parts.push(...formattedResults)
@@ -60,7 +62,7 @@ function explainResults({ bot, message, query, result, verbose }) {
 export async function handleExplain({ bot, message, text, verbose }) {
   let result
   try {
-    result = await es.answer.search(bot.config.luno.botId, text)
+    result = await es.answer.search(bot.config.luno.botId, text, { explain: true, timeout: 5000 })
   } catch (err) {
     logger.error('Error executing search', metadata({ err, bot, message }))
   }
@@ -77,7 +79,7 @@ export async function handleExplainId({ bot, message, text, id }) {
     answerId = new Buffer(id, 'base64').toString('ascii').split('_')[1]
   } catch (err) {
     logger.error('Error parsing id', metadata({ err, bot, message, id }))
-    return reject(err)
+    return
   }
 
   let result
@@ -85,7 +87,7 @@ export async function handleExplainId({ bot, message, text, id }) {
     result = await es.answer.explain(bot.config.luno.botId, text, answerId)
   } catch (err) {
     logger.error('Error executing explain', metadata({ err, bot, message }))
-    return reject(err)
+    return
   }
 
   let upload
@@ -93,7 +95,7 @@ export async function handleExplainId({ bot, message, text, id }) {
     upload = await uploadResult({ bot, message, query: text, result })
   } catch (err) {
     logger.error('Error uploading result', metadata({ err, bot, message, result }))
-    return reject(err)
+    return
   }
 
   bot.replyPrivate(message, `Full explanation: ${upload.permalink}`, (err) => {
@@ -111,7 +113,28 @@ export async function handleValidate({ bot, message, text }) {
     logger.error('Error executing validate', metadata({ err, bot, message }))
   }
 
-  bot.replyPrivate(message, `Results of validating query:\n\`\`\`${JSON.stringify(result, undefined, '  ')}\`\`\``)
+  bot.replyPrivate(message, `Results of validating query: \`${text}\`\n\`\`\`${JSON.stringify(result, undefined, '  ')}\`\`\``)
+}
+
+export async function handleAnalyze({ bot, message, text }) {
+  const options = {
+    analyzer: 'default_search',
+  }
+  let query = text
+  if (text.includes('|')) {
+    const parts = text.split('|')
+    query = parts[0].trim()
+    Object.assign(options, JSON.parse(parts[1].trim().replace(/[“”]/g, '"')))
+  }
+
+  let result
+  try {
+    result = await es.answer.analyze({ query, ...options })
+  } catch (err) {
+    logger.error('Error executing analyze', metadata({ err, bot, message, query, options }))
+  }
+
+  bot.replyPrivate(message, `Results of analyzing: \`${query}\`\n\`\`\`${JSON.stringify(result, undefined, '  ')}\`\`\``)
 }
 
 export function handleDefault({ bot, message }) {
