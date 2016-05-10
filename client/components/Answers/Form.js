@@ -10,6 +10,8 @@ const validate = values => {
   const errors = {}
   if (!values.title) {
     errors.title = 'Required'
+  } else if (values.title && values.title.split(' ').length > 15) {
+    errors.title = 'Maximum of 15 words'
   }
   if (!values.body) {
     errors.body = 'Required'
