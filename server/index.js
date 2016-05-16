@@ -28,6 +28,7 @@ let relayServer
 
 const botkit = Botkit.slackbot({
   storage: bk.storage,
+  logger,
 }).configureSlackApp({
   clientId: config.slack.clientId,
   clientSecret: config.slack.clientSecret,
@@ -43,8 +44,12 @@ botkit.findTeamById = async (id, cb) => {
     return cb(err)
   }
   botkit.storage.teams.get(id, (err, team) => {
-    const slackTeam = db.team.toSlackTeam(team, bots[0])
-    cb(err, Object.assign({}, slackTeam, team))
+    let fullTeam
+    if (team && bots.length) {
+      const slackTeam = db.team.toSlackTeam(team, bots[0])
+      fullTeam = Object.assign({}, slackTeam, team)
+    }
+    cb(err, fullTeam)
   })
 }
 
