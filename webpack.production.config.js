@@ -69,6 +69,10 @@ module.exports = {
     }),
     new webpack.DefinePlugin({
       __SENTRY_DSN__: JSON.stringify('https://e797ece0159c474ea264041392b714f7@app.getsentry.com/75750')
+      'process.env': {
+        // Useful to reduce the size of client-side libraries, eg. react
+        NODE_ENV: JSON.stringify('production'),
+      },
     }),
     new CopyWebpackPlugin([
       { from: 'client/.well-known', to: '.well-known' },
