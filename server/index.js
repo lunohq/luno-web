@@ -53,6 +53,17 @@ botkit.findTeamById = async (id, cb) => {
   })
 }
 
+botkit.on('create_bot', async (bot) => {
+  logger.info('Publishing `create_bot` notification')
+  let result
+  try {
+    result = await events.publish.createBot(bot.config.id)
+  } catch (err) {
+    logger.error('Error publishing `create_bot`', { teamId: bot.config.id }, err)
+  }
+  logger.info('Published `create_bot` notification', { result })
+})
+
 botkit.on('create_team', async (bot) => {
   logger.info('Publishing `create_team` notification')
   let result
