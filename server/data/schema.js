@@ -157,6 +157,11 @@ const GraphQLUser = new GraphQLObjectType({
       type: GraphQLString,
       description: 'The full name of the User',
     },
+    username: {
+      type: GraphQLString,
+      description: 'The username of the User',
+      resolve: user => user.user,
+    },
     team: {
       type: GraphQLTeam,
       description: 'The Team the User belongs to',

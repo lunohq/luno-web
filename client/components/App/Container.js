@@ -10,6 +10,7 @@ export default Relay.createContainer(AppComponent, {
       fragment on User {
         id
         anonymous
+        username
         team {
           id
         }

@@ -180,6 +180,7 @@ type UpdateBotPurposePayload {
 type User implements Node {
   id: ID!
   fullName: String
+  username: String
   team: Team
   bots(after: String, first: Int, before: String, last: Int): BotConnection
   anonymous: Boolean
