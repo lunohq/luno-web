@@ -19,12 +19,12 @@ const AUTOPREFIXER_BROWSERS = [
 module.exports = {
   entry: {
     app: [
-      path.join(__dirname, 'client/index.js')
+      path.join(__dirname, '../client/index.js')
     ],
     vendor: ['react', 'react-dom', 'react-relay', 'react-router', 'react-router-relay']
   },
   output: {
-    path: path.join(__dirname, 'build'),
+    path: path.join(__dirname, '../build'),
     filename: '[name].js'
   },
   devtool: 'source-map',
@@ -71,12 +71,11 @@ module.exports = {
       __SENTRY_DSN__: JSON.stringify('https://e797ece0159c474ea264041392b714f7@app.getsentry.com/75750'),
       __MIXPANEL_TOKEN__: JSON.stringify('9c41cd75afb094fdfa50e3e829f4bad3'),
       'process.env': {
-        // Useful to reduce the size of client-side libraries, eg. react
-        NODE_ENV: JSON.stringify('production'),
+        NODE_ENV: JSON.stringify('development'),
       },
     }),
     new CopyWebpackPlugin([
-      { from: 'client/.well-known', to: '.well-known' },
+      { from: '../client/.well-known', to: '.well-known' },
     ]),
   ],
   postcss(bundler) {
