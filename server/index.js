@@ -21,6 +21,7 @@ import updateSchema from './utils/updateSchema'
 import auth from './middleware/auth'
 import slashCommands from './middleware/slashCommands'
 import logger from './logger'
+import tracker from './tracker'
 import { handleSlashCommand } from './handlers'
 
 let graphQLServer
@@ -75,6 +76,7 @@ botkit.on('create_team', async (bot) => {
 
 botkit.on('create_user', async (bot, user) => {
   logger.info('Publishing `create_user` notification')
+  tracker.trackCreateUser(user)
   try {
     await events.publish.createUser(user.teamId, user.id)
   } catch (err) {

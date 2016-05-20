@@ -30,6 +30,9 @@ const config = {
   sentry: {
     dsn: process.env.SENTRY_DSN,
   },
+  mixpanel: {
+    token: process.env.MIXPANEL_TOKEN,
+  },
 }
 
 export default _.merge(config, require(`./${config.env}`).default)
