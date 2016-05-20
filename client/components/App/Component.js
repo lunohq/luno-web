@@ -32,12 +32,16 @@ class App extends Component {
 
   componentWillReceiveProps(nextProps) {
     tracker.init(nextProps.viewer)
+    if (this.props.location.pathname !== nextProps.location.pathname) {
+      tracker.trackPageView(this.props.location)
+    }
   }
 
   componentWillMount() {
     // _insertCss comes from https://github.com/kriasoft/isomorphic-style-loader
     this.removeCss = s._insertCss()
     tracker.init(this.props.viewer)
+    tracker.trackPageView(this.props.location)
   }
 
   componentWillUnmount() {

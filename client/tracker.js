@@ -61,6 +61,12 @@ class Tracker {
     })
   }
 
+  trackPageView(location) {
+    this.track('Page View', {
+      Path: location.pathname,
+    })
+  }
+
   clear() {
     mixpanel.cookie.clear()
     mixpanel.init(token)
