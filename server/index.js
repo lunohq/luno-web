@@ -145,7 +145,7 @@ function startRelayServer() {
   })
 }
 
-if (config.env === 'development') {
+if (config.env === 'local') {
   // Start GraphQL and Relay servers
   startGraphQLServer(schema)
   startRelayServer()
@@ -169,7 +169,7 @@ if (config.env === 'development') {
       }
     })
   })
-} else if (config.env === 'production') {
+} else {
   // Launch Relay by creating a normal express server
   relayServer = express()
 

@@ -18,14 +18,14 @@ const AUTOPREFIXER_BROWSERS = [
 module.exports = {
   entry: {
     app: [
-      path.join(__dirname, '../client/index.js'),
+      path.join(__dirname, 'client/index.js'),
       'webpack-dev-server/client?http://localhost:3000',
       'webpack/hot/only-dev-server'
     ],
     vendor: ['react', 'react-dom', 'react-relay', 'react-router', 'react-router-relay']
   },
   output: {
-    path: path.join(__dirname, '../build'),
+    path: path.join(__dirname, 'build'),
     filename: '[name].js'
   },
   devtool: 'eval',

@@ -68,10 +68,11 @@ module.exports = {
       favicon: './client/assets/favicon.ico'
     }),
     new webpack.DefinePlugin({
-      __SENTRY_DSN__: JSON.stringify('https://e797ece0159c474ea264041392b714f7@app.getsentry.com/75750'),
-      __MIXPANEL_TOKEN__: JSON.stringify('9c41cd75afb094fdfa50e3e829f4bad3'),
+      __SENTRY_DSN__: JSON.stringify(process.env.SENTRY_DSN),
+      __MIXPANEL_TOKEN__: JSON.stringify(process.env.MIXPANEL_TOKEN),
       'process.env': {
-        NODE_ENV: JSON.stringify('development'),
+        // Useful to reduce the size of client-side libraries, eg. react
+        NODE_ENV: JSON.stringify(process.env.NODE_ENV),
       },
     }),
     new CopyWebpackPlugin([

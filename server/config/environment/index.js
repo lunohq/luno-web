@@ -1,7 +1,7 @@
 import _ from 'lodash'
 
 const config = {
-  env: process.env.NODE_ENV || 'development',
+  env: process.env.NODE_ENV || 'local',
   port: process.env.PORT || 3000,
   token: {
     secret: process.env.TOKEN_SECRET,
