@@ -294,21 +294,15 @@ const GraphQLQuery = new GraphQLObjectType({
     node: nodeField,
     viewer: {
       type: GraphQLUser,
-      resolve: (source, args, { rootValue }) => {
-        return new Promise(async (resolve, reject) => {
-          let user = new db.user.AnonymousUser()
+      resolve: async (source, args, { rootValue }) => {
+        let user = new db.user.AnonymousUser()
 
-          if (!rootValue) {
-            return resolve(user)
-          }
+        if (!rootValue) {
+          return user
+        }
 
-          try {
-            user = await db.user.getUser(rootValue.uid)
-          } catch (err) {
-            return reject(err)
-          }
-          return resolve(user)
-        })
+        user = await db.user.getUser(rootValue.uid)
+        return user
       },
     },
   },
@@ -339,54 +333,38 @@ const GraphQLCreateAnswerMutation = mutationWithClientMutationId({
     },
     answerEdge: {
       type: GraphQLAnswerEdge,
-      resolve: ({ answer, botId }) => {
-        return new Promise(async (resolve, reject) => {
-          // XXX need to have a way to do this that doesn't require fetching
-          // all answers
-          let answers
-          try {
-            answers = await db.answer.getAnswers(botId)
-          } catch (err) {
-            return reject(err)
-          }
+      resolve: async ({ answer, botId }) => {
+        // XXX need to have a way to do this that doesn't require fetching
+        // all answers
+        const answers = await db.answer.getAnswers(botId)
 
-          // TODO: maybe we make this our own function?
-          // cursorForObjectInConnection indexOf was returning -1 even though the
-          // item was there, something to do with ===
-          let cursor
-          for (const index in answers) {
-            const a = answers[index]
-            if (a.id === answer.id) {
-              cursor = offsetToCursor(index)
-              break
-            }
+        // TODO: maybe we make this our own function?
+        // cursorForObjectInConnection indexOf was returning -1 even though the
+        // item was there, something to do with ===
+        let cursor
+        for (const index in answers) {
+          const a = answers[index]
+          if (a.id === answer.id) {
+            cursor = offsetToCursor(index)
+            break
           }
+        }
 
-          return resolve({ cursor, node: answer })
-        })
+        return { cursor, node: answer }
       }
     },
   },
-  mutateAndGetPayload: ({ title, body, botId: globalId }, { rootValue: { uid: createdBy } }) => {
-    return new Promise(async (resolve, reject) => {
-      const { id: compositeId } = fromGlobalId(globalId)
-      const [teamId, botId] = db.client.deconstructId(compositeId)
-
-      let answer
-      try {
-        answer = await db.answer.createAnswer({
-          title,
-          body,
-          botId,
-          teamId,
-          createdBy,
-        })
-      } catch (err) {
-        return reject(err)
-      }
-
-      return resolve({ answer, teamId, botId })
+  mutateAndGetPayload: async ({ title, body, botId: globalId }, { rootValue: { uid: createdBy } }) => {
+    const { id: compositeId } = fromGlobalId(globalId)
+    const [teamId, botId] = db.client.deconstructId(compositeId)
+    const answer = await db.answer.createAnswer({
+      title,
+      body,
+      botId,
+      teamId,
+      createdBy,
     })
+    return { answer, teamId, botId }
   },
 })
 
@@ -471,52 +449,34 @@ const GraphQLCreateRegexMutation = mutationWithClientMutationId({
     },
     regexEdge: {
       type: GraphQLRegexEdge,
-      resolve: ({ regex, botId }) => {
-        return new Promise(async (resolve, reject) => {
-          // XXX need to have a way to do this that doesn't require fetching
-          // all regexes
-          let regexes
-          try {
-            regexes = await db.regex.getRegexes(botId)
-          } catch (err) {
-            return reject(err)
+      resolve: async ({ regex, botId }) => {
+        // XXX need to have a way to do this that doesn't require fetching
+        // all regexes
+        const regexes = await db.regex.getRegexes(botId)
+        let cursor
+        for (const index in regexes) {
+          const r = regexes[index]
+          if (r.id === regex.id) {
+            cursor = offsetToCursor(index)
+            break
           }
-
-          let cursor
-          for (const index in regexes) {
-            const r = regexes[index]
-            if (r.id === regex.id) {
-              cursor = offsetToCursor(index)
-              break
-            }
-          }
-
-          return resolve({ cursor, node: regex })
-        })
+        }
+        return { cursor, node: regex }
       }
     },
   },
-  mutateAndGetPayload: ({ regex, body, botId: globalId, position }, { rootValue: { uid: createdBy } }) => {
-    return new Promise(async (resolve, reject) => {
-      const { id: compositeId } = fromGlobalId(globalId)
-      const [teamId, botId] = db.client.deconstructId(compositeId)
-
-      let regex
-      try {
-        regex = await db.regex.createRegex({
-          regex,
-          body,
-          botId,
-          teamId,
-          createdBy,
-          position,
-        })
-      } catch (err) {
-        return reject(err)
-      }
-
-      return resolve({ regex, teamId, botId })
+  mutateAndGetPayload: async ({ regex, body, botId: globalId, position }, { rootValue: { uid: createdBy } }) => {
+    const { id: compositeId } = fromGlobalId(globalId)
+    const [teamId, botId] = db.client.deconstructId(compositeId)
+    const r = await db.regex.createRegex({
+      regex,
+      body,
+      botId,
+      teamId,
+      createdBy,
+      position,
     })
+    return { regex: r, teamId, botId }
   },
 })
 
@@ -642,20 +602,13 @@ const GraphQLLogoutMutation = mutationWithClientMutationId({
       resolve: user => user,
     },
   },
-  mutateAndGetPayload: (_, { rootValue }) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        await db.token.deleteToken(rootValue.t.id, rootValue.uid)
-      } catch (err) {
-        return reject(err)
-      }
-
-      const user = new db.user.AnonymousUser()
-      // this value is needed to invalidate the relay cache for the currently
-      // logged in user
-      user.id = rootValue.uid
-      return resolve(user)
-    })
+  mutateAndGetPayload: async (_, { rootValue }) => {
+    await db.token.deleteToken(rootValue.t.id, rootValue.uid)
+    const user = new db.user.AnonymousUser()
+    // this value is needed to invalidate the relay cache for the currently
+    // logged in user
+    user.id = rootValue.uid
+    return user
   },
 })
 
