@@ -5,6 +5,7 @@ class Tracker {
 
   constructor(token) {
     mixpanel.init(token)
+    this._token = token
     this.initialized = false
   }
 
@@ -65,7 +66,7 @@ class Tracker {
 
   clear() {
     mixpanel.cookie.clear()
-    mixpanel.init(token)
+    mixpanel.init(this._token)
     Raven.setUserContext()
   }
 
