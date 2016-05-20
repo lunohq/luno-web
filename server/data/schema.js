@@ -23,6 +23,7 @@ import {
 } from 'graphql-relay'
 
 import { db } from 'luno-core'
+import tracker from '../tracker'
 
 import { getMember, getMembers, SlackMember } from '../actions/slack'
 
@@ -354,7 +355,8 @@ const GraphQLCreateAnswerMutation = mutationWithClientMutationId({
       }
     },
   },
-  mutateAndGetPayload: async ({ title, body, botId: globalId }, { rootValue: { uid: createdBy } }) => {
+  mutateAndGetPayload: async ({ title, body, botId: globalId }, { rootValue: root }) => {
+    const { uid: createdBy } = root
     const { id: compositeId } = fromGlobalId(globalId)
     const [teamId, botId] = db.client.deconstructId(compositeId)
     const answer = await db.answer.createAnswer({
@@ -364,6 +366,7 @@ const GraphQLCreateAnswerMutation = mutationWithClientMutationId({
       teamId,
       createdBy,
     })
+    tracker.trackCreateAnswer({ root, id: answer.id })
     return { answer, teamId, botId }
   },
 })
@@ -383,10 +386,11 @@ const GraphQLDeleteAnswerMutation = mutationWithClientMutationId({
       resolve: ({ globalId }) => globalId,
     },
   },
-  mutateAndGetPayload: async ({ id: globalId }) => {
+  mutateAndGetPayload: async ({ id: globalId }, { rootValue: root }) => {
     const { id: compositeId } = fromGlobalId(globalId)
     const [botId, id] = db.client.deconstructId(compositeId)
     const { teamId } = await db.answer.deleteAnswer(botId, id)
+    tracker.trackDeleteAnswer({ id, root })
     return {
       botId,
       globalId,
@@ -408,7 +412,7 @@ const GraphQLUpdateAnswerMutation = mutationWithClientMutationId({
       resolve: (answer) => answer,
     },
   },
-  mutateAndGetPayload: async ({ id: globalId, title, body }) => {
+  mutateAndGetPayload: async ({ id: globalId, title, body }, { rootValue: root }) => {
     const { id: compositeId } = fromGlobalId(globalId)
     const [botId, id] = db.client.deconstructId(compositeId)
 
@@ -418,6 +422,7 @@ const GraphQLUpdateAnswerMutation = mutationWithClientMutationId({
       botId,
       id,
     })
+    tracker.trackUpdateAnswer({ root, id })
     return answer
   },
 })
@@ -550,7 +555,7 @@ const GraphQLUpdateBotPurposeMutation = mutationWithClientMutationId({
       resolve: (bot) => bot,
     },
   },
-  mutateAndGetPayload: async ({ id: globalId, purpose }) => {
+  mutateAndGetPayload: async ({ id: globalId, purpose }, { rootValue: root }) => {
     const { id: compositeId } = fromGlobalId(globalId)
     const [teamId, id] = db.client.deconstructId(compositeId)
 
@@ -559,6 +564,7 @@ const GraphQLUpdateBotPurposeMutation = mutationWithClientMutationId({
       id,
       purpose: purpose || null,
     })
+    tracker.trackUpdateBotPurpose({ root, id })
     return bot
   },
 })
@@ -581,7 +587,7 @@ const GraphQLUpdateBotPointsOfContactMutation = mutationWithClientMutationId({
       resolve: bot => bot,
     },
   },
-  mutateAndGetPayload: async ({ id: globalId, pointsOfContact }) => {
+  mutateAndGetPayload: async ({ id: globalId, pointsOfContact }, { rootValue: root }) => {
     const { id: compositeId } = fromGlobalId(globalId)
     const [teamId, id] = db.client.deconstructId(compositeId)
 
@@ -590,6 +596,7 @@ const GraphQLUpdateBotPointsOfContactMutation = mutationWithClientMutationId({
       teamId,
       id,
     })
+    tracker.trackUpdateBotPointsOfContact({ root, id })
     return bot
   },
 })

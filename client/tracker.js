@@ -1,3 +1,10 @@
+/**
+ * Web tracking of events within mixpanel.
+ *
+ * When adding, updating, or removing events, keep this doc in sync:
+ * https://goo.gl/G6GCmV
+ *
+ */
 import mixpanel from 'mixpanel-browser'
 import Raven from 'raven-js'
 
