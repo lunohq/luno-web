@@ -55,35 +55,32 @@ botkit.findTeamById = async (id, cb) => {
 
 botkit.on('create_bot', async (bot) => {
   logger.info('Publishing `create_bot` notification')
-  let result
   try {
-    result = await events.publish.createBot(bot.config.id)
+    await events.publish.createBot(bot.config.id)
   } catch (err) {
     logger.error('Error publishing `create_bot`', { teamId: bot.config.id }, err)
   }
-  logger.info('Published `create_bot` notification', { result })
+  logger.info('Published `create_bot` notification')
 })
 
 botkit.on('create_team', async (bot) => {
   logger.info('Publishing `create_team` notification')
-  let result
   try {
-    result = await events.publish.createTeam(bot.config.id)
+    await events.publish.createTeam(bot.config.id)
   } catch (err) {
     logger.error('Error publishing `create_team`', { teamId: bot.config.id }, err)
   }
-  logger.info('Published `create_team` notification', { result })
+  logger.info('Published `create_team` notification')
 })
 
 botkit.on('create_user', async (bot, user) => {
   logger.info('Publishing `create_user` notification')
-  let result
   try {
-    result = await events.publish.createUser(user.teamId, user.id)
+    await events.publish.createUser(user.teamId, user.id)
   } catch (err) {
     logger.error('Error publishing `create_user`', { user }, err)
   }
-  logger.info('Published `create_user` notification', { result })
+  logger.info('Published `create_user` notification')
 })
 
 botkit.on('slash_command', (bot, message) => {
