@@ -3,6 +3,7 @@ import Relay from 'react-relay'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
+import tracker from '../../tracker'
 import AnonymousLanding from '../AnonymousLanding/Component'
 import AuthenticatedLanding from '../AuthenticatedLanding/Component'
 import LogoutMutation from '../../mutations/LogoutMutation'
@@ -16,6 +17,7 @@ class App extends Component {
     Relay.Store.commitUpdate(
       new LogoutMutation({ viewer })
     )
+    tracker.clear()
   }
 
   getChildContext() {
@@ -28,9 +30,14 @@ class App extends Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    tracker.init(nextProps.viewer)
+  }
+
   componentWillMount() {
     // _insertCss comes from https://github.com/kriasoft/isomorphic-style-loader
     this.removeCss = s._insertCss()
+    tracker.init(this.props.viewer)
   }
 
   componentWillUnmount() {

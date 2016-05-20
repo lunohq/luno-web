@@ -14,7 +14,7 @@ class Tracker {
     this.mixpanel = Mixpanel.init(token)
   }
 
-  track(event, data) {
+  _track(event, data) {
     return new Promise((resolve, reject) => {
       this.mixpanel.track(event, data, (err) => {
         if (err) {
@@ -27,23 +27,25 @@ class Tracker {
     })
   }
 
-  trackWithCtx(event, payload) {
+  track(event, payload) {
     const data = {
       client: 'server',
       ...payload,
     }
-    this.track(event, data)
+    this._track(event, data)
   }
 
   trackCreateUser(user) {
     const distinctId = `${user.teamId}:${user.id}`
     const data = {
       distinct_id: distinctId,
-      type: 'create_user',
-      user: user.user,
+      Type: 'create_user',
+      User: user.user,
+      'User ID': user.id,
+      'Team ID': user.teamId,
     }
     debug('Tracking create user', data)
-    this.trackWithCtx('create_user', data)
+    this.track('create_user', data)
     this.mixpanel.people.set(distinctId, {
       $created: (new Date()).toISOString(),
     })

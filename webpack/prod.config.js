@@ -69,6 +69,7 @@ module.exports = {
     }),
     new webpack.DefinePlugin({
       __SENTRY_DSN__: JSON.stringify('https://e797ece0159c474ea264041392b714f7@app.getsentry.com/75750'),
+      __MIXPANEL_TOKEN__: JSON.stringify('b339f301bbea524831d42bc9abc0fceb'),
       'process.env': {
         // Useful to reduce the size of client-side libraries, eg. react
         NODE_ENV: JSON.stringify('production'),

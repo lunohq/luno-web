@@ -63,7 +63,8 @@ module.exports = {
       favicon: './client/assets/favicon.ico'
     }),
     new webpack.DefinePlugin({
-      __SENTRY_DSN__: JSON.stringify('https://f440b668d21b4853852a183f7ecd7710@app.getsentry.com/75742')
+      __SENTRY_DSN__: JSON.stringify('https://f440b668d21b4853852a183f7ecd7710@app.getsentry.com/75742'),
+      __MIXPANEL_TOKEN__: JSON.stringify('3aee37e9cb8f8f6afc3b52cd5a0c3457'),
     }),
   ],
   postcss(bundler) {
