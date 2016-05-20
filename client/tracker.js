@@ -49,16 +49,11 @@ class Tracker {
   }
 
   track(event, data) {
-    return new Promise((resolve, reject) => {
-      mixpanel.track(event, data, (err) => {
-        if (err) {
-          Raven.captureException(err, { extra: { event, data } })
-          reject(err)
-        } else {
-          resolve()
-        }
-      })
-    })
+    try {
+      mixpanel.track(event, data)
+    } catch (err) {
+      Raven.captureException(err, { extra: { event, data } })
+    }
   }
 
   trackPageView(location) {
