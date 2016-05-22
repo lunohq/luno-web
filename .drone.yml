@@ -10,5 +10,5 @@ publish:
 
 notify:
   slack:
-    webhook_url: https://hooks.slack.com/services/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
+    webhook_url: $$SLACK_WEBHOOK_URL
     channel: ops
