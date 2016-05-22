@@ -7,3 +7,9 @@ publish:
     tag:
       - latest
       - $$COMMIT
+
+notify:
+  slack:
+    webhook_url: https://hooks.slack.com/services/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
+    channel: ops
+    username: drone
