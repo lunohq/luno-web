@@ -34,5 +34,6 @@ notify:
     channel: ops
     template: >
       *{{ build.status }}* <{{ system.link_url }}/{{ repo.full_name }}/{{ build.number }}|{{ repo.owner }}/{{ repo.name }}#{{ build.commit[:8] }}> ({{ build.branch }}) by {{ build.author }}
+
       *Deploy With:*
       ```emp deploy {{ repo.owner }}/{{ repo.name }}:{{ build.commit }}```
