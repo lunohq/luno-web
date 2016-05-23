@@ -13,7 +13,7 @@ import morgan from 'morgan'
 import { HTTPS as enforceHttps } from 'express-sslify'
 import raven from 'raven'
 
-import webpackConfig from '../webpack.config'
+import webpackConfig from '../webpack/local'
 import requireUncached from './utils/requireUncached'
 import config from './config/environment'
 import schema from './data/schema'

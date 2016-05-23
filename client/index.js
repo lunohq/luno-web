@@ -14,8 +14,7 @@ Relay.injectNetworkLayer(
 Raven.config(__SENTRY_DSN__).install()
 
 const store = configureStore()
-const rootNode = document.createElement('div')
-document.body.appendChild(rootNode)
+const rootNode = document.getElementById('app')
 
 ReactDOM.render(<Root history={browserHistory} store={store} />, rootNode)
 injectTapEventPlugin()
