@@ -1,3 +1,22 @@
+build:
+  image: node:5.10.1
+  command:
+    - mv /drone/dev_deps node_modules
+    - npm install
+    - make release -j
+    - mv node_modules /drone/dev_deps
+    - mv /drone/server_deps node_modules
+    - npm install --production
+    - cp -a /drone/server_deps/
+  environment:
+    - S3_BUCKET=luno-web
+    - S3_REGION=us-east-1
+
+cache:
+  mount:
+    - /drone/dev_deps
+    - /drone/server_deps
+
 publish:
   docker:
     username: $$DOCKER_USERNAME
