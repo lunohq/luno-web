@@ -3,7 +3,7 @@
   "version": "1.0.3",
   "description": "Luno web app",
   "scripts": {
-    "start": "npm run webpack && npm run update && babel-node server/index.js",
+    "start": "npm run update && babel-node server/index.js",
     "dev": "npm run update && ./bin/server",
     "update": "babel-node server/utils/updateSchema.js",
     "webpack": "webpack --config webpack/release.js",
@@ -67,6 +67,7 @@
     "redux-devtools-log-monitor": "^1.0.11",
     "redux-form": "git+https://github.com/lunohq/redux-form.git#1039e7c8262c746cc0a7f3acb7c59d3a9aaf282d",
     "redux-logger": "^2.6.1",
+    "s3": "^4.4.0",
     "sass-loader": "^3.2.0",
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
