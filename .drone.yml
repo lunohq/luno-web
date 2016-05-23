@@ -33,7 +33,5 @@ notify:
     webhook_url: $$SLACK_WEBHOOK_URL
     channel: ops
     template: >
-      *{{ build.status }}* <{{ system.link_url }}/{{ repo.full_name }}/{{ build.number }}|{{ repo.owner }}/{{ repo.name }}#{{ build.commit[:8] }}> ({{ build.branch }}) by {{ build.author }}
-
-      *Deploy With:*
+      *{{ build.status }}* <{{ system.link_url }}/{{ repo.full_name }}/{{ build.number }}|{{ repo.owner }}/{{ repo.name }}#{{ build.commit }}> ({{ build.branch }}) by {{ build.author }}
       ```emp deploy {{ repo.owner }}/{{ repo.name }}:{{ build.commit }}```
