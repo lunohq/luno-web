@@ -1,6 +1,6 @@
 build:
   image: node:5.10.1
-  command:
+  commands:
     - mv /drone/dev_deps node_modules
     - npm install
     - make release -j
