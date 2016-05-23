@@ -7,11 +7,7 @@
     "dev": "npm run update && ./bin/server",
     "update": "babel-node server/utils/updateSchema.js",
     "webpack": "webpack --config webpack/release.js",
-    "deploy": "eval \"$(docker-machine env default)\" && npm run docker",
-    "lint": "eslint --ignore-path .gitignore client server",
-    "docker-build": "docker build -t lunohq/luno-web . && docker tag lunohq/luno-web lunohq/luno-web:`git log -n 1 --pretty=format:'%H'`",
-    "docker-push": "docker push lunohq/luno-web",
-    "docker": "npm run docker-build && npm run docker-push"
+    "lint": "eslint --ignore-path .gitignore client server"
   },
   "repository": {
     "type": "git",
