@@ -16,6 +16,7 @@ cache:
   mount:
     - /drone/dev_deps
     - /drone/server_deps
+    - .git
 
 publish:
   docker:
