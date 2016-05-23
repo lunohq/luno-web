@@ -13,6 +13,8 @@ const plugins = [
   new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.[chunkhash].js'),
 ]
 
+const cdn = 'https://d21ennydsbmq0y.cloudfront.net'
+
 const common = {
   entry: {
     app: [
@@ -27,7 +29,7 @@ const development = {
     filename: '[name].[chunkhash].js',
     chunkFilename: '[name].[chunkhash].chunk.js',
     path: path.resolve(process.cwd(), 'build/development'),
-    publicPath: 'https://d1wsrbrkwkj4km.cloudfront.net/development/',
+    publicPath: `${cdn}/development/`,
   },
   plugins: plugins.concat([
     new HtmlWebpackPlugin({
@@ -62,7 +64,7 @@ const production = {
     path: path.resolve(process.cwd(), 'build/production'),
     filename: '[name].[chunkhash].js',
     chunkFilename: '[name].[chunkhash].chunk.js',
-    publicPath: 'https://d21ennydsbmq0y.cloudfront.net/production/',
+    publicPath: `${cdn}/production/`,
   },
   plugins: plugins.concat([
     new webpack.optimize.UglifyJsPlugin({
