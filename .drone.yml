@@ -32,3 +32,5 @@ notify:
   slack:
     webhook_url: $$SLACK_WEBHOOK_URL
     channel: ops
+    template: >
+      *{{ build.Status }}* <{{ sys.Link }}/{{ repo.FullName }}/{{ build.Number }}|{{ repo.Owner }}/{{ repo.Name }}#{{ build.Commit[:8] }}> ({{ build.Branch }}) by {{ build.Author }}\n*Deploy With:*```emp deploy {{ repo.Owner }}/{{ repo.Name }}:{{ build.Commit }}```
