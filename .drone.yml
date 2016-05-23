@@ -7,7 +7,7 @@ build:
     - mv node_modules /drone/dev_deps
     - mv /drone/server_deps node_modules || true
     - npm install --production
-    - cp -a /drone/server_deps/
+    - cp -a node_modules /drone/server_deps/
   environment:
     - S3_BUCKET=luno-web
     - S3_REGION=us-east-1
