@@ -5,6 +5,7 @@
   "scripts": {
     "start": "npm run update && babel-node server/index.js",
     "dev": "npm run update && ./bin/server",
+    "build": "./bin/build",
     "update": "babel-node server/utils/updateSchema.js",
     "webpack": "webpack --config webpack/release.js",
     "lint": "eslint --ignore-path .gitignore client server"
