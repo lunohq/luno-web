@@ -1,6 +1,6 @@
 {
   "name": "luno-web",
-  "version": "1.0.3",
+  "version": "2.0.0",
   "description": "Luno web app",
   "scripts": {
     "start": "npm run update && babel-node server/index.js",
