@@ -183,7 +183,7 @@ if (config.env === 'local') {
   auth(relayServer, botkit)
   slashCommands(relayServer, botkit)
   relayServer.use(historyApiFallback())
-  relayServer.use('/', express.static(path.join(__dirname, '../build')))
+  relayServer.use('/', express.static(path.join(__dirname, '../build', process.env.NODE_ENV)))
   relayServer.use('/graphql', graphQLHTTP(request => ({
     schema,
     context: { auth: request.auth },

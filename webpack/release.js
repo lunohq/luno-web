@@ -20,28 +20,29 @@ const common = {
     ],
     vendor: ['react', 'react-dom', 'react-relay', 'react-router', 'react-router-relay'],
   },
+}
+
+const development = {
   output: {
     filename: '[name].[chunkhash].js',
     chunkFilename: '[name].[chunkhash].chunk.js',
+    path: path.resolve(process.cwd(), 'build/development'),
+    publicPath: 'https://d1wsrbrkwkj4km.cloudfront.net/development/',
   },
-}
-
-const dev = {
   plugins: plugins.concat([
     new HtmlWebpackPlugin({
       title: 'Luno',
       template: './client/index.html',
       mobile: true,
       inject: true,
-      favicon: './client/assets/favicon.ico'
+      favicon: './client/assets/favicon.ico',
     }),
-    // TODO update these values
     new webpack.DefinePlugin({
-      __SENTRY_DSN__: JSON.stringify('https://f440b668d21b4853852a183f7ecd7710@app.getsentry.com/75742'),
-      __MIXPANEL_TOKEN__: JSON.stringify('3aee37e9cb8f8f6afc3b52cd5a0c3457'),
+      __SENTRY_DSN__: JSON.stringify('https://0c2c66c2cd8b46f09fcfe7315fa57cd7@app.getsentry.com/61527'),
+      __MIXPANEL_TOKEN__: JSON.stringify('9c41cd75afb094fdfa50e3e829f4bad3')
     }),
     new CopyWebpackPlugin([
-      { from: 'client/.well-known', to: '.well-known' },
+      { from: 'client/.well-known', to: '.well-known' }
     ]),
   ]),
   scssLoaders: [
@@ -56,7 +57,13 @@ const dev = {
   ],
 }
 
-const prod = {
+const production = {
+  output: {
+    path: path.resolve(process.cwd(), 'build/production'),
+    filename: '[name].[chunkhash].js',
+    chunkFilename: '[name].[chunkhash].chunk.js',
+    publicPath: 'https://d21ennydsbmq0y.cloudfront.net/production/',
+  },
   plugins: plugins.concat([
     new webpack.optimize.UglifyJsPlugin({
       compress: {
@@ -83,10 +90,9 @@ const prod = {
       mobile: true,
       favicon: 'client/assets/favicon.ico'
     }),
-    // TODO update these values
     new webpack.DefinePlugin({
-      __SENTRY_DSN__: JSON.stringify('https://f440b668d21b4853852a183f7ecd7710@app.getsentry.com/75742'),
-      __MIXPANEL_TOKEN__: JSON.stringify('3aee37e9cb8f8f6afc3b52cd5a0c3457'),
+      __SENTRY_DSN__: JSON.stringify('https://e797ece0159c474ea264041392b714f7@app.getsentry.com/75750'),
+      __MIXPANEL_TOKEN__: JSON.stringify('b339f301bbea524831d42bc9abc0fceb'),
     }),
   ]),
   scssLoaders: [
@@ -101,12 +107,9 @@ const prod = {
   ],
 }
 
-module.exports = (() => {
-  let bundle
-  if (process.env.NODE_ENV === 'production') {
-    bundle = prod
-  } else {
-    bundle = dev
-  }
-  return base(Object.assign({}, common, bundle))
-})()
+const bundles = {
+  development,
+  production,
+}
+
+module.exports = (() => base(Object.assign({}, common, bundles[process.env.NODE_ENV])))()
