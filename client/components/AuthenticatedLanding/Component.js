@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import SnackBar from 'material-ui/SnackBar'
+import Snackbar from 'material-ui/Snackbar'
 
 import withStyles from '../../utils/withStyles'
 import Navigation from './Navigation'
@@ -10,7 +10,7 @@ const AuthenticatedLanding = ({ children, onLogout, viewer }) => {
   let assumeNotification
   if (viewer.assumed) {
     assumeNotification = (
-      <SnackBar
+      <Snackbar
         open={true}
         message={`Viewing as ${viewer.username} in ${viewer.team.name}`}
         action='end'
