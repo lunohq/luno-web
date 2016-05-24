@@ -48,6 +48,7 @@ async function assumeToken(req, res) {
     secret: config.token.secret,
     user: { id: adminToken.targetUserId, teamId: adminToken.targetTeamId },
   })
+  logger.info('Claimed session', { id })
   setCookie({ res, token })
   return res.redirect('/')
 }
