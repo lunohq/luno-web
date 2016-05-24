@@ -30,13 +30,13 @@ async function assumeToken(req, res) {
   const id = req.params.tokenId
   let adminToken = await db.admin.getToken(id)
   if (!adminToken) {
-    logger.warn('Failed attempt to assume user.', { id, req, res })
+    logger.warn('Failed attempt to assume user.', { id })
     return res.redirect('/')
   }
 
   const { valid, message } = isValid(adminToken)
   if (!valid) {
-    logger.warn(message, { id, req, res })
+    logger.warn(message, { id })
     return res.redirect('/')
   }
 
