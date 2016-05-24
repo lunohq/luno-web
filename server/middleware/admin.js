@@ -27,7 +27,10 @@ function isValid(token) {
 }
 
 async function assumeToken(req, res) {
-  logger.info('UserAgent', req.headers['user-agent'])
+  if (req.headers['user-agent'].includes('Slackbot')) {
+    return res.redirect('/')
+  }
+
   const id = req.params.tokenId
   let adminToken = await db.admin.getToken(id)
   if (!adminToken) {
