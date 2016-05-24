@@ -27,6 +27,7 @@ function isValid(token) {
 }
 
 async function assumeToken(req, res) {
+  logger.info('UserAgent', req.headers['user-agent'])
   const id = req.params.tokenId
   let adminToken = await db.admin.getToken(id)
   if (!adminToken) {
