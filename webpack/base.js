@@ -33,7 +33,13 @@ module.exports = (options) => ({
       loader: 'url-loader?limit=10000&name=assets/[name].[hash].[ext]'
     }],
   },
-  plugins: options.plugins,
+  plugins: options.plugins,concat([
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+      },
+    }),
+  ]),
   postcss(bundler) {
     return [
       require('postcss-import')({ addDependencyTo: bundler }),
