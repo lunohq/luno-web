@@ -189,6 +189,10 @@ const GraphQLUser = new GraphQLObjectType({
       type: GraphQLBoolean,
       description: 'Boolean indicating whether or not the user is authenticated',
     },
+    assumed: {
+      type: GraphQLBoolean,
+      description: 'Boolean indicating whether or not an admin is assuming this user',
+    },
   }),
   interfaces: [nodeInterface],
 })
@@ -303,6 +307,9 @@ const GraphQLQuery = new GraphQLObjectType({
         }
 
         user = await db.user.getUser(rootValue.uid)
+        if (rootValue.a) {
+          user.assumed = true
+        }
         return user
       },
     },
@@ -611,6 +618,9 @@ const GraphQLLogoutMutation = mutationWithClientMutationId({
   },
   mutateAndGetPayload: async (_, { rootValue }) => {
     await db.token.deleteToken(rootValue.t.id, rootValue.uid)
+    if (rootValue.a) {
+      await db.admin.endToken(rootValue.a.id)
+    }
     const user = new db.user.AnonymousUser()
     // this value is needed to invalidate the relay cache for the currently
     // logged in user

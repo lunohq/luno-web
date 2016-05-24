@@ -3,7 +3,7 @@ import jwt from 'express-jwt'
 import { db } from 'luno-core'
 
 import config from '../config/environment'
-import { generateToken } from '../actions/auth'
+import { generateToken, setCookie } from '../actions/auth'
 import logger, { metadata } from '../logger'
 
 /**
@@ -29,13 +29,13 @@ function oauth(botkit, app) {
 
     let token
     try {
-      token = await generateToken(config.token.secret, { user: res.locals.user })
+      token = await generateToken({ secret: config.token.secret, user: res.locals.user })
     } catch (err) {
       logger.error('OAuth Token Transfer Failure', metadata({ query: req.query.error, err }))
       return res.redirect('/')
     }
 
-    res.cookie(config.cookie.key, token, { maxAge: config.cookie.maxAge, signed: true })
+    setCookie({ res, token })
     return res.redirect('/')
   })
 }

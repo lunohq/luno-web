@@ -22,7 +22,7 @@ class Tracker {
    * @param {Object} viewer the active user
    */
   init(viewer) {
-    if (this.initialized || viewer.anonymous) return
+    if (this.initialized || viewer.anonymous || viewer.assumed) return
 
     // Convert relay ids so we can identify the user across platforms
     let userId, teamId

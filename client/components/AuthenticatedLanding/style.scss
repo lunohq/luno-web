@@ -53,16 +53,16 @@ $leftNavWidth: 60px;
 }
 
 .selectedNavButton::before {
-  content: "";
-  position: absolute;
-  height: 36px;
-  border-left: 8px solid #FFF;
-  border-radius: 4px;
-  left: -10px;
-  top: 4px;
+    content: "";
+    position: absolute;
+    height: 36px;
+    border-left: 8px solid #FFF;
+    border-radius: 4px;
+    left: -10px;
+    top: 4px;
 }
 
 .navButton:hover {
-  background: #2F3437;
-  cursor: pointer;
+    background: #2F3437;
+    cursor: pointer;
 }

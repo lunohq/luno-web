@@ -10,9 +10,11 @@ export default Relay.createContainer(AppComponent, {
       fragment on User {
         id
         anonymous
+        assumed
         username
         team {
           id
+          name
         }
         ${LogoutMutation.getFragment('viewer')}
       }

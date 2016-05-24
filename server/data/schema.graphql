@@ -184,4 +184,5 @@ type User implements Node {
   team: Team
   bots(after: String, first: Int, before: String, last: Int): BotConnection
   anonymous: Boolean
+  assumed: Boolean
 }

@@ -32,7 +32,7 @@ class App extends Component {
 
   componentWillReceiveProps(nextProps) {
     tracker.init(nextProps.viewer)
-    if (this.props.location.pathname !== nextProps.location.pathname) {
+    if (this.props.location.pathname !== nextProps.location.pathname && !this.props.viewer.assumed) {
       tracker.trackPageView(this.props.location)
     }
   }
@@ -41,7 +41,9 @@ class App extends Component {
     // _insertCss comes from https://github.com/kriasoft/isomorphic-style-loader
     this.removeCss = s._insertCss()
     tracker.init(this.props.viewer)
-    tracker.trackPageView(this.props.location)
+    if (!this.props.viewer.assumed) {
+      tracker.trackPageView(this.props.location)
+    }
   }
 
   componentWillUnmount() {
@@ -59,6 +61,7 @@ class App extends Component {
         <AuthenticatedLanding
           children={children}
           onLogout={this.handleLogout}
+          viewer={viewer}
         />
       )
     }

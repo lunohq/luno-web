@@ -45,7 +45,11 @@ class Tracker {
       data['User ID'] = root.uid
       data['Team ID'] = root.tid
     }
-    this._track(TEAM_EVENT, data)
+
+    // don't track assumed actions
+    if (!root.a) {
+      this._track(TEAM_EVENT, data)
+    }
   }
 
   trackCreateUser(user) {

@@ -15,6 +15,7 @@ import schema from './data/schema'
 import updateSchema from './utils/updateSchema'
 import auth from './middleware/auth'
 import slashCommands from './middleware/slashCommands'
+import admin from './middleware/admin'
 
 import botkit from './botkit'
 
@@ -40,6 +41,10 @@ function startGraphQLServer(schema) {
 }
 
 function startRelayServer() {
+  function noop(ctx) {
+    return ctx.parsedUrl.pathname
+  }
+
   // Launch Relay by using webpack.config.js
   relayServer = new WebpackDevServer(webpack(webpackConfig), {
     contentBase: '/build/',
@@ -55,8 +60,9 @@ function startRelayServer() {
       // historyApiFallback doesn't wait till we get a 404 to rewrite to
       // index.html. This is required so we can access these urls.
       rewrites: [
-        { from: /\/login/, to: '/login' },
-        { from: /\/oauth/, to: '/oauth' },
+        { from: /\/login/, to: noop },
+        { from: /\/oauth/, to: noop },
+        { from: /\/admin/, to: noop },
       ],
     },
   })
@@ -64,6 +70,7 @@ function startRelayServer() {
   relayServer.use(morgan('short'))
   auth(relayServer.app, botkit)
   slashCommands(relayServer.app, botkit)
+  admin(relayServer.app)
   // Serve static resources
   relayServer.use('/', express.static(path.join(__dirname, '../build')))
 
