@@ -41,18 +41,21 @@ class Tracker {
       ...other,
     }
     if (root) {
+      // don't track assumed actions
+      if (root.a) {
+        return
+      }
+
       data.distinct_id = `${root.tid}:${root.uid}`
       data['User ID'] = root.uid
       data['Team ID'] = root.tid
     }
 
-    // don't track assumed actions
-    if (!root.a) {
-      this._track(TEAM_EVENT, data)
-    }
+    this._track(TEAM_EVENT, data)
   }
 
   trackCreateUser(user) {
+    debug('Tracking create user', user)
     const distinctId = `${user.teamId}:${user.id}`
     const data = {
       distinct_id: distinctId,
@@ -61,11 +64,11 @@ class Tracker {
       'User ID': user.id,
       'Team ID': user.teamId,
     }
-    debug('Tracking create user', data)
     this.track(TEAM_EVENT, data)
     this.mixpanel.people.set(distinctId, {
       $created: (new Date()).toISOString(),
     })
+    debug('Tracked create user')
   }
 
   trackCreateAnswer({ root, id }) {
