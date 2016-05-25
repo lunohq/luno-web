@@ -50,6 +50,7 @@ class Tracker {
       'User ID': userId,
       'Team ID': teamId,
       'Username': viewer.username,
+      'Team Name': viewer.team ? viewer.team.name : null,
     })
     mixpanel.people.set_once({
       'First Seen': new Date(),
