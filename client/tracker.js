@@ -47,6 +47,7 @@ class Tracker {
       'Team ID': teamId,
     })
     mixpanel.people.set({
+      $first_name: viewer.username,
       'User ID': userId,
       'Team ID': teamId,
       'Username': viewer.username,
