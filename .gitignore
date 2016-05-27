@@ -39,3 +39,4 @@ output
 *.vim
 
 .envrc
+.direnv
