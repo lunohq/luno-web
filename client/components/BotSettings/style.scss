@@ -1,5 +1,8 @@
 .root {
     composes: col-xs from '../../styles/vendor/flexboxgrid.css';
+}
+
+.content {
     composes: content from '../../styles/layout.scss';
 }
 

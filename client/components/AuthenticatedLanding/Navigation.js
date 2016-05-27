@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react'
+import { Link } from 'react-router'
 
 import withStyles from '../../utils/withStyles'
 import LogoutIcon from '../LogoutIcon'
@@ -15,12 +16,12 @@ const Navigation = ({ onLogout }) => {
   return (
     <nav className={s.nav}>
       <div className={s.topButtons}>
-        <a className={isSelected('/')} href='/'>
+        <Link className={isSelected('/')} to='/'>
           <QuestionAnswerIcon />
-        </a>
-        <a className={isSelected('/bot-settings')} href='/bot-settings'>
+        </Link>
+        <Link className={isSelected('/bot-settings')} to='/bot-settings'>
           <SettingsIcon />
-        </a>
+        </Link>
       </div>
       <div className={s.buttons}>
         <a className={s.navButton} onClick={onLogout}>

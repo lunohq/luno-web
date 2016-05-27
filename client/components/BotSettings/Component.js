@@ -70,21 +70,25 @@ class BotSettings extends Component {
     return (
       <DocumentTitle title={t('Bot settings')}>
         <div className={s.root}>
-          <Expertise
-            bot={this.getBot()}
-            onSave={this.handleSaveExpertise}
-          />
-          <PointsOfContact
-            bot={this.getBot()}
-            members={members}
-            onSave={this.handleSavePointsOfContact}
-          />
-          <Snackbar
-            open={this.state.showSnackbar}
-            message={this.state.snackbarMessage}
-            autoHideDuration={4000}
-            onRequestClose={this.hideSnackbar}
-          />
+          <div className={s.content}>
+            <div>
+              <Expertise
+                bot={this.getBot()}
+                onSave={this.handleSaveExpertise}
+              />
+              <PointsOfContact
+                bot={this.getBot()}
+                members={members}
+                onSave={this.handleSavePointsOfContact}
+              />
+              <Snackbar
+                open={this.state.showSnackbar}
+                message={this.state.snackbarMessage}
+                autoHideDuration={4000}
+                onRequestClose={this.hideSnackbar}
+              />
+            </div>
+          </div>
         </div>
       </DocumentTitle>
     )
