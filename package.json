@@ -44,7 +44,7 @@
     "react-redux": "^4.4.5",
     "react-relay": "^0.8.0",
     "react-router": "^2.3.0",
-    "react-router-relay": "^0.12.2",
+    "react-router-relay": "^0.13.2",
     "react-tap-event-plugin": "^1.0.0",
     "react-transform-catch-errors": "^1.0.2",
     "react-transform-hmr": "^1.0.4",
