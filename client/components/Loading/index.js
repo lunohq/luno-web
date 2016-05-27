@@ -1,7 +1,7 @@
 import React from 'react'
 import CircularProgress from 'material-ui/CircularProgress'
 
-import withStyles from '../../utils/withStyles'
+import withStyles from 'u/withStyles'
 
 import s from './style.scss'
 

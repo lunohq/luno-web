@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom'
 import Relay from 'react-relay'
 import Raven from 'raven-js'
 
-import Root from './components/Root'
+import Root from 'c/Root'
 import configureStore from './redux/store/configureStore'
 
 Relay.injectNetworkLayer(

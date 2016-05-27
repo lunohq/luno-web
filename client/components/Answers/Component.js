@@ -3,15 +3,15 @@ import Relay from 'react-relay'
 
 import RaisedButton from 'material-ui/RaisedButton'
 
-import CreateAnswerMutation from '../../mutations/CreateAnswerMutation'
-import DeleteAnswerMutation from '../../mutations/DeleteAnswerMutation'
-import UpdateAnswerMutation from '../../mutations/UpdateAnswerMutation'
-import t from '../../utils/gettext'
-import withStyles from '../../utils/withStyles'
+import CreateAnswerMutation from 'm/CreateAnswerMutation'
+import DeleteAnswerMutation from 'm/DeleteAnswerMutation'
+import UpdateAnswerMutation from 'm/UpdateAnswerMutation'
+import t from 'u/gettext'
+import withStyles from 'u/withStyles'
 
-import DocumentTitle from '../DocumentTitle'
-import Divider from '../Divider/Component'
-import SectionTitle from '../SectionTitle/Component'
+import DocumentTitle from 'c/DocumentTitle'
+import Divider from 'c/Divider/Component'
+import SectionTitle from 'c/SectionTitle/Component'
 
 import AnswersTable from './AnswersTable'
 import CreateEditDialog from './CreateEditDialog'

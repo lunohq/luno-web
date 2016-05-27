@@ -3,7 +3,7 @@ import React, { PropTypes } from 'react'
 import Dialog from 'material-ui/Dialog'
 import FlatButton from 'material-ui/FlatButton'
 
-import t from '../../utils/gettext'
+import t from 'u/gettext'
 
 const DeleteDialog = ({ answer, open, onClose, onSubmit }) => {
   const actions = [

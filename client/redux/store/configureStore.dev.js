@@ -1,7 +1,7 @@
 import { createStore, applyMiddleware, compose } from 'redux'
 import createLogger from 'redux-logger'
 import rootReducer from '../rootReducer'
-import DevTools from '../../components/DevTools'
+import DevTools from 'c/DevTools'
 
 export default function (initialState) {
   const store = createStore(

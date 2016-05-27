@@ -6,7 +6,7 @@ import {
   TableRowColumn,
 } from 'material-ui'
 
-import withStyles from '../../utils/withStyles'
+import withStyles from 'u/withStyles'
 
 import s from './answer-row-style.scss'
 

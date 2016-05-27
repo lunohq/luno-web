@@ -2,12 +2,12 @@ import React, { Component, PropTypes } from 'react'
 import Relay from 'react-relay'
 import { Snackbar } from 'material-ui'
 
-import UpdateBotPurposeMutation from '../../mutations/UpdateBotPurposeMutation'
-import UpdateBotPointsOfContactMutation from '../../mutations/UpdateBotPointsOfContactMutation'
-import t from '../../utils/gettext'
-import withStyles from '../../utils/withStyles'
+import UpdateBotPurposeMutation from 'm/UpdateBotPurposeMutation'
+import UpdateBotPointsOfContactMutation from 'm/UpdateBotPointsOfContactMutation'
+import t from 'u/gettext'
+import withStyles from 'u/withStyles'
 
-import DocumentTitle from '../DocumentTitle'
+import DocumentTitle from 'c/DocumentTitle'
 
 import Expertise from './Expertise'
 import PointsOfContact from './PointsOfContact'

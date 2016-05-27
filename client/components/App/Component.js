@@ -3,10 +3,10 @@ import Relay from 'react-relay'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
-import tracker from '../../tracker'
-import AnonymousLanding from '../AnonymousLanding/Component'
-import AuthenticatedLanding from '../AuthenticatedLanding/Component'
-import LogoutMutation from '../../mutations/LogoutMutation'
+import tracker from 'r/tracker'
+import AnonymousLanding from 'c/AnonymousLanding/Component'
+import AuthenticatedLanding from 'c/AuthenticatedLanding/Component'
+import LogoutMutation from 'm/LogoutMutation'
 
 import s from './style.scss'
 
@@ -15,7 +15,8 @@ class App extends Component {
   handleLogout = () => {
     const { viewer } = this.props;
     Relay.Store.commitUpdate(
-      new LogoutMutation({ viewer })
+      new LogoutMutation({ viewer }),
+      { onSuccess: () => this.context.router.push('/') },
     )
     tracker.clear()
   }
@@ -27,6 +28,7 @@ class App extends Component {
           style._insertCss()
         }
       },
+      viewer: this.props.viewer,
     }
   }
 
@@ -76,11 +78,16 @@ class App extends Component {
 
 App.childContextTypes = {
   insertCss: PropTypes.func.isRequired,
+  viewer: PropTypes.object.isRequired,
 }
 
 App.propTypes = {
   children: PropTypes.object,
   viewer: PropTypes.object.isRequired,
+}
+
+App.contextTypes = {
+  router: PropTypes.object.isRequired,
 }
 
 export default App

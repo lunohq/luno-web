@@ -1,6 +1,6 @@
 .container {
-    composes: between-xs from '../../styles/vendor/flexboxgrid.css';
-    composes: col from '../../styles/layout.scss';
+    composes: between-xs from 's/vendor/flexboxgrid.css';
+    composes: col from 's/layout.scss';
     height: 100%;
 }
 
@@ -36,8 +36,8 @@
 }
 
 .buttons {
-    composes: middle-xs from '../../styles/vendor/flexboxgrid.css';
-    composes: col from '../../styles/layout.scss';
+    composes: middle-xs from 's/vendor/flexboxgrid.css';
+    composes: col from 's/layout.scss';
 }
 
 .topButtons {

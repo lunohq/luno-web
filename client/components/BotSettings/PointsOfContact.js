@@ -1,10 +1,10 @@
 import React, { Component, PropTypes } from 'react'
 
-import t from '../../utils/gettext'
-import withStyles from '../../utils/withStyles'
+import t from 'u/gettext'
+import withStyles from 'u/withStyles'
 
-import Divider from '../Divider/Component'
-import SectionTitle from '../SectionTitle/Component'
+import Divider from 'c/Divider/Component'
+import SectionTitle from 'c/SectionTitle/Component'
 
 import PointsOfContactForm from './PointsOfContactForm'
 

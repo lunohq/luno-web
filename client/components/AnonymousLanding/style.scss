@@ -4,27 +4,27 @@
 }
 
 .container {
-    composes: container from '../../styles/layout.scss';
+    composes: container from 's/layout.scss';
 }
 
 .content {
-    composes: row center-xs from '../../styles/vendor/flexboxgrid.css';
+    composes: row center-xs from 's/vendor/flexboxgrid.css';
     padding-top: 200px;
 }
 
 .header {
-    composes: row from '../../styles/vendor/flexboxgrid.css';
+    composes: row from 's/vendor/flexboxgrid.css';
     padding-top: 15px;
 }
 
 .brand {
-    composes: brand from '../../styles/typography.scss';
+    composes: brand from 's/typography.scss';
 }
 
 .brandContainer {
-    composes: col-xs-6 from '../../styles/vendor/flexboxgrid.css';
+    composes: col-xs-6 from 's/vendor/flexboxgrid.css';
 }
 
 .loginContainer {
-    composes: col-xs-12 from '../../styles/vendor/flexboxgrid.css';
+    composes: col-xs-12 from 's/vendor/flexboxgrid.css';
 }

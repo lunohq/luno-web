@@ -1,7 +1,7 @@
 import React from 'react'
 
-import withStyles from '../../utils/withStyles'
-import DocumentTitle from '../DocumentTitle'
+import withStyles from 'u/withStyles'
+import DocumentTitle from 'c/DocumentTitle'
 
 import s from './style.scss'
 

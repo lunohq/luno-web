@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
 .text {
-    composes: text from '../../styles/typography.scss';
+    composes: text from 's/typography.scss';
 }
 
 
@@ -27,10 +27,10 @@
 }
 
 .content {
-    composes: content from '../../styles/layout.scss';
+    composes: content from 's/layout.scss';
 }
 
 .title {
-    composes: row between-xs middle-xs from '../../styles/vendor/flexboxgrid.css';
+    composes: row between-xs middle-xs from 's/vendor/flexboxgrid.css';
     margin: 0;
 }

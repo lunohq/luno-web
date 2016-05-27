@@ -1,6 +1,6 @@
 import React from 'react'
 import { Field, reduxForm } from 'redux-form'
-import t from '../../utils/gettext'
+import t from 'u/gettext'
 
 import TextField from 'material-ui/TextField'
 

@@ -4,7 +4,7 @@ import { destroy, initialize } from 'redux-form'
 import Dialog from 'material-ui/Dialog'
 import FlatButton from 'material-ui/FlatButton'
 
-import t from '../../utils/gettext'
+import t from 'u/gettext'
 import Form, { FORM_NAME } from './Form'
 
 class CreateEditDialog extends Component {

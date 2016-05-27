@@ -1,7 +1,7 @@
 .root {}
 
 .content {
-    composes: content from '../../styles/layout.scss';
+    composes: content from 's/layout.scss';
 }
 
 .body {
@@ -10,6 +10,6 @@
 }
 
 .titleContainer {
-    composes: row between-xs middle-xs from '../../styles/vendor/flexboxgrid.css';
+    composes: row between-xs middle-xs from 's/vendor/flexboxgrid.css';
     margin: 0;
 }

@@ -1,27 +1,10 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
 
-const QuestionAnswerIcon = ({ height, stroke, strokeWidth, width, ...other }) => (
-  <svg width={width} height={height} viewBox='0 0 48 48' {...other}>
-    <path
-      d='M42 12h-4v18H12v4c0 1.1.9 2 2 2h22l8 8V14c0-1.1-.9-2-2-2zm-8 12V6c0-1.1-.9-2-2-2H6c-1.1 0-2 .9-2 2v28l8-8h20c1.1 0 2-.9 2-2z'
-      fill={stroke}
-      strokeWidth={strokeWidth}
-    />
+const QuestionAnswerIcon = () => (
+  <svg fill="#FFFFFF" height="26" viewBox="0 0 24 24" width="26" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 0h24v24H0z" fill="none"/>
+      <path d="M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-4 6V3c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1z"/>
   </svg>
 )
-
-QuestionAnswerIcon.propTypes = {
-  height: PropTypes.number,
-  stroke: PropTypes.string,
-  strokeWidth: PropTypes.number,
-  width: PropTypes.number,
-}
-
-QuestionAnswerIcon.defaultProps = {
-  height: 26,
-  stroke: '#FFF',
-  strokeWidth: 1,
-  width: 26,
-}
 
 export default QuestionAnswerIcon

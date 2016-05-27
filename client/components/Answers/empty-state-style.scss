@@ -1,5 +1,5 @@
 .root {
-    composes: row middle-xs center-xs from '../../styles/vendor/flexboxgrid.css';
+    composes: row middle-xs center-xs from 's/vendor/flexboxgrid.css';
     padding: 32px 0;
 }
 
@@ -13,5 +13,5 @@
 }
 
 .row {
-    composes: col-xs-12 from '../../styles/vendor/flexboxgrid.css';
+    composes: col-xs-12 from 's/vendor/flexboxgrid.css';
 }

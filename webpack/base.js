@@ -47,6 +47,18 @@ module.exports = (options) => ({
       require('autoprefixer')({ browsers: AUTOPREFIXER_BROWSERS }),
     ];
   },
+  resolve: {
+    root: [
+      path.resolve(process.cwd(), 'node_modules'),
+    ],
+    alias: {
+      c: path.resolve(process.cwd(), 'client', 'components'),
+      u: path.resolve(process.cwd(), 'client', 'utils'),
+      m: path.resolve(process.cwd(), 'client', 'mutations'),
+      s: path.resolve(process.cwd(), 'client', 'styles'),
+      r: path.resolve(process.cwd(), 'client'),
+    },
+  },
   devtool: options.devtool,
   stats: false,
   progress: true,

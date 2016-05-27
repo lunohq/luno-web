@@ -1,6 +1,6 @@
 import React from 'react'
 
-import withStyles from '../../utils/withStyles'
+import withStyles from 'u/withStyles'
 
 import s from './style.scss'
 

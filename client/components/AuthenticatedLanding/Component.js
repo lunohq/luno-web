@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import Snackbar from 'material-ui/Snackbar'
 
-import withStyles from '../../utils/withStyles'
+import withStyles from 'u/withStyles'
 import Navigation from './Navigation'
 
 import s from './style.scss'
@@ -23,7 +23,7 @@ const AuthenticatedLanding = ({ children, onLogout, viewer }) => {
   return (
     <div className={s.root}>
       <section>
-        <Navigation onLogout={onLogout} />
+        <Navigation onLogout={onLogout} team={viewer.team} />
         <main className={s.main}>
           {children}
           {assumeNotification}

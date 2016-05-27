@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 
-import withStyles from '../../utils/withStyles'
+import withStyles from 'u/withStyles'
 import s from './style.scss'
 
 const SectionTitle = ({ title }) => (

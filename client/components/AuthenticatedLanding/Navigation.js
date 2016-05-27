@@ -2,10 +2,9 @@ import React, { PropTypes } from 'react'
 import { Link } from 'react-router'
 import Drawer from 'material-ui/Drawer'
 
-import withStyles from '../../utils/withStyles'
-import LogoutIcon from '../LogoutIcon'
-import QuestionAnswerIcon from '../QuestionAnswerIcon'
-import SettingsIcon from '../SettingsIcon'
+import withStyles from 'u/withStyles'
+import QuestionAnswerIcon from 'c/QuestionAnswerIcon'
+import AccountMenu from './AccountMenu'
 
 import s from './nav-style.scss'
 
@@ -24,14 +23,9 @@ const Navigation = ({ onLogout }) => {
           <Link className={isSelected('/')} to='/'>
             <QuestionAnswerIcon />
           </Link>
-          <Link className={isSelected('/bot-settings')} to='/bot-settings'>
-            <SettingsIcon />
-          </Link>
         </div>
         <div className={s.buttons}>
-          <a className={s.button} onClick={onLogout}>
-            <LogoutIcon />
-          </a>
+          <AccountMenu className={s.button} onLogout={onLogout} />
         </div>
       </div>
     </Drawer>

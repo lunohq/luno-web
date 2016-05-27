@@ -2,10 +2,10 @@ import React, { Component, PropTypes } from 'react'
 import { Field, FieldArray, reduxForm } from 'redux-form'
 import AutoComplete from 'material-ui/AutoComplete'
 
-import t from '../../utils/gettext'
-import withStyles from '../../utils/withStyles'
+import t from 'u/gettext'
+import withStyles from 'u/withStyles'
 
-import CrossIcon from '../CrossIcon'
+import CrossIcon from 'c/CrossIcon'
 
 import s from './points-of-contact-form-style.scss'
 
