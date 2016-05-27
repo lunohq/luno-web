@@ -35,7 +35,7 @@ class Expertise extends Component {
       <div>
         <div>
           <div className={s.titleContainer}>
-            <SectionTitle title={t('Domain Expertise')} />
+            <SectionTitle title={t('Lunobot Expertise')} />
           </div>
           <Divider />
           <p className={s.text}>

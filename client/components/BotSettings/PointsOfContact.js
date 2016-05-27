@@ -14,7 +14,7 @@ const PointsOfContact = ({ bot, members, onSave }) => (
   <div>
     <div>
       <div className={s.titleContainer}>
-        <SectionTitle title={t('Points of contact')} />
+        <SectionTitle title={t('Points of Contact')} />
       </div>
       <Divider />
       <p className={s.text}>
