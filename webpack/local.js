@@ -18,6 +18,7 @@ const local = {
   // Don't use hashes for better performance
   output: {
     filename: '[name].js',
+    publicPath: '/',
   },
   scssLoaders: [
     'isomorphic-style-loader',

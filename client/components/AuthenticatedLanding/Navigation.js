@@ -8,15 +8,20 @@ import AccountMenu from './AccountMenu'
 
 import s from './nav-style.scss'
 
+export const NAV_WIDTH = 60
+
 const Navigation = ({ onLogout }) => {
-  const isSelected = (path) => {
+  const isSelected = (path, fuzzy) => {
+    if (fuzzy) {
+      return window.location.pathname.startsWith(path) ? s.selectedButton : s.button
+    }
     return window.location.pathname === path ? s.selectedButton : s.button
   }
 
   return (
     <Drawer
       containerStyle={{background: '#393F44'}}
-      width={60}
+      width={NAV_WIDTH}
     >
       <div className={s.container}>
         <div className={s.topButtons}>
@@ -25,7 +30,7 @@ const Navigation = ({ onLogout }) => {
           </Link>
         </div>
         <div className={s.buttons}>
-          <AccountMenu className={s.button} onLogout={onLogout} />
+          <AccountMenu className={isSelected('/admin', true)} onLogout={onLogout} />
         </div>
       </div>
     </Drawer>

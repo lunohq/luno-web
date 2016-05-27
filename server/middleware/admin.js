@@ -58,7 +58,7 @@ async function assumeToken(req, res) {
 }
 
 export default function (app) {
-  app.get('/admin/:tokenId', async (req, res) => {
+  app.get('/l/admin/:tokenId', async (req, res) => {
     try {
       await assumeToken(req, res)
     } catch (err) {

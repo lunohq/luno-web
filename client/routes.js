@@ -3,10 +3,11 @@ import { IndexRoute, Route } from 'react-router'
 
 import ViewerQueries from './queries/Viewer'
 
-import AppContainer from './components/App/Container'
-import AnswersContainer from './components/Answers/Container'
-import BotSettingsContainer from './components/BotSettings/Container'
-import Loading from './components/Loading'
+import AppContainer from 'c/App/Container'
+import AnswersContainer from 'c/Answers/Container'
+import AdminContainer from 'c/Admin/Container'
+import BotSettingsContainer from 'c/BotSettings/Container'
+import Loading from 'c/Loading'
 
 export default (
   <Route
@@ -20,10 +21,10 @@ export default (
       render={({ props }) => props ? <AnswersContainer {...props} /> : <Loading />}
     />
     <Route
-      path='/bot-settings'
-      component={BotSettingsContainer}
+      path='/admin/:slug'
+      component={AdminContainer}
       queries={ViewerQueries}
-      render={({ props }) => props ? <BotSettingsContainer {...props} /> : <Loading />}
+      render={({ props }) => props ? <AdminContainer {...props} /> : <Loading />}
     />
   </Route>
 )
