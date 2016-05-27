@@ -1,68 +1,10 @@
-$leftNavWidth: 60px;
-
 .root {
     overflow-x: hidden;
 }
 
 .main {
-    left: $leftNavWidth;
-    margin: 0;
-    padding: 0;
-    position: absolute;
-    top: 0px;
-}
-
-.buttons {
-    composes: middle-xs from '../../styles/vendor/flexboxgrid.css';
-    composes: col from '../../styles/layout.scss';
-}
-
-.topButtons {
-    composes: buttons;
-    margin-top: 35px;
-}
-
-.nav {
-    composes: between-xs from '../../styles/vendor/flexboxgrid.css';
-    composes: col from '../../styles/layout.scss';
-    background: #393F44;
-    bottom: 0;
-    height: 100%;
-    left: 0;
-    margin: 0;
-    padding: 0;
-    position: fixed;
-    top: 0;
-    width: $leftNavWidth;
-}
-
-.navButton {
-    border-radius: 2px;
-    margin-bottom: 10px;
-    opacity: 0.6;
-    padding: 10px;
-    position: relative;
-}
-
-.navButton:hover, .selectedNavButton {
-    opacity: 1;
-}
-
-.selectedNavButton {
-    composes: navButton;
-}
-
-.selectedNavButton::before {
-    content: "";
-    position: absolute;
-    height: 36px;
-    border-left: 8px solid #FFF;
-    border-radius: 4px;
-    left: -10px;
-    top: 4px;
-}
-
-.navButton:hover {
-    background: #2F3437;
-    cursor: pointer;
+    background: #FFF;
+    // 60px for left nav width + 40px
+    padding-left: 100px;
+    height: 100vh;
 }

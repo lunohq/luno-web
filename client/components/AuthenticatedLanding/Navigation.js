@@ -1,34 +1,40 @@
 import React, { PropTypes } from 'react'
 import { Link } from 'react-router'
+import Drawer from 'material-ui/Drawer'
 
 import withStyles from '../../utils/withStyles'
 import LogoutIcon from '../LogoutIcon'
 import QuestionAnswerIcon from '../QuestionAnswerIcon'
 import SettingsIcon from '../SettingsIcon'
 
-import s from './style.scss'
+import s from './nav-style.scss'
 
 const Navigation = ({ onLogout }) => {
   const isSelected = (path) => {
-    return window.location.pathname === path ? s.selectedNavButton : s.navButton
+    return window.location.pathname === path ? s.selectedButton : s.button
   }
 
   return (
-    <nav className={s.nav}>
-      <div className={s.topButtons}>
-        <Link className={isSelected('/')} to='/'>
-          <QuestionAnswerIcon />
-        </Link>
-        <Link className={isSelected('/bot-settings')} to='/bot-settings'>
-          <SettingsIcon />
-        </Link>
+    <Drawer
+      containerStyle={{background: '#393F44'}}
+      width={60}
+    >
+      <div className={s.container}>
+        <div className={s.topButtons}>
+          <Link className={isSelected('/')} to='/'>
+            <QuestionAnswerIcon />
+          </Link>
+          <Link className={isSelected('/bot-settings')} to='/bot-settings'>
+            <SettingsIcon />
+          </Link>
+        </div>
+        <div className={s.buttons}>
+          <a className={s.button} onClick={onLogout}>
+            <LogoutIcon />
+          </a>
+        </div>
       </div>
-      <div className={s.buttons}>
-        <a className={s.navButton} onClick={onLogout}>
-          <LogoutIcon />
-        </a>
-      </div>
-    </nav>
+    </Drawer>
   )
 }
 

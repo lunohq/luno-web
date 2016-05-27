@@ -5,17 +5,15 @@
    flex-direction: column;
 }
 
-.content {
-    background: #FFF;
-    padding: 30px 40px;
-    margin: 0;
-}
-
 .titleDivider {
     background: #666;
     border: 0;
     height: 2px;
     margin: 10px 0;
+}
+
+.content {
+    padding-top: 30px;
 }
 
 .container {

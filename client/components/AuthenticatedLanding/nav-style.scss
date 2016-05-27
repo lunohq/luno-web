@@ -1,0 +1,46 @@
+.container {
+    composes: between-xs from '../../styles/vendor/flexboxgrid.css';
+    composes: col from '../../styles/layout.scss';
+    height: 100%;
+}
+
+.button {
+    border-radius: 2px;
+    margin-bottom: 10px;
+    opacity: 0.6;
+    padding: 10px;
+    position: relative;
+}
+
+.button:hover, .selectedButton {
+    opacity: 1;
+}
+
+.selectedButton {
+    composes: button;
+}
+
+.selectedButton::before {
+    content: "";
+    position: absolute;
+    height: 36px;
+    border-left: 8px solid #FFF;
+    border-radius: 4px;
+    left: -10px;
+    top: 4px;
+}
+
+.button:hover {
+    background: #2F3437;
+    cursor: pointer;
+}
+
+.buttons {
+    composes: middle-xs from '../../styles/vendor/flexboxgrid.css';
+    composes: col from '../../styles/layout.scss';
+}
+
+.topButtons {
+    composes: buttons;
+    margin-top: 35px;
+}
