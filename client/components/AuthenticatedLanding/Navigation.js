@@ -20,7 +20,7 @@ const Navigation = ({ onLogout }) => {
 
   return (
     <Drawer
-      containerStyle={{background: '#393F44'}}
+      containerStyle={{ background: '#393F44', boxShadow: 'none' }}
       width={NAV_WIDTH}
     >
       <div className={s.container}>
