@@ -69,7 +69,7 @@ function startRelayServer() {
 
   relayServer.use(morgan('short'))
   auth(relayServer.app, converse)
-  //slashCommands(relayServer.app, botkit)
+  slashCommands(relayServer.app, converse)
   admin(relayServer.app)
   // Serve static resources
   relayServer.use('/', express.static(path.join(__dirname, '../build')))

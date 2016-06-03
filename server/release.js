@@ -27,7 +27,7 @@ if (config.ssl) {
 
 relayServer.use(morgan('short'))
 auth(relayServer, converse)
-//slashCommands(relayServer, botkit)
+slashCommands(relayServer, converse)
 admin(relayServer)
 relayServer.use(historyApiFallback())
 relayServer.use('/', express.static(path.join(__dirname, '../output', process.env.NODE_ENV)))
