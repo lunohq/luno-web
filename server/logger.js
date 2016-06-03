@@ -19,7 +19,11 @@ export function metadata({ bot, err, ...other }) {
 
 export default new winston.Logger({
   transports: [
-    new winston.transports.Console({ level: config.winston.logger.console.level }),
+    new winston.transports.Console({
+      level: config.winston.logger.console.level,
+      depth: config.winston.logger.console.depth,
+      prettyPrint: config.winston.logger.console.prettyPrint,
+    }),
     new RavenWinston({ dsn: config.sentry.dsn, patchGlobal: true, level: 'warn' }),
   ],
 })

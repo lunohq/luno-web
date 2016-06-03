@@ -10,6 +10,8 @@ const config = {
     logger: {
       console: {
         level: process.env.WINSTON_LOGGER_CONSOLE_LEVEL || 'info',
+        depth: parseInt(process.env.WINSTON_LOGGER_CONSOLE_DEPTH, 10) || 3,
+        prettyPrint: parseInt(process.env.WINSTON_LOGGER_CONSOLE_PRETTY_PRINT, 10) === 1 || true,
       },
     },
   },
