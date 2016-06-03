@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import { destroy, initialize } from 'redux-form'
 
-import Dialog from 'material-ui/Dialog'
+import Dialog from 'c/Dialog'
 import FlatButton from 'material-ui/FlatButton'
 
 import t from 'u/gettext'
