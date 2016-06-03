@@ -17,7 +17,7 @@ import auth from './middleware/auth'
 import slashCommands from './middleware/slashCommands'
 import admin from './middleware/admin'
 
-import botkit from './botkit'
+import converse from './converse'
 
 let graphQLServer
 let relayServer
@@ -68,8 +68,8 @@ function startRelayServer() {
   })
 
   relayServer.use(morgan('short'))
-  auth(relayServer.app, botkit)
-  slashCommands(relayServer.app, botkit)
+  auth(relayServer.app, converse)
+  //slashCommands(relayServer.app, botkit)
   admin(relayServer.app)
   // Serve static resources
   relayServer.use('/', express.static(path.join(__dirname, '../build')))

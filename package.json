@@ -64,7 +64,7 @@
     "webpack-hot-middleware": "^2.10.0"
   },
   "dependencies": {
-    "@slack/client": "^3.1.0",
+    "@slack/client": "^3.4.0",
     "babel-cli": "^6.6.5",
     "babel-core": "^6.7.4",
     "babel-plugin-react-transform": "^2.0.2",
@@ -76,6 +76,7 @@
     "bluebird": "^3.4.0",
     "body-parser": "^1.15.1",
     "botkit": "git+https://github.com/lunohq/botkit.git#6ad2ddef652f25db80b6ef9fe52db69c4739de62",
+    "converse": "git+https://1d0cdee693b540fb3b9cd603b01834ec45976ce9:x-oauth-basic@github.com/lunohq/converse.git#v0.0.2-15",
     "connect-history-api-fallback": "^1.2.0",
     "cookie-parser": "^1.4.1",
     "debug": "^2.2.0",
@@ -88,7 +89,7 @@
     "graphql-relay": "^0.3.6",
     "jsonwebtoken": "^5.7.0",
     "lodash": "^4.7.0",
-    "luno-core": "git+https://1d0cdee693b540fb3b9cd603b01834ec45976ce9:x-oauth-basic@github.com/lunohq/luno-core.git#v1.5.0",
+    "luno-core": "git+https://1d0cdee693b540fb3b9cd603b01834ec45976ce9:x-oauth-basic@github.com/lunohq/luno-core.git#v1.6.0",
     "mixpanel": "^0.4.0",
     "morgan": "^1.7.0",
     "raven": "^0.10.0",

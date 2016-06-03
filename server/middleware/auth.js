@@ -6,17 +6,19 @@ import config from '../config/environment'
 import { generateToken, setCookie } from '../actions/auth'
 import logger, { metadata } from '../logger'
 
+const debug = require('debug')('server:middleware:auth')
+
 /**
- * Use botkit to handle the oauth process.
+ * Use converse to handle the oauth process.
  *
  * If we successfully auth a user, we'll generate a token and store it in a
  * cookie.
  *
- * @param {Object} botkit botkit instance
+ * @param {Object} converse converse.Server instance
  * @param {Object} app express app
  */
-function oauth(botkit, app) {
-  botkit.createOauthEndpoints(app, async (err, req, res) => {
+function oauth(converse, app) {
+  converse.createAuthEndpoints(app, async (err, req, res) => {
     if (err) {
       logger.error('OAuth Failure', metadata({ query: req.query, err }))
       return res.redirect('/')
@@ -25,6 +27,13 @@ function oauth(botkit, app) {
     if (req.query.error) {
       logger.error('OAuth Error', { error: req.query.error, query: req.query })
       return res.redirect('/')
+    }
+
+    const { locals: { team } } = res
+    debug('Checking if app is installed', { team })
+    if (!team.slack || !team.slack.bot) {
+      logger.info('Routing initial user through install', { team: res.locals.team, user: res.locals.user })
+      return res.redirect(converse.getInstallURL(team.id))
     }
 
     let token
@@ -40,7 +49,7 @@ function oauth(botkit, app) {
   })
 }
 
-export default function (app, botkit) {
+export default function (app, converse) {
   // cookieParser is required so we can read and write cookie values
   app.use(cookieParser(config.cookie.secret))
 
@@ -71,7 +80,7 @@ export default function (app, botkit) {
     return next()
   })
 
-  if (botkit) {
-    oauth(botkit, app)
+  if (converse) {
+    oauth(converse, app)
   }
 }
