@@ -67,6 +67,7 @@ class Tracker {
     this.track(TEAM_EVENT, data)
     this.mixpanel.people.set(distinctId, {
       $created: (new Date()).toISOString(),
+      $email: user.email,
     })
     debug('Tracked create user')
   }
