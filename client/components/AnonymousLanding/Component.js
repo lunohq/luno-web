@@ -1,6 +1,7 @@
 import React from 'react'
 
 import withStyles from 'u/withStyles'
+import t from 'u/gettext'
 import DocumentTitle from 'c/DocumentTitle'
 
 import s from './style.scss'
@@ -18,6 +19,9 @@ const AnonymousLanding = () => (
         </div>
         <div className={s.content}>
           <div className={s.loginContainer}>
+            <div className={s.headerContainer}>
+              <h1 className={s.header}>{t('Open your Luno dashboard')}</h1>
+            </div>
             <a href='/login'>
               <img
                 alt='Sign in with Slack'
