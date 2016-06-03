@@ -14,7 +14,7 @@ import auth from './middleware/auth'
 import slashCommands from './middleware/slashCommands'
 import admin from './middleware/admin'
 
-import botkit from './botkit'
+import converse from './converse'
 
 // Launch Relay by creating a normal express server
 const relayServer = express()
@@ -26,8 +26,8 @@ if (config.ssl) {
 }
 
 relayServer.use(morgan('short'))
-auth(relayServer, botkit)
-slashCommands(relayServer, botkit)
+auth(relayServer, converse)
+//slashCommands(relayServer, botkit)
 admin(relayServer)
 relayServer.use(historyApiFallback())
 relayServer.use('/', express.static(path.join(__dirname, '../output', process.env.NODE_ENV)))
