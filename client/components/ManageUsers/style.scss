@@ -1,9 +1,3 @@
-.root {}
-
-.text {
-    composes: text from 's/typography.scss';
-}
-
 .content {
     composes: content from 's/layout.scss';
 }

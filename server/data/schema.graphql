@@ -187,6 +187,7 @@ type User implements Node {
   anonymous: Boolean
   assumed: Boolean
   role: UserRole
+  displayRole: String
 }
 
 type UserConnection {

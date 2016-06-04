@@ -6,7 +6,6 @@ import ViewerQueries from './queries/Viewer'
 import AppContainer from 'c/App/Container'
 import AnswersContainer from 'c/Answers/Container'
 import AdminContainer from 'c/Admin/Container'
-import BotSettingsContainer from 'c/BotSettings/Container'
 import Loading from 'c/Loading'
 
 export default (

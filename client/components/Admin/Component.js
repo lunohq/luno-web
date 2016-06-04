@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react'
 
 import withStyles from 'u/withStyles'
 import BotSettingsContainer from 'c/BotSettings/Container'
+import ManageUsersContainer from 'c/ManageUsers/Container'
 
 import Navigation from './Navigation'
 
@@ -12,6 +13,9 @@ const Admin = ({ location, params: { slug }, viewer }) => {
   switch (slug) {
     case 'bot':
       content = <BotSettingsContainer viewer={viewer} />
+      break
+    case 'users':
+      content = <ManageUsersContainer viewer={viewer} />
       break
     default:
   }

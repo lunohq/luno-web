@@ -44,18 +44,43 @@ function wrapState(ComposedComponent) {
 
 SelectableList = wrapState(SelectableList)
 
-const Navigation = ({ location: { pathname } }) => (
-  <Drawer containerStyle={{left: NAV_WIDTH}}>
-    <SelectableList defaultValue={pathname}>
-      <Subheader>{t('Admin Settings')}</Subheader>
-      <ListItem value='/admin/bot' primaryText={t('Lunobot Settings')} />
-    </SelectableList>
-  </Drawer>
-)
+class Navigation extends Component {
+
+  handleBotTouchTap = () => this.context.router.push('/admin/bot')
+  handleUsersTouchTap = () => this.context.router.push('/admin/users')
+
+  render() {
+    const { location: { pathname } } = this.props
+    return (
+      <Drawer containerStyle={{left: NAV_WIDTH}}>
+        <SelectableList defaultValue={pathname}>
+          <Subheader>{t('Admin Settings')}</Subheader>
+          <ListItem
+            onTouchTap={this.handleBotTouchTap}
+            primaryText={t('Lunobot Settings')}
+            value='/admin/bot'
+          />
+          <ListItem
+            onTouchTap={this.handleUsersTouchTap}
+            primaryText={t('Manage Users')}
+            value='/admin/users'
+          />
+        </SelectableList>
+      </Drawer>
+    )
+  }
+
+}
 
 Navigation.propTypes = {
   location: PropTypes.shape({
     pathname: PropTypes.string.isRequired,
+  }).isRequired,
+}
+
+Navigation.contextTypes = {
+  router: PropTypes.shape({
+    push: PropTypes.func.isRequired,
   }).isRequired,
 }
 

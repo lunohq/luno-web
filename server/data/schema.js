@@ -216,6 +216,21 @@ const GraphQLUser = new GraphQLObjectType({
       type: GraphQLUserRole,
       description: 'Role of the user',
     },
+    displayRole: {
+      type: GraphQLString,
+      description: 'The display name for the user\'s role',
+      resolve: (user) => {
+        switch (user.role) {
+          case undefined:
+          case db.user.ADMIN:
+            return 'Superadmin'
+          case db.user.TRAINER:
+            return 'Trainer'
+          default:
+            return ''
+        }
+      },
+    },
   }),
   interfaces: [nodeInterface],
 })
