@@ -141,6 +141,7 @@ type Team implements Node {
   name: String
   slack: SlackInfo
   members(after: String, first: Int, before: String, last: Int): SlackMemberConnection
+  users(after: String, first: Int, before: String, last: Int): UserConnection
 }
 
 input UpdateAnswerInput {
@@ -185,4 +186,21 @@ type User implements Node {
   bots(after: String, first: Int, before: String, last: Int): BotConnection
   anonymous: Boolean
   assumed: Boolean
+  role: UserRole
+}
+
+type UserConnection {
+  pageInfo: PageInfo!
+  edges: [UserEdge]
+}
+
+type UserEdge {
+  node: User
+  cursor: String!
+}
+
+enum UserRole {
+  ADMIN
+  TRAINER
+  CONSUMER
 }

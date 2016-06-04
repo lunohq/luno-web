@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars, no-use-before-define */
 import {
   GraphQLBoolean,
+  GraphQLEnumType,
   GraphQLFloat,
   GraphQLID,
   GraphQLInt,
@@ -124,6 +125,15 @@ const GraphQLTeam = new GraphQLObjectType({
         return connectionFromArray(members, args)
       },
     },
+    users: {
+      type: UsersConnection,
+      description: 'Users within Luno',
+      args: connectionArgs,
+      resolve: async (team, args) => {
+        const users = await db.user.getUsers(team.id)
+        return connectionFromArray(users, args)
+      },
+    },
   }),
   interfaces: [nodeInterface],
 })
@@ -147,6 +157,15 @@ const GraphQLSlackMember = new GraphQLObjectType({
     },
   }),
   interfaces: [nodeInterface],
+})
+
+const GraphQLUserRole = new GraphQLEnumType({
+  name: 'UserRole',
+  values: {
+    ADMIN: { value: db.user.ADMIN },
+    TRAINER: { value: db.user.TRAINER },
+    CONSUMER: { value: db.user.CONSUMER },
+  },
 })
 
 const GraphQLUser = new GraphQLObjectType({
@@ -192,6 +211,10 @@ const GraphQLUser = new GraphQLObjectType({
     assumed: {
       type: GraphQLBoolean,
       description: 'Boolean indicating whether or not an admin is assuming this user',
+    },
+    role: {
+      type: GraphQLUserRole,
+      description: 'Role of the user',
     },
   }),
   interfaces: [nodeInterface],
