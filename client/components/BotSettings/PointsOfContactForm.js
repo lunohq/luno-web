@@ -4,12 +4,17 @@ import AutoComplete from 'material-ui/AutoComplete'
 
 import t from 'u/gettext'
 import withStyles from 'u/withStyles'
+import colors from 's/colors'
 
 import CrossIcon from 'c/CrossIcon'
 
 import s from './points-of-contact-form-style.scss'
 
 export const FORM_NAME = 'form/bot-settings/points-of-contact'
+
+function filter(searchText, key) {
+  return searchText !== '' && key.toLowerCase().indexOf(searchText.toLowerCase()) !== -1
+}
 
 function getItemName(item) {
   return `@${item.name}`
@@ -25,6 +30,47 @@ function createDataSource(members) {
     dataSource.push(text)
   }
   return dataSource
+}
+
+const Contact = ({ contacts, index, onRemove, value }) => (
+  <li className={s.token} onTouchTap={() => onRemove(contacts, value, index)}>
+    <span>{`@${value.node.name}`}</span>
+    <CrossIcon
+      className={s.icon}
+      height={16}
+      width={16}
+      stroke={colors.darkGrey}
+    />
+  </li>
+)
+
+const Contacts = ({ dataSource, onRemove, onNewRequest, onUpdateInput, searchText, fields }) => {
+  const tokens = fields.map((contact, index) => (
+    <Field
+      component={Contact}
+      contacts={fields}
+      index={index}
+      key={index}
+      name={contact}
+      onRemove={onRemove}
+    />
+  ))
+
+  return (
+    <div>
+      <ul className={s.tokenContainer}>
+        {tokens}
+      </ul>
+      <AutoComplete
+        dataSource={dataSource}
+        filter={filter}
+        hintText={t('@username')}
+        onNewRequest={onNewRequest}
+        onUpdateInput={onUpdateInput}
+        searchText={searchText}
+      />
+    </div>
+  )
 }
 
 class PointsOfContactForm extends Component {
@@ -108,47 +154,21 @@ class PointsOfContactForm extends Component {
 
   handleUpdateInput = searchText => this.setState({ searchText })
 
-  generateTokens = (contacts) => {
-    return contacts.map((contact, index) => {
-      return (
-        <Field key={index} name={contact} component={({ value }) =>
-          <li className={s.token} onTouchTap={() => this.handleRemove(contacts, value, index)}>
-            <span>{`@${value.node.name}`}</span>
-            <CrossIcon
-              className={s.icon}
-              height={16}
-              width={16}
-              // TODO come up with a way to abstract this
-              stroke='#808080'
-            />
-          </li>
-        } />
-      )
-    })
-  }
-
   render() {
-    const { existing } = this.props
     const { members, searchText } = this.state
     const dataSource = createDataSource(members)
     return (
       <form>
         <div>
-          <FieldArray name='contacts' component={contacts =>
-            <div>
-              <ul className={s.tokenContainer}>
-                {this.generateTokens(contacts)}
-              </ul>
-              <AutoComplete
-                dataSource={dataSource}
-                filter={AutoComplete.caseInsensitiveFilter}
-                hintText={t('@username')}
-                onNewRequest={this.handleNewRequest}
-                onUpdateInput={this.handleUpdateInput}
-                searchText={searchText}
-              />
-            </div>
-          } />
+          <FieldArray
+            component={Contacts}
+            dataSource={dataSource}
+            name='contacts'
+            onNewRequest={this.handleNewRequest}
+            onRemove={this.handleRemove}
+            onUpdateInput={this.handleUpdateInput}
+            searchText={searchText}
+          />
         </div>
       </form>
     )

@@ -19,30 +19,32 @@ const validate = values => {
   return errors
 }
 
+const Title = (props) => (
+  <TextField
+    errorText={props.touched ? props.error : undefined}
+    fullWidth
+    hintText={t('Title')}
+    {...props}
+  />
+)
+
+const Body = (props) => (
+  <TextField
+    errorText={props.touched ? props.error : undefined}
+    fullWidth
+    hintText={t('Answer')}
+    multiLine
+    rows={1}
+    {...props}
+  />
+)
+
 const Form = () => {
   return (
     <form>
       <div>
-        <Field name='title' component={title =>
-            <TextField
-              errorText={title.touched ? title.error : undefined}
-              fullWidth
-              hintText={t('Title')}
-              {...title}
-            />
-          }
-        />
-        <Field name='body' component={body =>
-            <TextField
-              errorText={body.touched ? body.error : undefined}
-              fullWidth
-              hintText={t('Answer')}
-              multiLine
-              rows={1}
-              {...body}
-            />
-          }
-        />
+        <Field name='title' component={Title} />
+        <Field name='body' component={Body} />
       </div>
     </form>
   )
