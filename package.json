@@ -30,7 +30,7 @@
     "gaze": "^1.0.0",
     "html-webpack-plugin": "^2.15.0",
     "isomorphic-style-loader": "^1.0.0",
-    "material-ui": "v0.15.0",
+    "material-ui": "git+https://github.com/lunohq/material-ui-dist.git#d2830bd2bf2370608c7a125771acb9b8ceb12161",
     "mixpanel-browser": "^2.7.2",
     "node-sass": "^3.4.2",
     "postcss": "^5.0.21",

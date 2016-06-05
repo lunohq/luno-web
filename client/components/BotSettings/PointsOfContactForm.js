@@ -62,6 +62,7 @@ const Contacts = ({ dataSource, onRemove, onNewRequest, onUpdateInput, searchTex
         {tokens}
       </ul>
       <AutoComplete
+        chosenRequestText={() => ''}
         dataSource={dataSource}
         filter={filter}
         hintText={t('@username')}
