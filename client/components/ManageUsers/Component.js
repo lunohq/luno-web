@@ -58,7 +58,8 @@ class ManageUsers extends Component {
     userToDelete: null,
   })
   handleDelete = () => {
-    debugger
+    const mutation = new UpdateUserMutation({ user: this.state.userToDelete, role: 'CONSUMER' })
+    Relay.Store.commitUpdate(mutation)
     this.hideDeleteConfirmation()
   }
 
