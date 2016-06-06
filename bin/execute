@@ -1,4 +1,4 @@
 #!/usr/bin/env babel-node
 import dotenv from 'dotenv'
 dotenv.config()
-require('../server')
+require('../server/management/scripts/executor')
