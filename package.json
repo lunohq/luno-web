@@ -53,7 +53,7 @@
     "redux-devtools": "^3.2.0",
     "redux-devtools-dock-monitor": "^1.1.1",
     "redux-devtools-log-monitor": "^1.0.11",
-    "redux-form": "git+https://github.com/lunohq/redux-form.git#fbd60a43b2f54cbf7c09a33af891f50dda504615",
+    "redux-form": "v6.0.0-alpha.15",
     "redux-logger": "^2.6.1",
     "s3": "^4.4.0",
     "sass-loader": "^3.2.0",
