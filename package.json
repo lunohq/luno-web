@@ -8,7 +8,8 @@
     "build": "./bin/build",
     "update": "babel-node server/utils/updateSchema.js",
     "webpack": "webpack --config webpack/release.js",
-    "lint": "eslint --ignore-path .gitignore client server"
+    "lint": "eslint --ignore-path .gitignore client server",
+    "script": "./bin/execute"
   },
   "repository": {
     "type": "git",
