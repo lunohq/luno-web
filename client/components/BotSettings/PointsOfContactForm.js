@@ -1,35 +1,19 @@
 import React, { Component, PropTypes } from 'react'
 import { Field, FieldArray, reduxForm } from 'redux-form'
-import AutoComplete from 'material-ui/AutoComplete'
 
 import t from 'u/gettext'
 import withStyles from 'u/withStyles'
 import colors from 's/colors'
 
+import AutoCompleteMembers, { createDataSource } from 'c/AutoCompleteMembers'
 import CrossIcon from 'c/CrossIcon'
 
 import s from './points-of-contact-form-style.scss'
 
 export const FORM_NAME = 'form/bot-settings/points-of-contact'
 
-function filter(searchText, key) {
-  return searchText !== '' && key.toLowerCase().indexOf(searchText.toLowerCase()) !== -1
-}
-
 function getItemName(item) {
   return `@${item.name}`
-}
-
-function createDataSource(members) {
-  const dataSource = []
-  for (const member of members) {
-    let text = `@${member.node.name}`
-    if (member.node.profile.realName) {
-      text = `${text} (${member.node.profile.realName})`
-    }
-    dataSource.push(text)
-  }
-  return dataSource
 }
 
 const Contact = ({ contacts, index, onRemove, value }) => (
@@ -61,11 +45,9 @@ const Contacts = ({ dataSource, onRemove, onNewRequest, onUpdateInput, searchTex
       <ul className={s.tokenContainer}>
         {tokens}
       </ul>
-      <AutoComplete
+      <AutoCompleteMembers
         chosenRequestText={() => ''}
         dataSource={dataSource}
-        filter={filter}
-        hintText={t('@username')}
         onNewRequest={onNewRequest}
         onUpdateInput={onUpdateInput}
         searchText={searchText}
