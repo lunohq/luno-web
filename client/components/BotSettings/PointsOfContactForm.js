@@ -141,19 +141,17 @@ class PointsOfContactForm extends Component {
     const { members, searchText } = this.state
     const dataSource = createDataSource(members)
     return (
-      <form>
-        <div>
-          <FieldArray
-            component={Contacts}
-            dataSource={dataSource}
-            name='contacts'
-            onNewRequest={this.handleNewRequest}
-            onRemove={this.handleRemove}
-            onUpdateInput={this.handleUpdateInput}
-            searchText={searchText}
-          />
-        </div>
-      </form>
+      <div>
+        <FieldArray
+          component={Contacts}
+          dataSource={dataSource}
+          name='contacts'
+          onNewRequest={this.handleNewRequest}
+          onRemove={this.handleRemove}
+          onUpdateInput={this.handleUpdateInput}
+          searchText={searchText}
+        />
+      </div>
     )
   }
 }

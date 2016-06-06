@@ -20,6 +20,17 @@ export default Relay.createContainer(Component, {
               }
             }
           }
+          members(first: $limit) {
+            edges {
+              node {
+                userId
+                name
+                profile {
+                  realName
+                }
+              }
+            }
+          }
         }
       }
     `,

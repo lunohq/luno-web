@@ -39,16 +39,12 @@ const Body = (props) => (
   />
 )
 
-const Form = () => {
-  return (
-    <form>
-      <div>
-        <Field name='title' component={Title} />
-        <Field name='body' component={Body} />
-      </div>
-    </form>
-  )
-}
+const Form = () => (
+  <div>
+    <Field name='title' component={Title} />
+    <Field name='body' component={Body} />
+  </div>
+)
 
 export default reduxForm({
   form: FORM_NAME,
