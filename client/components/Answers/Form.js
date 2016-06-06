@@ -9,12 +9,12 @@ export const FORM_NAME = 'form/answers/answer'
 const validate = values => {
   const errors = {}
   if (!values.title) {
-    errors.title = 'Required'
+    errors.title = t('Required')
   } else if (values.title && values.title.split(' ').length > 15) {
-    errors.title = 'Maximum of 15 words'
+    errors.title = t('Maximum of 15 words')
   }
   if (!values.body) {
-    errors.body = 'Required'
+    errors.body = t('Required')
   }
   return errors
 }
