@@ -81,6 +81,15 @@ class Tracker {
     this.track(ADMIN_ACTION, data)
   }
 
+  trackUpdateUser({ root, id }) {
+    const data = {
+      root,
+      Type: 'Update User',
+      'Target User ID': id,
+    }
+    this.track(ADMIN_ACTION, data)
+  }
+
   trackUpdateAnswer({ root, id }) {
     const data = {
       root,

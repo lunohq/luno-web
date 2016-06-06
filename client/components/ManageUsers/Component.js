@@ -1,8 +1,12 @@
 import React, { Component, PropTypes } from 'react'
+import Relay from 'react-relay'
+
 import RaisedButton from 'material-ui/RaisedButton'
 
 import t from 'u/gettext'
 import withStyles from 'u/withStyles'
+
+import UpdateUserMutation from 'm/UpdateUserMutation'
 
 import DocumentTitle from 'c/DocumentTitle'
 import Divider from 'c/Divider/Component'
@@ -39,8 +43,9 @@ class ManageUsers extends Component {
     editFormOpen: false,
     userToEdit: null,
   })
-  handleSubmitEdit = (values) => {
-    debugger
+  handleSubmitEdit = ({ role }) => {
+    const mutation = new UpdateUserMutation({ user: this.state.userToEdit, role })
+    Relay.Store.commitUpdate(mutation)
     this.hideEditForm()
   }
 

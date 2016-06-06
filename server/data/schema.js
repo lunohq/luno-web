@@ -28,6 +28,8 @@ import tracker from '../tracker'
 
 import { getMember, getMembers, SlackMember } from '../actions/slack'
 
+const debug = require('debug')('server:data:schema')
+
 const { nodeInterface, nodeField } = nodeDefinitions(
   (globalId) => {
     const { type, id } = fromGlobalId(globalId)
@@ -215,6 +217,7 @@ const GraphQLUser = new GraphQLObjectType({
     role: {
       type: GraphQLUserRole,
       description: 'Role of the user',
+      resolve: user => user.role === undefined ? db.user.ADMIN : user.role,
     },
     displayRole: {
       type: GraphQLString,
@@ -667,6 +670,26 @@ const GraphQLLogoutMutation = mutationWithClientMutationId({
   },
 })
 
+const GraphQLUpdateUserMutation = mutationWithClientMutationId({
+  name: 'UpdateUser',
+  inputFields: {
+    id: { type: new GraphQLNonNull(GraphQLID) },
+    role: { type: new GraphQLNonNull(GraphQLUserRole) },
+  },
+  outputFields: {
+    user: {
+      type: GraphQLUser,
+      resolve: (user) => user,
+    },
+  },
+  mutateAndGetPayload: async({ id: globalId, role }, { rootValue: root }) => {
+    const { id } = fromGlobalId(globalId)
+    const user = await db.user.updateUserRole({ id, role })
+    tracker.trackUpdateUser({ root, id })
+    return user
+  },
+})
+
 const GraphQLMutation = new GraphQLObjectType({
   name: 'Mutation',
   fields: () => ({
@@ -676,6 +699,7 @@ const GraphQLMutation = new GraphQLObjectType({
     updateBotPurpose: GraphQLUpdateBotPurposeMutation,
     updateBotPointsOfContact: GraphQLUpdateBotPointsOfContactMutation,
     logout: GraphQLLogoutMutation,
+    updateUser: GraphQLUpdateUserMutation,
   }),
 })
 

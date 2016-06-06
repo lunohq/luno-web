@@ -10,9 +10,8 @@ const RoleField = (props) => (
     component={RadioButtonGroup}
     {...props}
   >
-    {/* TODO this should be moved to a luno-schema (maybe protobufs again?) repo that just contains our models and enums */}
-    <RadioButton value='0' label={t('Superadmin')} />
-    <RadioButton value='1' label={t('Bot Trainer')} />
+    <RadioButton value='ADMIN' label={t('Superadmin')} />
+    <RadioButton value='TRAINER' label={t('Bot Trainer')} />
   </Field>
 )
 

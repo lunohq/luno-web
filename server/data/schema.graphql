@@ -72,6 +72,7 @@ type Mutation {
   updateBotPurpose(input: UpdateBotPurposeInput!): UpdateBotPurposePayload
   updateBotPointsOfContact(input: UpdateBotPointsOfContactInput!): UpdateBotPointsOfContactPayload
   logout(input: LogoutInput!): LogoutPayload
+  updateUser(input: UpdateUserInput!): UpdateUserPayload
 }
 
 interface Node {
@@ -175,6 +176,17 @@ input UpdateBotPurposeInput {
 
 type UpdateBotPurposePayload {
   bot: Bot
+  clientMutationId: String!
+}
+
+input UpdateUserInput {
+  id: ID!
+  role: UserRole!
+  clientMutationId: String!
+}
+
+type UpdateUserPayload {
+  user: User
   clientMutationId: String!
 }
 
