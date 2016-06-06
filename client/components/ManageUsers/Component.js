@@ -8,6 +8,7 @@ import DocumentTitle from 'c/DocumentTitle'
 import Divider from 'c/Divider/Component'
 import SectionTitle from 'c/SectionTitle/Component'
 
+import DeleteDialog from './DeleteDialog'
 import EditDialog from './EditDialog'
 import InviteDialog from './InviteDialog'
 import UsersTable from './UsersTable'
@@ -16,9 +17,11 @@ import s from './style.scss'
 class ManageUsers extends Component {
 
   state = {
+    deleteFormOpen: false,
     inviteFormOpen: false,
     editFormOpen: false,
     userToEdit: null,
+    userToDelete: null,
   }
 
   displayInviteForm = () => this.setState({ inviteFormOpen: true })
@@ -41,7 +44,18 @@ class ManageUsers extends Component {
     this.hideEditForm()
   }
 
-  handleDelete = (user) => {}
+  displayDeleteConfirmation = (user) => this.setState({
+    deleteFormOpen: true,
+    userToDelete: user,
+  })
+  hideDeleteConfirmation = () => this.setState({
+    deleteFormOpen: false,
+    userToDelete: null,
+  })
+  handleDelete = () => {
+    debugger
+    this.hideDeleteConfirmation()
+  }
 
   render() {
     // "members" should be the diff between members and users, you can't invite someone who is already a user, unless they're a consumer?
@@ -59,7 +73,7 @@ class ManageUsers extends Component {
             <Divider />
           </div>
           <UsersTable
-            onDelete={this.handleDelete}
+            onDelete={this.displayDeleteConfirmation}
             onEdit={this.displayEditForm}
             users={users}
           />
@@ -75,6 +89,14 @@ class ManageUsers extends Component {
               user={this.state.userToEdit}
               onSubmit={this.handleSubmitEdit}
               onCancel={this.hideEditForm}
+            />
+          ))()}
+          {(() => !this.state.userToDelete ? null : (
+            <DeleteDialog
+              open={this.state.deleteFormOpen}
+              user={this.state.userToDelete}
+              onCancel={this.hideDeleteConfirmation}
+              onConfirm={this.handleDelete}
             />
           ))()}
         </div>

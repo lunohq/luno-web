@@ -1,8 +1,5 @@
 import React, { PropTypes } from 'react'
 
-import Dialog from 'material-ui/Dialog'
-import FlatButton from 'material-ui/FlatButton'
-
 import t from 'u/gettext'
 
 import CommonDeleteDialog from 'c/DeleteDialog'
@@ -23,7 +20,7 @@ const DeleteDialog = ({ answer, ...other }) => {
 }
 
 DeleteDialog.propTypes = {
-  answer: PropTypes.object,
+  answer: PropTypes.object.isRequired,
 }
 
 export default DeleteDialog
