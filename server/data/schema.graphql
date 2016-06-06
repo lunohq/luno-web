@@ -69,9 +69,9 @@ type Mutation {
   createAnswer(input: CreateAnswerInput!): CreateAnswerPayload
   deleteAnswer(input: DeleteAnswerInput!): DeleteAnswerPayload
   updateAnswer(input: UpdateAnswerInput!): UpdateAnswerPayload
+  logout(input: LogoutInput!): LogoutPayload
   updateBotPurpose(input: UpdateBotPurposeInput!): UpdateBotPurposePayload
   updateBotPointsOfContact(input: UpdateBotPointsOfContactInput!): UpdateBotPointsOfContactPayload
-  logout(input: LogoutInput!): LogoutPayload
   updateUser(input: UpdateUserInput!): UpdateUserPayload
 }
 

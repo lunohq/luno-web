@@ -49,7 +49,7 @@ function oauth(converse, app) {
   })
 }
 
-export default function (app, converse) {
+export default function auth(app, converse) {
   // cookieParser is required so we can read and write cookie values
   app.use(cookieParser(config.cookie.secret))
 
@@ -63,6 +63,7 @@ export default function (app, converse) {
   }))
 
   // ensure the auth information is still valid, if not, remove the cookie.
+  // TODO this should be cached in redis
   app.use(async (req, res, next) => {
     if (req.auth) {
       let token

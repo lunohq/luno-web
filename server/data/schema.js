@@ -70,6 +70,20 @@ const { nodeInterface, nodeField } = nodeDefinitions(
   },
 )
 
+function adminMutation({ resolve, ...other }) {
+  return {
+    resolve: async (source, args, context, info) => {
+      // TODO this should be cached
+      const user = await db.user.getUser(source.uid)
+      if (user.role !== db.user.ADMIN) {
+        throw new Error('Permission Denied')
+      }
+      return resolve(source, args, context, info)
+    },
+    ...other,
+  }
+}
+
 // Our GraphQL Types
 
 const GraphQLSlackBot = new GraphQLObjectType({
@@ -696,10 +710,10 @@ const GraphQLMutation = new GraphQLObjectType({
     createAnswer: GraphQLCreateAnswerMutation,
     deleteAnswer: GraphQLDeleteAnswerMutation,
     updateAnswer: GraphQLUpdateAnswerMutation,
-    updateBotPurpose: GraphQLUpdateBotPurposeMutation,
-    updateBotPointsOfContact: GraphQLUpdateBotPointsOfContactMutation,
     logout: GraphQLLogoutMutation,
-    updateUser: GraphQLUpdateUserMutation,
+    updateBotPurpose: adminMutation(GraphQLUpdateBotPurposeMutation),
+    updateBotPointsOfContact: adminMutation(GraphQLUpdateBotPointsOfContactMutation),
+    updateUser: adminMutation(GraphQLUpdateUserMutation),
   }),
 })
 
