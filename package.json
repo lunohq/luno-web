@@ -94,7 +94,7 @@
     "morgan": "^1.7.0",
     "raven": "^0.10.0",
     "raven-winston": "0.0.1",
-    "react": "^15.0.1",
+    "react": "^15.1.0",
     "winston": "^2.2.0"
   }
 }
