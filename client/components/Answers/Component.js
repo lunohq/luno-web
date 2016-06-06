@@ -181,8 +181,8 @@ class Answers extends Component {
           />
           <DeleteDialog
             answer={this.state.answerToBeDeleted}
-            onClose={this.hideDeleteDialog}
-            onSubmit={this.handleDeleteAnswer}
+            onCancel={this.hideDeleteDialog}
+            onConfirm={this.handleDeleteAnswer}
             open={this.state.showDeleteDialog}
           />
         </div>

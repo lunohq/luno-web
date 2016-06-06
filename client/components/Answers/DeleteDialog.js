@@ -5,41 +5,25 @@ import FlatButton from 'material-ui/FlatButton'
 
 import t from 'u/gettext'
 
-const DeleteDialog = ({ answer, open, onClose, onSubmit }) => {
-  const actions = [
-    <FlatButton
-      label={t('Cancel')}
-      secondary
-      onClick={onClose}
-    />,
-    <FlatButton
-      label={t('Yes')}
-      primary
-      onClick={onSubmit}
-    />,
-  ]
+import CommonDeleteDialog from 'c/DeleteDialog'
 
-  const answerTitle = answer ? answer.title : t('answer')
+const DeleteDialog = ({ answer, ...other }) => {
+  const answerTitle = answer ? answer.title : t('this answer')
   return (
-    <Dialog
+    <CommonDeleteDialog
       title={t('Confirm delete answer?')}
-      actions={actions}
       modal={false}
-      open={open}
-      onRequestClose={onClose}
+      {...other}
     >
-      <div style={{ fontSize: '1.4rem' }}>
+      <div>
         {t(`Are you sure you want to delete "${answerTitle}"? This action cannot be undone.`)}
       </div>
-    </Dialog>
+    </CommonDeleteDialog>
   )
 }
 
 DeleteDialog.propTypes = {
   answer: PropTypes.object,
-  open: PropTypes.bool,
-  onClose: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func.isRequired,
 }
 
 export default DeleteDialog
