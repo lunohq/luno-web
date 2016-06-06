@@ -1,14 +1,16 @@
 import React, { PropTypes } from 'react'
 
+import t from 'u/gettext'
+
 import FormDialog from 'c/FormDialog'
 
-import InviteForm, { FORM_NAME as InviteFormName } from './InviteForm'
+import InviteForm, { FORM_NAME } from './InviteForm'
 
 const InviteDialog = ({ members, ...other }) => (
   <FormDialog
     form={{
       node: <InviteForm members={members} />,
-      name: InviteFormName,
+      name: FORM_NAME,
     }}
     dialogProps={{
       title: t('Invite Users'),

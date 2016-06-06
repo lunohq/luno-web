@@ -8,6 +8,7 @@ import DocumentTitle from 'c/DocumentTitle'
 import Divider from 'c/Divider/Component'
 import SectionTitle from 'c/SectionTitle/Component'
 
+import EditDialog from './EditDialog'
 import InviteDialog from './InviteDialog'
 import UsersTable from './UsersTable'
 import s from './style.scss'
@@ -15,17 +16,31 @@ import s from './style.scss'
 class ManageUsers extends Component {
 
   state = {
-    inviteOpen: false,
+    inviteFormOpen: false,
+    editFormOpen: false,
+    userToEdit: null,
   }
 
-  displayInviteForm = () => this.setState({ inviteOpen: true })
-  hideInviteForm = () => this.setState({ inviteOpen: false })
+  displayInviteForm = () => this.setState({ inviteFormOpen: true })
+  hideInviteForm = () => this.setState({ inviteFormOpen: false })
   handleSubmitInvite = (values) => {
     debugger
     this.hideInviteForm()
   }
 
-  handleEdit = (user) => {}
+  displayEditForm = (user) => this.setState({
+    userToEdit: user,
+    editFormOpen: true,
+  })
+  hideEditForm = () => this.setState({
+    editFormOpen: false,
+    userToEdit: null,
+  })
+  handleSubmitEdit = (values) => {
+    debugger
+    this.hideEditForm()
+  }
+
   handleDelete = (user) => {}
 
   render() {
@@ -45,15 +60,23 @@ class ManageUsers extends Component {
           </div>
           <UsersTable
             onDelete={this.handleDelete}
-            onEdit={this.handleEdit}
+            onEdit={this.displayEditForm}
             users={users}
           />
           <InviteDialog
             members={members}
-            open={this.state.inviteOpen}
+            open={this.state.inviteFormOpen}
             onSubmit={this.handleSubmitInvite}
             onCancel={this.hideInviteForm}
           />
+          {(() => !this.state.userToEdit ? null : (
+            <EditDialog
+              open={this.state.editFormOpen}
+              user={this.state.userToEdit}
+              onSubmit={this.handleSubmitEdit}
+              onCancel={this.hideEditForm}
+            />
+          ))()}
         </div>
       </DocumentTitle>
     )

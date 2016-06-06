@@ -1,11 +1,12 @@
 import React, { Component, PropTypes } from 'react'
 import { Field, reduxForm } from 'redux-form'
 
-import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton'
 import TextField from 'material-ui/TextField'
 
 import t from 'u/gettext'
 import AutoCompleteMembers, { createDataSource } from 'c/AutoCompleteMembers'
+
+import RoleField from './RoleField'
 
 export const FORM_NAME = 'form/users/invite'
 
@@ -32,7 +33,7 @@ const Username = ({ members, onNewRequest, onUpdateInput, searchText, onChange, 
   )
 }
 
-class Form extends Component {
+class InviteForm extends Component {
 
   state = {
     searchText: '',
@@ -51,22 +52,14 @@ class Form extends Component {
           onUpdateInput={this.handleUpdateInput}
           searchText={this.state.searchText}
         />
-        <Field
-          name='role'
-          component={RadioButtonGroup}
-          defaultSelected={initialValues.role}
-        >
-          {/* TODO this should be moved to a luno-schema (maybe protobufs again?) repo that just contains our models and enums */}
-          <RadioButton value='0' label={t('Superadmin')} />
-          <RadioButton value='1' label={t('Bot Trainer')} />
-        </Field>
+        <RoleField name='role' defaultSelected={initialValues.role} />
       </div>
     )
   }
 
 }
 
-Form.propTypes = {
+InviteForm.propTypes = {
   members: PropTypes.array.isRequired,
 }
 
@@ -76,4 +69,4 @@ export default reduxForm({
     role: '1',
   },
   validate,
-})(Form)
+})(InviteForm)

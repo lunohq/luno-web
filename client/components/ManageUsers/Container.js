@@ -17,6 +17,7 @@ export default Relay.createContainer(Component, {
                 id
                 username
                 displayRole
+                role
               }
             }
           }
