@@ -574,7 +574,6 @@ const GraphQLDeleteRegexMutation = mutationWithClientMutationId({
   },
 })
 
-// TODO look into bulk updates
 const GraphQLUpdateRegexMutation = mutationWithClientMutationId({
   name: 'UpdateRegex',
   inputFields: {
