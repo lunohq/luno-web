@@ -60,7 +60,7 @@ server.on('authenticated', async ({ user, team, isNew }) => {
       if (isNew.bot) {
         await publishCreateTeam(team)
         await publishCreateUser(user)
-      } else if (isNew.user) {
+      } else if (isNew.user && user.isTrainer) {
         await publishCreateUser(user)
       }
     } else if (team.createdBy !== user.id) {
