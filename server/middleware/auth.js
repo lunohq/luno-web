@@ -29,7 +29,7 @@ function oauth(converse, app) {
       return res.redirect('/')
     }
 
-    const { locals: { team, user, isNew } } = res
+    const { locals: { team, isNew } } = res
     let { locals: { user } } = res
     if (isNew.team) {
       debug('New team, auto upgrading to admin', { user })
