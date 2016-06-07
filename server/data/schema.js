@@ -173,6 +173,15 @@ const GraphQLTeam = new GraphQLObjectType({
         return connectionFromArray(users, args)
       },
     },
+    admins: {
+      type: UsersConnection,
+      description: 'Admins within Luno',
+      args: connectionArgs,
+      resolve: async (team, args) => {
+        const admins = await db.user.getAdmins(team.id)
+        return connectionFromArray(admins, args)
+      },
+    },
   }),
   interfaces: [nodeInterface],
 })

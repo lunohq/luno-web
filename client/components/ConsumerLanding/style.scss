@@ -1,0 +1,24 @@
+.container {
+    composes: col-xs-12 from 's/vendor/flexboxgrid.css';
+}
+
+.header {
+    font-size: 3.6rem;
+    font-weight: 300;
+    color: white;
+}
+
+.subheader {
+    padding-top: 30px;
+    font-size: 2.0rem;
+    color: white;
+    line-height: 3.0rem;
+}
+
+.headerContainer {
+    composes: row center-xs from 's/vendor/flexboxgrid.css';
+}
+
+.buttonContainer {
+    padding-top: 20px;
+}

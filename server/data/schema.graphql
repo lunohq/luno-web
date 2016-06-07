@@ -159,6 +159,7 @@ type Team implements Node {
   members(after: String, first: Int, before: String, last: Int): SlackMemberConnection
   users(after: String, first: Int, before: String, last: Int): UserConnection
   staff(after: String, first: Int, before: String, last: Int): UserConnection
+  admins(after: String, first: Int, before: String, last: Int): UserConnection
 }
 
 input UpdateAnswerInput {
