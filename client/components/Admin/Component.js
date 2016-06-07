@@ -3,7 +3,7 @@ import React, { Component, PropTypes } from 'react'
 import withStyles from 'u/withStyles'
 import BotSettingsContainer from 'c/BotSettings/Container'
 import ManageUsersContainer from 'c/ManageUsers/Container'
-import NotFound from 'c/NotFound'
+import NotFound from 'c/NotFound/Component'
 
 import Navigation from './Navigation'
 
