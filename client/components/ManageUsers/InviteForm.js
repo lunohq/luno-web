@@ -12,8 +12,8 @@ export const FORM_NAME = 'form/users/invite'
 
 const validate = values => {
   const errors = {}
-  if (!values.user) {
-    errors.user = t('Required')
+  if (!values.member) {
+    errors.member = t('Required')
   }
   return errors
 }

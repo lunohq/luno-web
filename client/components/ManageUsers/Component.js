@@ -67,8 +67,14 @@ class ManageUsers extends Component {
   }
 
   render() {
-    // "members" should be the diff between members and users, you can't invite someone who is already a user, unless they're a consumer?
     const { viewer: { team: { members: { edges: members }, staff: { edges: users } } } } = this.props
+    const staffUserIds = users.map(user => user.id)
+    const invitable = []
+    for (const member of members) {
+      if (!staffUserIds.includes(member.userId)) {
+        invitable.push(member)
+      }
+    }
     return (
       <DocumentTitle title={t('Manage Users')}>
         <div className={s.content}>
@@ -87,7 +93,7 @@ class ManageUsers extends Component {
             users={users}
           />
           <InviteDialog
-            members={members}
+            members={invitable}
             open={this.state.inviteFormOpen}
             onSubmit={this.handleSubmitInvite}
             onCancel={this.hideInviteForm}
