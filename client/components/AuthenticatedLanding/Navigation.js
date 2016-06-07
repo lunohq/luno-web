@@ -10,7 +10,7 @@ import s from './nav-style.scss'
 
 export const NAV_WIDTH = 60
 
-const Navigation = ({ onLogout }) => {
+const Navigation = ({ isAdmin, onLogout }) => {
   const isSelected = (path, fuzzy) => {
     if (fuzzy) {
       return window.location.pathname.startsWith(path) ? s.selectedButton : s.button
@@ -30,7 +30,11 @@ const Navigation = ({ onLogout }) => {
           </Link>
         </div>
         <div className={s.buttons}>
-          <AccountMenu className={isSelected('/admin', true)} onLogout={onLogout} />
+          <AccountMenu
+            className={isSelected('/admin', true)}
+            isAdmin={isAdmin}
+            onLogout={onLogout}
+          />
         </div>
       </div>
     </Drawer>
@@ -38,6 +42,7 @@ const Navigation = ({ onLogout }) => {
 }
 
 Navigation.propTypes = {
+  isAdmin: PropTypes.bool.isRequired,
   onLogout: PropTypes.func.isRequired,
 }
 

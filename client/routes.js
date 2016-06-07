@@ -1,4 +1,5 @@
 import React from 'react'
+import Relay from 'react-relay'
 import { IndexRoute, Route } from 'react-router'
 
 import ViewerQueries from './queries/Viewer'

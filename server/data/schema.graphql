@@ -216,6 +216,8 @@ type User implements Node {
   anonymous: Boolean
   assumed: Boolean
   role: UserRole
+  isStaff: Boolean
+  isAdmin: Boolean
   displayRole: String
 }
 

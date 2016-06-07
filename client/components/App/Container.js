@@ -12,6 +12,7 @@ export default Relay.createContainer(AppComponent, {
         anonymous
         assumed
         username
+        isAdmin
         team {
           id
           name

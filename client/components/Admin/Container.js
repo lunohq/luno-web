@@ -8,6 +8,7 @@ export default Relay.createContainer(Component, {
   fragments: {
     viewer: () => Relay.QL`
       fragment on User {
+        isAdmin
         ${BotSettingsContainer.getFragment('viewer')}
         ${ManageUsersContainer.getFragment('viewer')}
       }

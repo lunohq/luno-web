@@ -75,7 +75,21 @@ function adminMutation({ resolve, ...other }) {
     resolve: async (source, args, context, info) => {
       // TODO this should be cached
       const user = await db.user.getUser(source.uid)
-      if (user.role !== db.user.ADMIN) {
+      if (!user.isAdmin) {
+        throw new Error('Permission Denied')
+      }
+      return resolve(source, args, context, info)
+    },
+    ...other,
+  }
+}
+
+function staffMutation({ resolve, ...other }) {
+  return {
+    resolve: async (source, args, context, info) => {
+      // TODO this should be cached
+      const user = await db.user.getUser(source.uid)
+      if (!user.isStaff) {
         throw new Error('Permission Denied')
       }
       return resolve(source, args, context, info)
@@ -237,6 +251,16 @@ const GraphQLUser = new GraphQLObjectType({
       type: GraphQLUserRole,
       description: 'Role of the user',
       resolve: user => user.role === undefined ? db.user.ADMIN : user.role,
+    },
+    isStaff: {
+      type: GraphQLBoolean,
+      description: 'Boolean for whether or not the user is a staff member',
+      resolve: user => user.isStaff,
+    },
+    isAdmin: {
+      type: GraphQLBoolean,
+      description: 'Boolean for whether or not the user is an admin',
+      resolve: user => user.isAdmin,
     },
     displayRole: {
       type: GraphQLString,
@@ -776,9 +800,9 @@ const GraphQLInviteUserMutation = mutationWithClientMutationId({
 const GraphQLMutation = new GraphQLObjectType({
   name: 'Mutation',
   fields: () => ({
-    createAnswer: GraphQLCreateAnswerMutation,
-    deleteAnswer: GraphQLDeleteAnswerMutation,
-    updateAnswer: GraphQLUpdateAnswerMutation,
+    createAnswer: staffMutation(GraphQLCreateAnswerMutation),
+    deleteAnswer: staffMutation(GraphQLDeleteAnswerMutation),
+    updateAnswer: staffMutation(GraphQLUpdateAnswerMutation),
     logout: GraphQLLogoutMutation,
     updateBotPurpose: adminMutation(GraphQLUpdateBotPurposeMutation),
     updateBotPointsOfContact: adminMutation(GraphQLUpdateBotPointsOfContactMutation),
