@@ -6,6 +6,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import tracker from 'r/tracker'
 import AnonymousLanding from 'c/AnonymousLanding/Component'
 import AuthenticatedLanding from 'c/AuthenticatedLanding/Component'
+import ConsumerLanding from 'c/ConsumerLanding/Component'
 import LogoutMutation from 'm/LogoutMutation'
 
 import s from './style.scss'
@@ -58,9 +59,17 @@ class App extends Component {
     let main
     if (viewer.anonymous) {
       main = <AnonymousLanding />
-    } else {
+    } else if (viewer.isStaff) {
       main = (
         <AuthenticatedLanding
+          children={children}
+          onLogout={this.handleLogout}
+          viewer={viewer}
+        />
+      )
+    } else {
+      main = (
+        <ConsumerLanding
           children={children}
           onLogout={this.handleLogout}
           viewer={viewer}
