@@ -29,7 +29,13 @@ function oauth(converse, app) {
       return res.redirect('/')
     }
 
-    const { locals: { team } } = res
+    const { locals: { team, user, isNew } } = res
+    let { locals: { user } } = res
+    if (isNew.team) {
+      debug('New team, auto upgrading to admin', { user })
+      user = await db.user.updateUserRole({ id: user.id, role: db.user.ADMIN })
+    }
+
     debug('Checking if app is installed', { team })
     if (!team.slack || !team.slack.bot) {
       logger.info('Routing initial user through install', { team: res.locals.team, user: res.locals.user })
