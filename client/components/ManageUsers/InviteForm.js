@@ -25,7 +25,7 @@ const Username = ({ members, onNewRequest, onUpdateInput, searchText, onChange, 
       dataSource={dataSource}
       errorText={touched && error}
       onNewRequest={(item, index) => {
-        onChange(members[index])
+        onChange(members[index].node)
       }}
       onUpdateInput={onUpdateInput}
       searchText={searchText}
@@ -48,7 +48,7 @@ class InviteForm extends Component {
         <Field
           component={Username}
           members={members}
-          name='user'
+          name='member'
           onUpdateInput={this.handleUpdateInput}
           searchText={this.state.searchText}
         />
@@ -66,7 +66,7 @@ InviteForm.propTypes = {
 export default reduxForm({
   form: FORM_NAME,
   initialValues: {
-    role: '1',
+    role: 'ADMIN',
   },
   validate,
 })(InviteForm)

@@ -56,6 +56,20 @@ type DeleteAnswerPayload {
   clientMutationId: String!
 }
 
+input InviteUserInput {
+  userId: String!
+  role: UserRole!
+  username: String!
+  clientMutationId: String!
+}
+
+type InviteUserPayload {
+  team: Team
+  user: User
+  userEdge: UserEdge
+  clientMutationId: String!
+}
+
 input LogoutInput {
   clientMutationId: String!
 }
@@ -73,6 +87,7 @@ type Mutation {
   updateBotPurpose(input: UpdateBotPurposeInput!): UpdateBotPurposePayload
   updateBotPointsOfContact(input: UpdateBotPointsOfContactInput!): UpdateBotPointsOfContactPayload
   updateUser(input: UpdateUserInput!): UpdateUserPayload
+  inviteUser(input: InviteUserInput!): InviteUserPayload
 }
 
 interface Node {
@@ -117,7 +132,7 @@ type SlackInfo {
 
 type SlackMember implements Node {
   id: ID!
-  userId: String
+  userId: ID!
   name: String
   profile: SlackMemberProfile
 }
@@ -143,6 +158,7 @@ type Team implements Node {
   slack: SlackInfo
   members(after: String, first: Int, before: String, last: Int): SlackMemberConnection
   users(after: String, first: Int, before: String, last: Int): UserConnection
+  staff(after: String, first: Int, before: String, last: Int): UserConnection
 }
 
 input UpdateAnswerInput {
@@ -186,6 +202,7 @@ input UpdateUserInput {
 }
 
 type UpdateUserPayload {
+  team: Team
   user: User
   clientMutationId: String!
 }

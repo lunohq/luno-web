@@ -150,6 +150,15 @@ const GraphQLTeam = new GraphQLObjectType({
         return connectionFromArray(users, args)
       },
     },
+    staff: {
+      type: UsersConnection,
+      description: 'Admin or Trainers with Luno',
+      args: connectionArgs,
+      resolve: async (team, args) => {
+        const users = await db.user.getStaff(team.id)
+        return connectionFromArray(users, args)
+      },
+    },
   }),
   interfaces: [nodeInterface],
 })
@@ -158,11 +167,7 @@ const GraphQLSlackMember = new GraphQLObjectType({
   name: 'SlackMember',
   fields: () => ({
     id: globalIdField('SlackMember', obj => db.client.compositeId(obj.teamId, obj.id)),
-    userId: {
-      type: GraphQLString,
-      description: 'Slack user id',
-      resolve: obj => obj.id,
-    },
+    userId: globalIdField('User', obj => obj.id),
     name: {
       type: GraphQLString,
       description: 'Member\'s slack username',
@@ -323,7 +328,7 @@ const GraphQLRegex = new GraphQLObjectType({
 
 // Our Relay GraphQL Connection Types
 
-const { connectionType: UsersConnection } = connectionDefinitions({
+const { connectionType: UsersConnection, edgeType: GraphQLUserEdge } = connectionDefinitions({
   name: 'User',
   nodeType: GraphQLUser,
 })
@@ -690,15 +695,80 @@ const GraphQLUpdateUserMutation = mutationWithClientMutationId({
     role: { type: new GraphQLNonNull(GraphQLUserRole) },
   },
   outputFields: {
+    team: {
+      type: GraphQLTeam,
+      resolve: ({ teamId }) => db.team.getTeam(teamId),
+    },
     user: {
       type: GraphQLUser,
       resolve: (user) => user,
     },
   },
-  mutateAndGetPayload: async({ id: globalId, role }, { rootValue: root }) => {
+  mutateAndGetPayload: async ({ id: globalId, role }, { rootValue: root }) => {
     const { id } = fromGlobalId(globalId)
-    const user = await db.user.updateUserRole({ id, role })
+    const { tid: teamId } = root
+    const params = {
+      id,
+      role,
+      teamId,
+    }
+    debug('Updating user', { user })
+    const user = await db.user.updateUser(params)
     tracker.trackUpdateUser({ root, id })
+    return user
+  },
+})
+
+const GraphQLInviteUserMutation = mutationWithClientMutationId({
+  name: 'InviteUser',
+  inputFields: {
+    userId: { type: new GraphQLNonNull(GraphQLString) },
+    role: { type: new GraphQLNonNull(GraphQLUserRole) },
+    username: { type: new GraphQLNonNull(GraphQLString) },
+  },
+  outputFields: {
+    team: {
+      type: GraphQLTeam,
+      resolve: ({ teamId }) => db.team.getTeam(teamId),
+    },
+    user: {
+      type: GraphQLUser,
+      resolve: (user) => user,
+    },
+    userEdge: {
+      type: GraphQLUserEdge,
+      resolve: async (user) => {
+        // TODO need to do this without fetching all users
+        const users = await db.user.getUsers(user.teamId)
+        let cursor
+        for (const index in users) {
+          const u = users[index]
+          if (user.id === u.id) {
+            cursor = offsetToCursor(index)
+            break
+          }
+        }
+
+        return { cursor, node: user }
+      },
+    },
+  },
+  mutateAndGetPayload: async ({ userId: globalId, role, username }, { rootValue: root }) => {
+    const { id: userId } = fromGlobalId(globalId)
+    const { tid: teamId, uid: invitedBy } = root
+    const params = {
+      role,
+      teamId,
+      user: username,
+      id: userId,
+      invite: {
+        invitedBy,
+        created: new Date().toISOString(),
+      },
+    }
+    debug('Inviting user', { params })
+    const user = await db.user.updateUser(params)
+    tracker.trackInviteUser({ root, id: userId })
     return user
   },
 })
@@ -713,6 +783,7 @@ const GraphQLMutation = new GraphQLObjectType({
     updateBotPurpose: adminMutation(GraphQLUpdateBotPurposeMutation),
     updateBotPointsOfContact: adminMutation(GraphQLUpdateBotPointsOfContactMutation),
     updateUser: adminMutation(GraphQLUpdateUserMutation),
+    inviteUser: adminMutation(GraphQLInviteUserMutation),
   }),
 })
 

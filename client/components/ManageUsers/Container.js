@@ -2,6 +2,8 @@ import Relay from 'react-relay'
 
 import Component from './Component'
 
+import DeleteUserMutation from 'm/DeleteUserMutation'
+import InviteUserMutation from 'm/InviteUserMutation'
 import UpdateUserMutation from 'm/UpdateUserMutation'
 
 export default Relay.createContainer(Component, {
@@ -13,9 +15,11 @@ export default Relay.createContainer(Component, {
     viewer: () => Relay.QL`
       fragment on User {
         team {
-          users(first: $limit) {
+          id
+          staff(first: $limit) {
             edges {
               node {
+                ${DeleteUserMutation.getFragment('user')}
                 ${UpdateUserMutation.getFragment('user')}
                 id
                 username
@@ -27,6 +31,8 @@ export default Relay.createContainer(Component, {
           members(first: $limit) {
             edges {
               node {
+                ${InviteUserMutation.getFragment('member')}
+                id
                 userId
                 name
                 profile {

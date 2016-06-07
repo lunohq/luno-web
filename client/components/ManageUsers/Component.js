@@ -6,6 +6,8 @@ import RaisedButton from 'material-ui/RaisedButton'
 import t from 'u/gettext'
 import withStyles from 'u/withStyles'
 
+import DeleteUserMutation from 'm/DeleteUserMutation'
+import InviteUserMutation from 'm/InviteUserMutation'
 import UpdateUserMutation from 'm/UpdateUserMutation'
 
 import DocumentTitle from 'c/DocumentTitle'
@@ -30,8 +32,9 @@ class ManageUsers extends Component {
 
   displayInviteForm = () => this.setState({ inviteFormOpen: true })
   hideInviteForm = () => this.setState({ inviteFormOpen: false })
-  handleSubmitInvite = (values) => {
-    debugger
+  handleSubmitInvite = ({ member, role }) => {
+    const mutation = new InviteUserMutation({ member, role, teamId: this.props.viewer.team.id })
+    Relay.Store.commitUpdate(mutation)
     this.hideInviteForm()
   }
 
@@ -58,14 +61,14 @@ class ManageUsers extends Component {
     userToDelete: null,
   })
   handleDelete = () => {
-    const mutation = new UpdateUserMutation({ user: this.state.userToDelete, role: 'CONSUMER' })
+    const mutation = new DeleteUserMutation({ user: this.state.userToDelete, teamId: this.props.viewer.team.id })
     Relay.Store.commitUpdate(mutation)
     this.hideDeleteConfirmation()
   }
 
   render() {
     // "members" should be the diff between members and users, you can't invite someone who is already a user, unless they're a consumer?
-    const { viewer: { team: { members: { edges: members }, users: { edges: users } } } } = this.props
+    const { viewer: { team: { members: { edges: members }, staff: { edges: users } } } } = this.props
     return (
       <DocumentTitle title={t('Manage Users')}>
         <div className={s.content}>
