@@ -66,7 +66,7 @@ InviteForm.propTypes = {
 export default reduxForm({
   form: FORM_NAME,
   initialValues: {
-    role: 'ADMIN',
+    role: 'TRAINER',
   },
   validate,
 })(InviteForm)
