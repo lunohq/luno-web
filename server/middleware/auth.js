@@ -1,5 +1,6 @@
 import cookieParser from 'cookie-parser'
 import jwt from 'express-jwt'
+import { WebClient } from '@slack/client'
 import { db } from 'luno-core'
 
 import config from '../config/environment'
@@ -7,6 +8,40 @@ import { generateToken, setCookie } from '../actions/auth'
 import logger, { metadata } from '../logger'
 
 const debug = require('debug')('server:middleware:auth')
+
+async function updateUserDetails({ user, team }) {
+  const client = new WebClient(team.slack.bot.token)
+  let userDetails
+  try {
+    userDetails = await client.users.info(user.id)
+  } catch (err) {
+    logger.error('Error fetching user details', { err, user, team })
+  }
+
+  if (!userDetails.ok) {
+    logger.error('Error fetching user details', { details: userDetails })
+  }
+
+  if (user.role === undefined) {
+    if (team.createdBy === user.id) {
+      debug('Setting role to ADMIN', { team, user })
+      user.role = db.user.ADMIN
+    } else {
+      // Default to TRAINER until we role out invites
+      debug('Setting role to TRAINER', { team, user })
+      user.role = db.user.TRAINER
+    }
+  }
+
+  if (userDetails) {
+    debug('Updating user details', { userDetails })
+    const { user: { name, profile } } = userDetails
+    user.user = name
+    user.profile = profile
+  }
+
+  return db.user.updateUser(user)
+}
 
 /**
  * Use converse to handle the oauth process.
@@ -30,15 +65,22 @@ function oauth(converse, app) {
     }
 
     const { locals: { team } } = res
+    let { locals: { user } } = res
     debug('Checking if app is installed', { team })
     if (!team.slack || !team.slack.bot) {
       logger.info('Routing initial user through install', { team: res.locals.team, user: res.locals.user })
       return res.redirect(converse.getInstallURL(team.id))
     }
 
+    try {
+      user = await updateUserDetails({ user, team })
+    } catch (err) {
+      logger.error('Error updating user details', { user, team, err })
+    }
+
     let token
     try {
-      token = await generateToken({ secret: config.token.secret, user: res.locals.user })
+      token = await generateToken({ secret: config.token.secret, user: user })
     } catch (err) {
       logger.error('OAuth Token Transfer Failure', metadata({ query: req.query.error, err }))
       return res.redirect('/')
