@@ -53,14 +53,17 @@ export default async function() {
       const { name, profile } = member
       user.user = name
       user.profile = profile
-      await db.user.updateUser(user)
+      try {
+        await db.user.updateUser(user)
+      } catch (err) {
+        logger.error('Error updating user', { err, user })
+        continue
+      }
       updatedUsers += 1
       // Throttle updates so we don't exceed our provisioned throughput
       await sleep(1)
     }
-    // Throttle queries so we don't exceed our provisioned throughput
-    await sleep(1)
-    logger.info(`...successfully updated ${users.length} for team: ${team.id}`)
+    logger.info(`...successfully updated ${users.length} users for team: ${team.id}`)
   }
   logger.info(`...successfully updated ${updatedUsers} slack details`)
 }
