@@ -33,7 +33,7 @@ function scrub(level, msg, meta) {
         obj[key] = '********'
         continue
       }
-      value = obj[key]
+      const value = obj[key]
       if (typeof value === 'object') {
         _scrub(value)
       }
