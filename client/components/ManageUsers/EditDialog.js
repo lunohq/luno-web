@@ -9,7 +9,7 @@ import EditForm, { FORM_NAME } from './EditForm'
 const EditDialog = ({ user, ...other }) => (
   <FormDialog
     form={{
-      node: <EditForm user={user} />,
+      node: <EditForm user={user} initialValues={{role: user.role}} />,
       name: FORM_NAME,
     }}
     dialogProps={{

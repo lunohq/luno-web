@@ -5,14 +5,14 @@ import RoleField from './RoleField'
 
 export const FORM_NAME = 'form/users/edit'
 
-const EditForm = ({ user }) => (
+const EditForm = ({ initialValues }) => (
   <div>
-    <RoleField name='role' defaultSelected={user.role || '0'} />
+    <RoleField name='role' defaultSelected={initialValues.role} />
   </div>
 )
 
 EditForm.propTypes = {
-  user: PropTypes.object.isRequired,
+  initialValues: PropTypes.object.isRequired,
 }
 
 export default reduxForm({
