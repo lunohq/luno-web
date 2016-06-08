@@ -65,3 +65,19 @@ export function getMembers(teamId) {
     return resolve(members)
   })
 }
+
+export async function send({ to, bot, message }) {
+  const client = new WebClient(bot.token)
+  const im = await client.im.open(to)
+  if (!im.ok) {
+    throw new Error('Failed to open IM')
+  }
+  const { channel: { id: channelId } } = im
+  return client.chat.postMessage(channelId, message, { as_user: true })
+}
+
+export default {
+  send,
+  getMembers,
+  getMember,
+}

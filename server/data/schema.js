@@ -25,8 +25,10 @@ import {
 
 import { db } from 'luno-core'
 import tracker from '../tracker'
+import logger from '../logger'
 
 import { getMember, getMembers, SlackMember } from '../actions/slack'
+import { sendInvite, sendAdminPromotion } from '../actions/notifications'
 
 const debug = require('debug')('server:data:schema')
 
@@ -735,14 +737,29 @@ const GraphQLUpdateUserMutation = mutationWithClientMutationId({
   },
   mutateAndGetPayload: async ({ id: globalId, role }, { rootValue: root }) => {
     const { id } = fromGlobalId(globalId)
-    const { tid: teamId } = root
+    const { tid: teamId, uid: sourceUserId } = root
     const params = {
       id,
       role,
       teamId,
     }
-    debug('Updating user', { user })
-    const user = await db.user.updateUser(params)
+    debug('Updating user', { params })
+    const [previous, user, team] = await Promise.all([
+      db.user.getUser(id),
+      db.user.updateUser(params),
+      db.team.getTeam(teamId),
+    ])
+
+    const shouldNotify = !previous.isAdmin && user.isAdmin
+    debug('Should send admin promotion notification', { shouldNotify, previous, user })
+    if (shouldNotify) {
+      debug('Sending admin promotion notification', { user })
+      try {
+        await sendAdminPromotion({ team, sourceUserId, userId: id })
+      } catch (err) {
+        logger.error('Error sending promotion notification', { err, team, sourceUserId, userId: id })
+      }
+    }
     tracker.trackUpdateUser({ root, id })
     return user
   },
@@ -796,7 +813,17 @@ const GraphQLInviteUserMutation = mutationWithClientMutationId({
       },
     }
     debug('Inviting user', { params })
-    const user = await db.user.updateUser(params)
+    const [team, user] = await Promise.all([
+      await db.team.getTeam(teamId),
+      await db.user.updateUser(params),
+    ])
+
+    try {
+      await sendInvite({ team, sourceUserId: invitedBy, userId })
+    } catch (err) {
+      logger.error('Error sending invite notification', { err, team, invitedBy, userId })
+    }
+
     tracker.trackInviteUser({ root, id: userId })
     return user
   },
