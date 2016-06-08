@@ -27,9 +27,8 @@ async function updateUserDetails({ user, team }) {
       debug('Setting role to ADMIN', { team, user })
       user.role = db.user.ADMIN
     } else {
-      // Default to TRAINER until we role out invites
-      debug('Setting role to TRAINER', { team, user })
-      user.role = db.user.TRAINER
+      debug('Setting role to CONSUMER', { team, user })
+      user.role = db.user.CONSUMER
     }
   }
 
