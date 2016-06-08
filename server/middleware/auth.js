@@ -29,9 +29,9 @@ function oauth(converse, app) {
       return res.redirect('/')
     }
 
-    const { locals: { team, isNew } } = res
+    const { locals: { team } } = res
     let { locals: { user } } = res
-    if (isNew.team) {
+    if (team.createdBy === user.id) {
       debug('New team, auto upgrading to admin', { user })
       user = await db.user.updateUserRole({ id: user.id, role: db.user.ADMIN })
     }
