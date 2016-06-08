@@ -43,7 +43,8 @@ export default async function() {
     }
 
     const users = await db.user.getUsers(team.id)
-    for (const user of users) {
+    for (const index in users) {
+      const user = users[index]
       const member = memberLookup[user.id]
       if (!member) {
         logger.error('No matching member found', { user, team })
@@ -53,6 +54,7 @@ export default async function() {
       const { name, profile } = member
       user.user = name
       user.profile = profile
+      logger.info(`...updating user ${user.id} (${index + 1}/${users.length})`)
       try {
         await db.user.updateUser(user)
       } catch (err) {
