@@ -217,10 +217,6 @@ const GraphQLUser = new GraphQLObjectType({
   description: 'User within our system',
   fields: () => ({
     id: globalIdField('User'),
-    fullName: {
-      type: GraphQLString,
-      description: 'The full name of the User',
-    },
     username: {
       type: GraphQLString,
       description: 'The username of the User',
