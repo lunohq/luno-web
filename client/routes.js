@@ -5,6 +5,7 @@ import ViewerQueries from './queries/Viewer'
 
 import AppContainer from 'c/App/Container'
 import AnswersContainer from 'c/Answers/Container'
+import KnowledgeContainer from 'c/Knowledge/Container'
 import AdminContainer from 'c/Admin/Container'
 import BotSettingsContainer from 'c/BotSettings/Container'
 import Loading from 'c/Loading'
@@ -21,6 +22,12 @@ export default (
       render={({ props }) => props ? <AnswersContainer {...props} /> : <Loading />}
     />
     <Route
+      path='/knowledge'
+      component={KnowledgeContainer}
+      queries={ViewerQueries}
+      render={({ props }) => props ? <KnowledgeContainer {...props} /> : <Loading />}
+    />
+    <Route
       path='/admin/:slug'
       component={AdminContainer}
       queries={ViewerQueries}
@@ -28,4 +35,3 @@ export default (
     />
   </Route>
 )
-

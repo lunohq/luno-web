@@ -1,0 +1,31 @@
+.root {
+    display: flex;
+    margin-left: 256px;
+    margin-top: 10px;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.listPane {
+  width: 40%;
+  overflow:scroll;
+  margin: 10px;
+}
+
+.detailPane {
+  flex: 1;
+  margin: 10px;
+}
+
+.content {
+    composes: content from 's/layout.scss';
+}
+
+.detailContent {
+  padding: 0px 16px;
+}
+
+.body {
+    font-size: 1.6rem;
+    margin-bottom: 60px;
+}

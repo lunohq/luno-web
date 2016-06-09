@@ -28,6 +28,9 @@ const Navigation = ({ onLogout }) => {
           <Link className={isSelected('/')} to='/'>
             <QuestionAnswerIcon />
           </Link>
+          <Link className={isSelected('/knowledge')} to='/knowledge'>
+            <QuestionAnswerIcon />
+          </Link>
         </div>
         <div className={s.buttons}>
           <AccountMenu className={isSelected('/admin', true)} onLogout={onLogout} />
