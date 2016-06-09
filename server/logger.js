@@ -40,6 +40,7 @@ function scrub(level, msg, meta) {
       }
     }
   }
+
   const output = merge({}, meta)
   _scrub(output)
   return output
