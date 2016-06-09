@@ -684,9 +684,10 @@ const GraphQLUpdateBotPointsOfContactMutation = mutationWithClientMutationId({
       resolve: bot => bot,
     },
   },
-  mutateAndGetPayload: async ({ id: globalId, pointsOfContact }, { rootValue: root }) => {
+  mutateAndGetPayload: async ({ id: globalId, pointsOfContact: globalIds }, { rootValue: root }) => {
     const { id: compositeId } = fromGlobalId(globalId)
     const [teamId, id] = db.client.deconstructId(compositeId)
+    const pointsOfContact = globalIds.map((id) => fromGlobalId(id).id)
 
     const bot = await db.bot.updatePointsOfContact({
       pointsOfContact,
