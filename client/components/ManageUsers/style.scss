@@ -1,0 +1,8 @@
+.content {
+    composes: content from 's/layout.scss';
+}
+
+.title {
+    composes: row between-xs middle-xs from 's/vendor/flexboxgrid.css';
+    margin: 0;
+}

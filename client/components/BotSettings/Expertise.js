@@ -20,6 +20,32 @@ const validate = values => {
   return errors
 }
 
+const Purpose = ({ handleSubmit, onBlur, onSave, ...props }) => {
+
+  function handleBlur(event) {
+    onBlur(event)
+    handleSubmit(onSave)()
+  }
+
+  function handleKeyDown(event) {
+    if (event.key === 'Enter') {
+      handleSubmit(onSave)()
+    }
+  }
+
+  return (
+    <TextField
+      className={s.expertise}
+      errorText={props.touched && props.error}
+      hintText={t('E.g., travel or HR and benefits')}
+      multiLine={false}
+      onBlur={handleBlur}
+      onKeyDown={handleKeyDown}
+      {...props}
+    />
+  )
+}
+
 class Expertise extends Component {
 
   componentWillMount() {
@@ -43,32 +69,12 @@ class Expertise extends Component {
           </p>
         </div>
         <div className={s.body}>&ldquo;{t('I can answer basic questions related to')}
-          <Field name='purpose' component={purpose => {
-            const { onBlur, ...other } = purpose
-
-            function handleBlur(event) {
-              onBlur(event)
-              handleSubmit(onSave)()
-            }
-
-            function handleKeyDown(event) {
-              if (event.key === 'Enter') {
-                handleSubmit(onSave)()
-              }
-            }
-
-            return (
-              <TextField
-                className={s.expertise}
-                errorText={purpose.touched && purpose.error}
-                hintText={t('E.g., travel or HR and benefits')}
-                multiLine={false}
-                onBlur={handleBlur}
-                onKeyDown={handleKeyDown}
-                {...other}
-              />
-            )
-          }} />&rdquo;
+          <Field
+            component={Purpose}
+            handleSubmit={handleSubmit}
+            onSave={onSave}
+            name='purpose'
+          />&rdquo;
         </div>
       </div>
     )

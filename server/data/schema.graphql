@@ -17,7 +17,7 @@ type AnswerEdge {
 type Bot implements Node {
   id: ID!
   purpose: String
-  pointsOfContact: [String]
+  pointsOfContact: [ID]
   answers(after: String, first: Int, before: String, last: Int): AnswerConnection
   regexes(after: String, first: Int, before: String, last: Int): RegexConnection
 }
@@ -56,6 +56,20 @@ type DeleteAnswerPayload {
   clientMutationId: String!
 }
 
+input InviteUserInput {
+  userId: String!
+  role: UserRole!
+  username: String!
+  clientMutationId: String!
+}
+
+type InviteUserPayload {
+  team: Team
+  user: User
+  userEdge: UserEdge
+  clientMutationId: String!
+}
+
 input LogoutInput {
   clientMutationId: String!
 }
@@ -69,9 +83,11 @@ type Mutation {
   createAnswer(input: CreateAnswerInput!): CreateAnswerPayload
   deleteAnswer(input: DeleteAnswerInput!): DeleteAnswerPayload
   updateAnswer(input: UpdateAnswerInput!): UpdateAnswerPayload
+  logout(input: LogoutInput!): LogoutPayload
   updateBotPurpose(input: UpdateBotPurposeInput!): UpdateBotPurposePayload
   updateBotPointsOfContact(input: UpdateBotPointsOfContactInput!): UpdateBotPointsOfContactPayload
-  logout(input: LogoutInput!): LogoutPayload
+  updateUser(input: UpdateUserInput!): UpdateUserPayload
+  inviteUser(input: InviteUserInput!): InviteUserPayload
 }
 
 interface Node {
@@ -116,7 +132,7 @@ type SlackInfo {
 
 type SlackMember implements Node {
   id: ID!
-  userId: String
+  userId: ID!
   name: String
   profile: SlackMemberProfile
 }
@@ -141,6 +157,9 @@ type Team implements Node {
   name: String
   slack: SlackInfo
   members(after: String, first: Int, before: String, last: Int): SlackMemberConnection
+  users(after: String, first: Int, before: String, last: Int): UserConnection
+  staff(after: String, first: Int, before: String, last: Int): UserConnection
+  admins(after: String, first: Int, before: String, last: Int): UserConnection
 }
 
 input UpdateAnswerInput {
@@ -177,6 +196,18 @@ type UpdateBotPurposePayload {
   clientMutationId: String!
 }
 
+input UpdateUserInput {
+  id: ID!
+  role: UserRole!
+  clientMutationId: String!
+}
+
+type UpdateUserPayload {
+  team: Team
+  user: User
+  clientMutationId: String!
+}
+
 type User implements Node {
   id: ID!
   username: String
@@ -184,4 +215,24 @@ type User implements Node {
   bots(after: String, first: Int, before: String, last: Int): BotConnection
   anonymous: Boolean
   assumed: Boolean
+  role: UserRole
+  isStaff: Boolean
+  isAdmin: Boolean
+  displayRole: String
+}
+
+type UserConnection {
+  pageInfo: PageInfo!
+  edges: [UserEdge]
+}
+
+type UserEdge {
+  node: User
+  cursor: String!
+}
+
+enum UserRole {
+  ADMIN
+  TRAINER
+  CONSUMER
 }

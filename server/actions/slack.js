@@ -65,3 +65,40 @@ export function getMembers(teamId) {
     return resolve(members)
   })
 }
+
+async function openIM({ client, to }) {
+  const res = await client.im.open(to)
+  if (!res.ok) {
+    throw new Error('Failed to open IM')
+  }
+  return res.channel.id
+}
+
+async function openMPIM({ client, to }) {
+  const res = await client.mpim.open(to.join(','))
+  if (!res.ok) {
+    throw new Error('Failed to open MPIM')
+  }
+  return res.group.id
+}
+
+export async function send({ to, bot, message }) {
+  const client = new WebClient(bot.token)
+  let channelId
+  if (typeof to.join === 'function') {
+    if (to.length === 1) {
+      channelId = await openIM({ client, to: to[0] })
+    } else {
+      channelId = await openMPIM({ client, to })
+    }
+  } else {
+    channelId = await openIM({ client, to })
+  }
+  return client.chat.postMessage(channelId, message, { as_user: true })
+}
+
+export default {
+  send,
+  getMembers,
+  getMember,
+}

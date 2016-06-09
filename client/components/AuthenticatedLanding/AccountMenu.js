@@ -39,7 +39,7 @@ class AccountMenu extends Component {
 
 
   render() {
-    const { className, onLogout } = this.props
+    const { className, onLogout, isAdmin } = this.props
     const { viewer: { team } } = this.context
     return (
       <a className={className} onTouchTap={this.handleTouchTap}>
@@ -52,7 +52,9 @@ class AccountMenu extends Component {
           onRequestClose={this.handleRequestClose}
         >
           <Menu>
-            <MenuItem onTouchTap={this.handleSettingsTouchTap} primaryText="Admin Settings" />
+            {(() => !isAdmin ? null : (
+              <MenuItem onTouchTap={this.handleSettingsTouchTap} primaryText="Admin Settings" />
+            ))()}
             <MenuItem onTouchTap={onLogout} primaryText={`Sign Out (${team.name})`} />
           </Menu>
         </Popover>
@@ -64,6 +66,7 @@ class AccountMenu extends Component {
 AccountMenu.contextTypes = {
   router: PropTypes.object.isRequired,
   viewer: PropTypes.shape({
+    isAdmin: PropTypes.bool.isRequired,
     team: PropTypes.shape({
       name: PropTypes.string.isRequired,
     }).isRequired,

@@ -9,44 +9,42 @@ export const FORM_NAME = 'form/answers/answer'
 const validate = values => {
   const errors = {}
   if (!values.title) {
-    errors.title = 'Required'
+    errors.title = t('Required')
   } else if (values.title && values.title.split(' ').length > 15) {
-    errors.title = 'Maximum of 15 words'
+    errors.title = t('Maximum of 15 words')
   }
   if (!values.body) {
-    errors.body = 'Required'
+    errors.body = t('Required')
   }
   return errors
 }
 
-const Form = () => {
-  return (
-    <form>
-      <div>
-        <Field name='title' component={title =>
-            <TextField
-              errorText={title.touched ? title.error : undefined}
-              fullWidth
-              hintText={t('Title')}
-              {...title}
-            />
-          }
-        />
-        <Field name='body' component={body =>
-            <TextField
-              errorText={body.touched ? body.error : undefined}
-              fullWidth
-              hintText={t('Answer')}
-              multiLine
-              rows={1}
-              {...body}
-            />
-          }
-        />
-      </div>
-    </form>
-  )
-}
+const Title = (props) => (
+  <TextField
+    errorText={props.touched ? props.error : undefined}
+    fullWidth
+    hintText={t('Title')}
+    {...props}
+  />
+)
+
+const Body = (props) => (
+  <TextField
+    errorText={props.touched ? props.error : undefined}
+    fullWidth
+    hintText={t('Answer')}
+    multiLine
+    rows={1}
+    {...props}
+  />
+)
+
+const Form = () => (
+  <div>
+    <Field name='title' component={Title} />
+    <Field name='body' component={Body} />
+  </div>
+)
 
 export default reduxForm({
   form: FORM_NAME,
