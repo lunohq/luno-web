@@ -1,5 +1,6 @@
 import winston from 'winston'
 import RavenWinston from 'raven-winston'
+import { merge } from 'lodash'
 
 import config from './config/environment'
 
@@ -39,7 +40,7 @@ function scrub(level, msg, meta) {
       }
     }
   }
-  const output = Object.assign({}, meta)
+  const output = merge({}, meta)
   _scrub(output)
   return output
 }
