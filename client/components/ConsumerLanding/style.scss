@@ -20,6 +20,6 @@
 }
 
 .buttonContainer {
-    composes: col-xs from 's/vendor/flexboxgrid.css';
+    composes: col-xs-12 from 's/vendor/flexboxgrid.css';
     padding-top: 20px;
 }
