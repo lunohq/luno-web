@@ -5,6 +5,7 @@ import { db } from 'luno-core'
 
 import config from '../config/environment'
 import { generateToken, setCookie } from '../actions/auth'
+import { sendAccessRequest } from '../actions/notifications'
 import logger, { metadata } from '../logger'
 
 const debug = require('debug')('server:middleware:auth')
@@ -29,6 +30,11 @@ async function updateUserDetails({ user, team }) {
     } else {
       debug('Setting role to CONSUMER', { team, user })
       user.role = db.user.CONSUMER
+      try {
+        await sendAccessRequest({ team, userId: user.id })
+      } catch (err) {
+        logger.error('Error sending access request', { err, team, user })
+      }
     }
   }
 

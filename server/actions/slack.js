@@ -68,11 +68,20 @@ export function getMembers(teamId) {
 
 export async function send({ to, bot, message }) {
   const client = new WebClient(bot.token)
-  const im = await client.im.open(to)
-  if (!im.ok) {
-    throw new Error('Failed to open IM')
+  let channelId
+  if (typeof to.join === 'function') {
+    const res = await client.mpim.open(to.join(','))
+    if (!res.ok) {
+      throw new Error('Failed to open MPIM')
+    }
+    channelId = res.group.id
+  } else {
+    const res = await client.im.open(to)
+    if (!res.ok) {
+      throw new Error('Failed to open IM')
+    }
+    channelId = res.channel.id
   }
-  const { channel: { id: channelId } } = im
   return client.chat.postMessage(channelId, message, { as_user: true })
 }
 
