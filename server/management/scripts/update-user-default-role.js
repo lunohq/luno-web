@@ -23,7 +23,7 @@ export default async function() {
         if (team.createdBy === user.id) {
           user.role = db.user.ADMIN
         }
-        logger.info(`...updating user ${user.id} to role: ${role}`)
+        logger.info(`...updating user ${user.id} to role: ${user.role}`)
         await db.user.updateUser(user)
         updatedUsers += 1
         // Throttle updates so we don't exceed our provisioned throughput
