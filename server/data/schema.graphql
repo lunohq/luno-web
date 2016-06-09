@@ -17,7 +17,7 @@ type AnswerEdge {
 type Bot implements Node {
   id: ID!
   purpose: String
-  pointsOfContact: [String]
+  pointsOfContact: [ID]
   answers(after: String, first: Int, before: String, last: Int): AnswerConnection
   regexes(after: String, first: Int, before: String, last: Int): RegexConnection
 }

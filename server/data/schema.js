@@ -19,6 +19,7 @@ import {
   offsetToCursor,
   fromGlobalId,
   globalIdField,
+  toGlobalId,
   mutationWithClientMutationId,
   nodeDefinitions
 } from 'graphql-relay'
@@ -298,8 +299,9 @@ const GraphQLBot = new GraphQLObjectType({
       description: 'Purpose of the Bot',
     },
     pointsOfContact: {
-      type: new GraphQLList(GraphQLString),
+      type: new GraphQLList(GraphQLID),
       description: 'Points of contact of the Bot for escalation',
+      resolve: (obj) => obj.pointsOfContact ? obj.pointsOfContact.map(id => toGlobalId('User', id)) : null,
     },
     answers: {
       type: AnswersConnection,
@@ -687,6 +689,7 @@ const GraphQLUpdateBotPointsOfContactMutation = mutationWithClientMutationId({
   mutateAndGetPayload: async ({ id: globalId, pointsOfContact: globalIds }, { rootValue: root }) => {
     const { id: compositeId } = fromGlobalId(globalId)
     const [teamId, id] = db.client.deconstructId(compositeId)
+    debug('Points of contact', { globalIds })
     const pointsOfContact = globalIds.map((id) => fromGlobalId(id).id)
 
     const bot = await db.bot.updatePointsOfContact({
