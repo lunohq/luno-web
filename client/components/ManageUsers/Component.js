@@ -68,7 +68,7 @@ class ManageUsers extends Component {
 
   render() {
     const { viewer: { team: { members: { edges: members }, staff: { edges: users } } } } = this.props
-    const staffUserIds = users.map(({ id }) => id)
+    const staffUserIds = users.map(({ node: { id } }) => id)
     const invitable = []
     for (const member of members) {
       const { node: { userId } } = member
