@@ -68,7 +68,7 @@ class BotSettings extends Component {
   render() {
     const { viewer: { team: { members: { edges: members } } } } = this.props;
     return (
-      <DocumentTitle title={t('Bot settings')}>
+      <DocumentTitle title={t('Bot Settings')}>
         <div className={s.root}>
           <div className={s.content}>
             <div>

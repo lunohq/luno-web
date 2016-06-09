@@ -1,4 +1,5 @@
 import React from 'react'
+import Relay from 'react-relay'
 import { IndexRoute, Route } from 'react-router'
 
 import ViewerQueries from './queries/Viewer'
@@ -7,7 +8,6 @@ import AppContainer from 'c/App/Container'
 import AnswersContainer from 'c/Answers/Container'
 import KnowledgeContainer from 'c/Knowledge/Container'
 import AdminContainer from 'c/Admin/Container'
-import BotSettingsContainer from 'c/BotSettings/Container'
 import Loading from 'c/Loading'
 
 export default (

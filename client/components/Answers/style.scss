@@ -1,29 +1,7 @@
-@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+.root {}
 
 .text {
     composes: text from 's/typography.scss';
-}
-
-
-.root :global {
-
-    table td,
-    table th {
-        vertical-align: middle;
-    }
-
-    table td {
-        line-height: 18px;
-        padding: 10px 24px;
-        white-space: wrap;
-    }
-
-    table th {
-        color: #A2A2A9;
-        font-weight: 600;
-        letter-spacing: 0.5px;
-        text-transform: uppercase;
-    }
 }
 
 .content {

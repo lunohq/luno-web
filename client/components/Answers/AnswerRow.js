@@ -7,13 +7,14 @@ import {
 } from 'material-ui'
 
 import withStyles from 'u/withStyles'
+import colors from 's/colors'
+
+import ActionsRowColumn from 'c/ActionsRowColumn'
 
 import s from './answer-row-style.scss'
 
 const AnswerRow = ({ answer, handleDelete, handleEdit }) => {
   const cellStyle = { fontSize: '1.4rem', whiteSpace: 'pre-wrap' }
-  const actionsCellStyle = { textAlign: 'right' }
-  const actionsIconColor = '#757575'
 
   const editAnswer = (answerToEdit) => {
     handleEdit(answerToEdit)
@@ -25,21 +26,21 @@ const AnswerRow = ({ answer, handleDelete, handleEdit }) => {
 
   const { id, title, body } = answer
   return (
-    <TableRow key={id} data-id={id}>
+    <TableRow data-id={id}>
       <TableRowColumn style={cellStyle}>{title}</TableRowColumn>
       <TableRowColumn style={cellStyle}>{body}</TableRowColumn>
-      <TableRowColumn style={actionsCellStyle}>
+      <ActionsRowColumn>
         <IconButton
           onTouchTap={() => editAnswer(answer)}
         >
-          <FontIcon className='material-icons' color={actionsIconColor}>edit</FontIcon>
+          <FontIcon className='material-icons' color={colors.darkGrey}>edit</FontIcon>
         </IconButton>
         <IconButton
           onTouchTap={() => deleteAnswer(answer)}
         >
-          <FontIcon className='material-icons' color={actionsIconColor}>delete</FontIcon>
+          <FontIcon className='material-icons' color={colors.darkGrey}>delete</FontIcon>
         </IconButton>
-      </TableRowColumn>
+      </ActionsRowColumn>
     </TableRow>
   )
 }

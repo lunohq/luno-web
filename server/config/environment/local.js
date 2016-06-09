@@ -16,4 +16,5 @@ export default {
   mixpanel: {
     token: '3aee37e9cb8f8f6afc3b52cd5a0c3457',
   },
+  dashboardUrl: 'localhost:3000',
 }

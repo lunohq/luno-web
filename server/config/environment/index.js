@@ -35,6 +35,7 @@ const config = {
   mixpanel: {
     token: process.env.MIXPANEL_TOKEN,
   },
+  dashboardUrl: process.env.DASHBOARD_URL,
 }
 
 export default _.merge(config, require(`./${config.env}`).default)

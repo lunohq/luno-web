@@ -1,13 +1,13 @@
 import React, { PropTypes } from 'react'
 
 import {
-  Table,
   TableBody,
   TableHeader,
   TableHeaderColumn,
   TableRow,
 } from 'material-ui'
 
+import Table from 'c/Table/Component'
 import AnswerRow from './AnswerRow'
 
 const AnswersTable = ({ bot, handleDelete, handleEdit }) => {

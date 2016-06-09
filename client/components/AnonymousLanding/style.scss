@@ -1,31 +1,4 @@
-.root {
-    background-color: #484959;
-    height: 100vh;
-}
-
 .container {
-    composes: container from 's/layout.scss';
-}
-
-.content {
-    composes: row center-xs from 's/vendor/flexboxgrid.css';
-    padding-top: 200px;
-}
-
-.header {
-    composes: row from 's/vendor/flexboxgrid.css';
-    padding-top: 15px;
-}
-
-.brand {
-    composes: brand from 's/typography.scss';
-}
-
-.brandContainer {
-    composes: col-xs-6 from 's/vendor/flexboxgrid.css';
-}
-
-.loginContainer {
     composes: col-xs-12 from 's/vendor/flexboxgrid.css';
 }
 

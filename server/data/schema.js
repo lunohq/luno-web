@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars, no-use-before-define */
 import {
   GraphQLBoolean,
+  GraphQLEnumType,
   GraphQLFloat,
   GraphQLID,
   GraphQLInt,
@@ -18,14 +19,19 @@ import {
   offsetToCursor,
   fromGlobalId,
   globalIdField,
+  toGlobalId,
   mutationWithClientMutationId,
   nodeDefinitions
 } from 'graphql-relay'
 
 import { db } from 'luno-core'
 import tracker from '../tracker'
+import logger from '../logger'
 
 import { getMember, getMembers, SlackMember } from '../actions/slack'
+import { sendInvite, sendAdminPromotion } from '../actions/notifications'
+
+const debug = require('debug')('server:data:schema')
 
 const { nodeInterface, nodeField } = nodeDefinitions(
   (globalId) => {
@@ -66,6 +72,34 @@ const { nodeInterface, nodeField } = nodeDefinitions(
     return null
   },
 )
+
+function adminMutation({ resolve, ...other }) {
+  return {
+    resolve: async (source, args, context, info) => {
+      // TODO this should be cached
+      const user = await db.user.getUser(source.uid)
+      if (!user.isAdmin) {
+        throw new Error('Permission Denied')
+      }
+      return resolve(source, args, context, info)
+    },
+    ...other,
+  }
+}
+
+function staffMutation({ resolve, ...other }) {
+  return {
+    resolve: async (source, args, context, info) => {
+      // TODO this should be cached
+      const user = await db.user.getUser(source.uid)
+      if (!user.isStaff) {
+        throw new Error('Permission Denied')
+      }
+      return resolve(source, args, context, info)
+    },
+    ...other,
+  }
+}
 
 // Our GraphQL Types
 
@@ -124,6 +158,33 @@ const GraphQLTeam = new GraphQLObjectType({
         return connectionFromArray(members, args)
       },
     },
+    users: {
+      type: UsersConnection,
+      description: 'Users within Luno',
+      args: connectionArgs,
+      resolve: async (team, args) => {
+        const users = await db.user.getUsers(team.id)
+        return connectionFromArray(users, args)
+      },
+    },
+    staff: {
+      type: UsersConnection,
+      description: 'Admin or Trainers with Luno',
+      args: connectionArgs,
+      resolve: async (team, args) => {
+        const users = await db.user.getStaff(team.id)
+        return connectionFromArray(users, args)
+      },
+    },
+    admins: {
+      type: UsersConnection,
+      description: 'Admins within Luno',
+      args: connectionArgs,
+      resolve: async (team, args) => {
+        const admins = await db.user.getAdmins(team.id)
+        return connectionFromArray(admins, args)
+      },
+    },
   }),
   interfaces: [nodeInterface],
 })
@@ -132,11 +193,7 @@ const GraphQLSlackMember = new GraphQLObjectType({
   name: 'SlackMember',
   fields: () => ({
     id: globalIdField('SlackMember', obj => db.client.compositeId(obj.teamId, obj.id)),
-    userId: {
-      type: GraphQLString,
-      description: 'Slack user id',
-      resolve: obj => obj.id,
-    },
+    userId: globalIdField('User', obj => obj.id),
     name: {
       type: GraphQLString,
       description: 'Member\'s slack username',
@@ -147,6 +204,15 @@ const GraphQLSlackMember = new GraphQLObjectType({
     },
   }),
   interfaces: [nodeInterface],
+})
+
+const GraphQLUserRole = new GraphQLEnumType({
+  name: 'UserRole',
+  values: {
+    ADMIN: { value: db.user.ADMIN },
+    TRAINER: { value: db.user.TRAINER },
+    CONSUMER: { value: db.user.CONSUMER },
+  },
 })
 
 const GraphQLUser = new GraphQLObjectType({
@@ -189,6 +255,36 @@ const GraphQLUser = new GraphQLObjectType({
       type: GraphQLBoolean,
       description: 'Boolean indicating whether or not an admin is assuming this user',
     },
+    role: {
+      type: GraphQLUserRole,
+      description: 'Role of the user',
+      resolve: user => user.role === undefined ? db.user.CONSUMER : user.role,
+    },
+    isStaff: {
+      type: GraphQLBoolean,
+      description: 'Boolean for whether or not the user is a staff member',
+      resolve: user => user.isStaff,
+    },
+    isAdmin: {
+      type: GraphQLBoolean,
+      description: 'Boolean for whether or not the user is an admin',
+      resolve: user => user.isAdmin,
+    },
+    displayRole: {
+      type: GraphQLString,
+      description: 'The display name for the user\'s role',
+      resolve: (user) => {
+        switch (user.role) {
+          case undefined:
+          case db.user.ADMIN:
+            return 'Superadmin'
+          case db.user.TRAINER:
+            return 'Trainer'
+          default:
+            return ''
+        }
+      },
+    },
   }),
   interfaces: [nodeInterface],
 })
@@ -203,8 +299,9 @@ const GraphQLBot = new GraphQLObjectType({
       description: 'Purpose of the Bot',
     },
     pointsOfContact: {
-      type: new GraphQLList(GraphQLString),
+      type: new GraphQLList(GraphQLID),
       description: 'Points of contact of the Bot for escalation',
+      resolve: (obj) => obj.pointsOfContact ? obj.pointsOfContact.map(id => toGlobalId('User', id)) : null,
     },
     answers: {
       type: AnswersConnection,
@@ -264,7 +361,7 @@ const GraphQLRegex = new GraphQLObjectType({
 
 // Our Relay GraphQL Connection Types
 
-const { connectionType: UsersConnection } = connectionDefinitions({
+const { connectionType: UsersConnection, edgeType: GraphQLUserEdge } = connectionDefinitions({
   name: 'User',
   nodeType: GraphQLUser,
 })
@@ -515,7 +612,6 @@ const GraphQLDeleteRegexMutation = mutationWithClientMutationId({
   },
 })
 
-// TODO look into bulk updates
 const GraphQLUpdateRegexMutation = mutationWithClientMutationId({
   name: 'UpdateRegex',
   inputFields: {
@@ -590,9 +686,11 @@ const GraphQLUpdateBotPointsOfContactMutation = mutationWithClientMutationId({
       resolve: bot => bot,
     },
   },
-  mutateAndGetPayload: async ({ id: globalId, pointsOfContact }, { rootValue: root }) => {
+  mutateAndGetPayload: async ({ id: globalId, pointsOfContact: globalIds }, { rootValue: root }) => {
     const { id: compositeId } = fromGlobalId(globalId)
     const [teamId, id] = db.client.deconstructId(compositeId)
+    debug('Points of contact', { globalIds })
+    const pointsOfContact = globalIds.map((id) => fromGlobalId(id).id)
 
     const bot = await db.bot.updatePointsOfContact({
       pointsOfContact,
@@ -625,15 +723,127 @@ const GraphQLLogoutMutation = mutationWithClientMutationId({
   },
 })
 
+const GraphQLUpdateUserMutation = mutationWithClientMutationId({
+  name: 'UpdateUser',
+  inputFields: {
+    id: { type: new GraphQLNonNull(GraphQLID) },
+    role: { type: new GraphQLNonNull(GraphQLUserRole) },
+  },
+  outputFields: {
+    team: {
+      type: GraphQLTeam,
+      resolve: ({ teamId }) => db.team.getTeam(teamId),
+    },
+    user: {
+      type: GraphQLUser,
+      resolve: (user) => user,
+    },
+  },
+  mutateAndGetPayload: async ({ id: globalId, role }, { rootValue: root }) => {
+    const { id } = fromGlobalId(globalId)
+    const { tid: teamId, uid: sourceUserId } = root
+    const params = {
+      id,
+      role,
+      teamId,
+    }
+    debug('Updating user', { params })
+    const [previous, user, team] = await Promise.all([
+      db.user.getUser(id),
+      db.user.updateUser(params),
+      db.team.getTeam(teamId),
+    ])
+
+    const shouldNotify = !previous.isAdmin && user.isAdmin
+    debug('Should send admin promotion notification', { shouldNotify, previous, user })
+    if (shouldNotify) {
+      debug('Sending admin promotion notification', { user })
+      try {
+        await sendAdminPromotion({ team, sourceUserId, userId: id })
+      } catch (err) {
+        logger.error('Error sending promotion notification', { err, team, sourceUserId, userId: id })
+      }
+    }
+    tracker.trackUpdateUser({ root, id })
+    return user
+  },
+})
+
+const GraphQLInviteUserMutation = mutationWithClientMutationId({
+  name: 'InviteUser',
+  inputFields: {
+    userId: { type: new GraphQLNonNull(GraphQLString) },
+    role: { type: new GraphQLNonNull(GraphQLUserRole) },
+    username: { type: new GraphQLNonNull(GraphQLString) },
+  },
+  outputFields: {
+    team: {
+      type: GraphQLTeam,
+      resolve: ({ teamId }) => db.team.getTeam(teamId),
+    },
+    user: {
+      type: GraphQLUser,
+      resolve: (user) => user,
+    },
+    userEdge: {
+      type: GraphQLUserEdge,
+      resolve: async (user) => {
+        // TODO need to do this without fetching all users
+        const users = await db.user.getUsers(user.teamId)
+        let cursor
+        for (const index in users) {
+          const u = users[index]
+          if (user.id === u.id) {
+            cursor = offsetToCursor(index)
+            break
+          }
+        }
+
+        return { cursor, node: user }
+      },
+    },
+  },
+  mutateAndGetPayload: async ({ userId: globalId, role, username }, { rootValue: root }) => {
+    const { id: userId } = fromGlobalId(globalId)
+    const { tid: teamId, uid: invitedBy } = root
+    const params = {
+      role,
+      teamId,
+      user: username,
+      id: userId,
+      invite: {
+        invitedBy,
+        created: new Date().toISOString(),
+      },
+    }
+    debug('Inviting user', { params })
+    const [team, user] = await Promise.all([
+      await db.team.getTeam(teamId),
+      await db.user.updateUser(params),
+    ])
+
+    try {
+      await sendInvite({ team, sourceUserId: invitedBy, userId })
+    } catch (err) {
+      logger.error('Error sending invite notification', { err, team, invitedBy, userId })
+    }
+
+    tracker.trackInviteUser({ root, id: userId })
+    return user
+  },
+})
+
 const GraphQLMutation = new GraphQLObjectType({
   name: 'Mutation',
   fields: () => ({
-    createAnswer: GraphQLCreateAnswerMutation,
-    deleteAnswer: GraphQLDeleteAnswerMutation,
-    updateAnswer: GraphQLUpdateAnswerMutation,
-    updateBotPurpose: GraphQLUpdateBotPurposeMutation,
-    updateBotPointsOfContact: GraphQLUpdateBotPointsOfContactMutation,
+    createAnswer: staffMutation(GraphQLCreateAnswerMutation),
+    deleteAnswer: staffMutation(GraphQLDeleteAnswerMutation),
+    updateAnswer: staffMutation(GraphQLUpdateAnswerMutation),
     logout: GraphQLLogoutMutation,
+    updateBotPurpose: adminMutation(GraphQLUpdateBotPurposeMutation),
+    updateBotPointsOfContact: adminMutation(GraphQLUpdateBotPointsOfContactMutation),
+    updateUser: adminMutation(GraphQLUpdateUserMutation),
+    inviteUser: adminMutation(GraphQLInviteUserMutation),
   }),
 })
 

@@ -5,6 +5,7 @@ import { db } from 'luno-core'
 
 import config from '../config/environment'
 import { generateToken, setCookie } from '../actions/auth'
+import { sendAccessRequest } from '../actions/notifications'
 import logger, { metadata } from '../logger'
 
 const debug = require('debug')('server:middleware:auth')
@@ -27,9 +28,13 @@ async function updateUserDetails({ user, team }) {
       debug('Setting role to ADMIN', { team, user })
       user.role = db.user.ADMIN
     } else {
-      // Default to TRAINER until we role out invites
-      debug('Setting role to TRAINER', { team, user })
-      user.role = db.user.TRAINER
+      debug('Setting role to CONSUMER', { team, user })
+      user.role = db.user.CONSUMER
+      try {
+        await sendAccessRequest({ team, userId: user.id })
+      } catch (err) {
+        logger.error('Error sending access request', { err, team, user })
+      }
     }
   }
 
@@ -66,6 +71,7 @@ function oauth(converse, app) {
 
     const { locals: { team } } = res
     let { locals: { user } } = res
+
     debug('Checking if app is installed', { team })
     if (!team.slack || !team.slack.bot) {
       logger.info('Routing initial user through install', { team: res.locals.team, user: res.locals.user })
@@ -91,7 +97,7 @@ function oauth(converse, app) {
   })
 }
 
-export default function (app, converse) {
+export default function auth(app, converse) {
   // cookieParser is required so we can read and write cookie values
   app.use(cookieParser(config.cookie.secret))
 
@@ -105,6 +111,7 @@ export default function (app, converse) {
   }))
 
   // ensure the auth information is still valid, if not, remove the cookie.
+  // TODO this should be cached in redis
   app.use(async (req, res, next) => {
     if (req.auth) {
       let token

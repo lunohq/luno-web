@@ -1,10 +1,14 @@
 import Relay from 'react-relay'
 
-import AppComponent from './Component'
+import LogoutMutation from 'm/LogoutMutation'
 
-import LogoutMutation from '../../mutations/LogoutMutation'
+import Component from './Component'
 
-export default Relay.createContainer(AppComponent, {
+export default Relay.createContainer(Component, {
+  initialVariables: {
+    limit: -1 >>> 1,
+  },
+
   fragments: {
     viewer: () => Relay.QL`
       fragment on User {
@@ -12,9 +16,18 @@ export default Relay.createContainer(AppComponent, {
         anonymous
         assumed
         username
+        isAdmin
+        isStaff
         team {
           id
           name
+          admins(first: $limit) {
+            edges {
+              node {
+                username
+              }
+            }
+          }
         }
         ${LogoutMutation.getFragment('viewer')}
       }
