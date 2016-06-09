@@ -24,7 +24,7 @@ export async function sendAccessRequest({ team, userId }) {
   }
   formattedAdmins = formattedAdmins.join(', ')
   const userMessage = `Hey <@${userId}>, thanks for your interest in Luno. I've let the admins (${formattedAdmins}) know, but feel free to bug them directly.`
-  const adminMessage = `Hey Luno admins, <@${userId}> wants to help train me. Can you give them access? You can do that at ${config.dashboardUrl}.`
+  const adminMessage = `Hey Luno admins, <@${userId}> wants to help train me. Can you give them access? You can do that at ${config.dashboardUrl}/admin/users.`
   return Promise.all([
     send({ to: userId, bot: team.slack.bot, message: userMessage }),
     send({ to: adminUserIds, bot: team.slack.bot, message: adminMessage }),
