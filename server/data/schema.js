@@ -258,7 +258,7 @@ const GraphQLUser = new GraphQLObjectType({
     role: {
       type: GraphQLUserRole,
       description: 'Role of the user',
-      resolve: user => user.role === undefined ? db.user.ADMIN : user.role,
+      resolve: user => user.role === undefined ? db.user.CONSUMER : user.role,
     },
     isStaff: {
       type: GraphQLBoolean,
