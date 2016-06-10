@@ -53,7 +53,7 @@ class Tracker {
       'Team ID': teamId,
       'Username': viewer.username,
       'Team Name': viewer.team ? viewer.team.name : null,
-      'Role': createdBy === userId ? 'CREATOR' ? viewer.role,
+      'Role': createdBy === userId ? 'CREATOR' : viewer.role,
     })
     mixpanel.people.set_once({
       'First Seen': new Date(),
