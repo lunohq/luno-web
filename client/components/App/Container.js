@@ -18,6 +18,7 @@ export default Relay.createContainer(Component, {
         username
         isAdmin
         isStaff
+        role
         team {
           id
           name
