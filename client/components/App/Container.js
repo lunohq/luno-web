@@ -21,6 +21,7 @@ export default Relay.createContainer(Component, {
         team {
           id
           name
+          createdBy
           admins(first: $limit) {
             edges {
               node {
