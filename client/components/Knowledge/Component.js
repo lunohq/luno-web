@@ -13,13 +13,18 @@ import Topics from 'c/Topics/Component'
 import s from './style.scss'
 
 class Knowledge extends Component {
+  getBot() {
+    const { viewer: { bots } } = this.props
+    return bots.edges[0].node
+  }
 
   render() {
+    const bot = this.getBot()
     return (
       <DocumentTitle title={t('Knowledge')}>
         <div>
           <Navigation />
-          <Topics />
+          <Topics bot={bot} />
         </div>
       </DocumentTitle>
     )

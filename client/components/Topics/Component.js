@@ -18,26 +18,15 @@ import ListPane from './ListPane'
 
 import s from './style.scss'
 
-const topics = [
-  <MenuItem key={1} value={1} primaryText="None" />,
-  <MenuItem key={2} value={2} primaryText="Sales Resources" />,
-  <MenuItem key={3} value={3} primaryText="Sales Tools" />,
-  <MenuItem key={4} value={4} primaryText="Pricing" />,
-]
-
 class Topics extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {value: 1}
-  }
-
-  handleChange = (event, index, value) => this.setState({value})
-
   render() {
+    const replies = this.props.bot.answers.edges
+
     return (
       <DocumentTitle title={t('!!! Topic Name')}>
         <div className={s.root}>
-          <ListPane />
+
+          <ListPane replies={replies} />
 
           <Paper className={s.detailPane} zDepth={1}>
             <Subheader>
@@ -60,14 +49,6 @@ class Topics extends Component {
                 multiLine={true}
                 rows={3}
               />
-              <SelectField
-                value={this.state.value}
-                onChange={this.handleChange}
-                floatingLabelFixed={true}
-                floatingLabelText="Topic"
-              >
-                {topics}
-              </SelectField>
             </div>
           </Paper>
         </div>
