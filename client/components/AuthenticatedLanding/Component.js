@@ -16,6 +16,7 @@ const AuthenticatedLanding = ({ children, onLogout, viewer }) => {
         action='end'
         onActionTouchTap={onLogout}
         onRequestClose={() => {}}
+        style={{zIndex: 0}}
       />
     )
   }
