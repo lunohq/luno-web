@@ -149,10 +149,7 @@ const GraphQLTeam = new GraphQLObjectType({
       type: GraphQLSlackInfo,
       description: 'Slack info related to the Team',
     },
-    createdBy: {
-      type: globalIdField('User', obj => obj.createdBy),
-      description: 'The user who created the team',
-    },
+    createdBy: globalIdField('User', obj => obj.createdBy),
     members: {
       type: SlackMembersConnection,
       description: 'Members of the slack team',
