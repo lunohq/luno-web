@@ -46,9 +46,8 @@ SelectableList = wrapState(SelectableList)
 
 const Navigation = () => (
   <Drawer containerStyle={{left: NAV_WIDTH}}>
-    <SelectableList defaultValue={1}>
-      <ListItem primaryText={t('Lunobot')} value={1} />
-      <ListItem primaryText={t('Some Topic')} value={2} />
+    <SelectableList defaultValue={'1'}>
+      <ListItem primaryText={t('Lunobot')} value={'1'} />
     </SelectableList>
   </Drawer>
 )

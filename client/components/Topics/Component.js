@@ -1,5 +1,3 @@
-// based on BotSetting.Coponent.js
-
 import React, { Component, PropTypes } from 'react'
 
 import Paper from 'material-ui/Paper';
@@ -15,6 +13,8 @@ import t from 'u/gettext'
 import withStyles from 'u/withStyles'
 
 import DocumentTitle from 'c/DocumentTitle'
+
+import ListPane from './ListPane'
 
 import s from './style.scss'
 
@@ -37,64 +37,7 @@ class Topics extends Component {
     return (
       <DocumentTitle title={t('!!! Topic Name')}>
         <div className={s.root}>
-          <Paper className={s.listPane} zDepth={1}>
-            <List>
-              <Subheader>
-                Lunobot
-                <FlatButton label="Add Reply" primary={true} />
-              </Subheader>
-              <ListItem
-                primaryText="Company Address"
-                secondaryText="Last updated by @michael on Apr 4, 2016"
-              />
-              <Divider />
-              <ListItem
-                primaryText="Guest Wifi Password"
-                secondaryText="Last updated by @allen on Mar 30, 2016"
-              />
-              <Divider />
-              <ListItem
-                primaryText="Another One"
-                secondaryText="Last updated by @allen on Mar 30, 2016"
-              />
-              <Divider />
-              <ListItem
-                primaryText="Another Two"
-                secondaryText="Last updated by @allen on Mar 30, 2016"
-              />
-              <Divider />
-              <ListItem
-                primaryText="Another Three"
-                secondaryText="Last updated by @allen on Mar 30, 2016"
-              />
-              <Divider />
-              <ListItem
-                primaryText="Another Four"
-                secondaryText="Last updated by @allen on Mar 30, 2016"
-              />
-              <Divider />
-              <ListItem
-                primaryText="Another Five"
-                secondaryText="Last updated by @allen on Mar 30, 2016"
-              />
-              <Divider />
-              <ListItem
-                primaryText="Another Six"
-                secondaryText="Last updated by @allen on Mar 30, 2016"
-              />
-              <Divider />
-              <ListItem
-                primaryText="Another Seven"
-                secondaryText="Last updated by @allen on Mar 30, 2016"
-              />
-              <Divider />
-              <ListItem
-                primaryText="Another Eight"
-                secondaryText="Last updated by @allen on Mar 30, 2016"
-              />
-              <Divider />
-            </List>
-          </Paper>
+          <ListPane />
 
           <Paper className={s.detailPane} zDepth={1}>
             <Subheader>
