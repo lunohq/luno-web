@@ -18,7 +18,7 @@ import ListPane from './ListPane'
 
 import s from './style.scss'
 
-class Topics extends Component {
+class Replies extends Component {
   render() {
     const replies = this.props.bot.answers.edges
 
@@ -57,4 +57,4 @@ class Topics extends Component {
   }
 }
 
-export default withStyles(s)(Topics)
+export default withStyles(s)(Replies)
