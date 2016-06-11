@@ -26,10 +26,14 @@ class ListPane extends Component {
     return (
       <Paper className={s.listPane} zDepth={1}>
         <List>
-          <Subheader>
+
+          <Subheader className={s.header}>
             Lunobot
-            <FlatButton label="Add Reply" primary={true} />
+            <div>
+              <FlatButton label="Add Reply" primary={true} />
+            </div>
           </Subheader>
+
           {replyRows}
         </List>
       </Paper>

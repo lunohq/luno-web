@@ -20,7 +20,9 @@
 
 .header {
     composes: row between-xs middle-xs from 's/vendor/flexboxgrid.css';
-    height: 75px;
+    margin-left: 0;
+    margin-right: 0;
+    padding-right: 6px;
 }
 
 .content {
