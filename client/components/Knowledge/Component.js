@@ -10,8 +10,6 @@ import SectionTitle from 'c/SectionTitle/Component'
 import Navigation from './Navigation'
 import Topics from 'c/Topics/Component'
 
-import s from './style.scss'
-
 class Knowledge extends Component {
   getBot() {
     const { viewer: { bots } } = this.props
@@ -35,4 +33,4 @@ Knowledge.propTypes = {
   viewer: PropTypes.object.isRequired,
 }
 
-export default withStyles(s)(Knowledge)
+export default Knowledge
