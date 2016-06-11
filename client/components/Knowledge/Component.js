@@ -8,7 +8,7 @@ import DocumentTitle from 'c/DocumentTitle'
 import Divider from 'c/Divider/Component'
 import SectionTitle from 'c/SectionTitle/Component'
 import Navigation from './Navigation'
-import Topics from 'c/Topics/Component'
+import Replies from 'c/Replies/Component'
 
 class Knowledge extends Component {
   getBot() {
@@ -22,7 +22,7 @@ class Knowledge extends Component {
       <DocumentTitle title={t('Knowledge')}>
         <div>
           <Navigation />
-          <Topics bot={bot} />
+          <Replies bot={bot} />
         </div>
       </DocumentTitle>
     )
