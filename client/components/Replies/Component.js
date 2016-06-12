@@ -15,6 +15,7 @@ import withStyles from 'u/withStyles'
 import DocumentTitle from 'c/DocumentTitle'
 
 import ListPane from './ListPane'
+import ReplyPane from './ReplyPane'
 
 import s from './style.scss'
 
@@ -25,32 +26,8 @@ class Replies extends Component {
     return (
       <DocumentTitle title={t('!!! Topic Name')}>
         <div className={s.root}>
-
           <ListPane replies={replies} />
-
-          <Paper className={s.detailPane} zDepth={1}>
-            <Subheader>
-              Last updated by @michael on May 30, 2016
-            </Subheader>
-            <div className={s.detailContent}>
-              <TextField
-                floatingLabelText="Title"
-                hintText="Add a title"
-                floatingLabelFixed={true}
-                fullWidth={true}
-                multiLine={true}
-              />
-              <br />
-              <TextField
-                floatingLabelText="Reply"
-                hintText="Add reply"
-                floatingLabelFixed={true}
-                fullWidth={true}
-                multiLine={true}
-                rows={3}
-              />
-            </div>
-          </Paper>
+          <ReplyPane />
         </div>
       </DocumentTitle>
     )

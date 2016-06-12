@@ -1,3 +1,21 @@
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+// .header {
+//     composes: row between-xs middle-xs from 's/vendor/flexboxgrid.css';
+//     height: 75px;
+// }
+
+.form {
+    composes: row col-xs from 's/vendor/flexboxgrid.css';
+}
+
+.field {
+    composes: col-xs-12 from 's/vendor/flexboxgrid.css';
+}
+
+
+// --------------------------------
+
 .root {
     display: flex;
     margin-left: 256px;
@@ -6,16 +24,18 @@
     overflow: hidden;
 }
 
+.listPane, .detailPane {
+  margin: 10px;
+  overflow:scroll;
+  padding-bottom: 80px;
+}
+
 .listPane {
   width: 40%;
-  overflow:scroll;
-  margin: 10px;
-  padding-bottom: 80px;
 }
 
 .detailPane {
   flex: 1;
-  margin: 10px;
 }
 
 .header {

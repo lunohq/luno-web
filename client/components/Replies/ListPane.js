@@ -24,7 +24,7 @@ class ListPane extends Component {
     ))
 
     return (
-      <Paper className={s.listPane} zDepth={1}>
+      <Paper className={s.listPane}>
         <List>
 
           <Subheader className={s.header}>
