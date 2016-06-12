@@ -13,7 +13,7 @@ import ReplyRow from './ReplyRow'
 
 import s from './style.scss'
 
-class ListPane extends Component {
+class RepliesList extends Component {
 
   render() {
     const replyRows = this.props.replies.map(({ node }, index) => (
@@ -41,4 +41,4 @@ class ListPane extends Component {
   }
 }
 
-export default withStyles(s)(ListPane)
+export default withStyles(s)(RepliesList)
