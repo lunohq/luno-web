@@ -15,7 +15,7 @@ import withStyles from 'u/withStyles'
 import DocumentTitle from 'c/DocumentTitle'
 
 import RepliesList from './RepliesList'
-import ReplyPane from './ReplyPane'
+import ViewEditReply from './ViewEditReply'
 
 import s from './style.scss'
 
@@ -27,7 +27,7 @@ class Replies extends Component {
       <DocumentTitle title={t('!!! Topic Name')}>
         <div className={s.root}>
           <RepliesList replies={replies} />
-          <ReplyPane />
+          <ViewEditReply />
         </div>
       </DocumentTitle>
     )
