@@ -24,17 +24,17 @@
     overflow: hidden;
 }
 
-.listPane, .detailPane {
+.replyListPane, .viewReplyPane {
   margin: 10px;
   overflow:scroll;
   padding-bottom: 80px;
 }
 
-.listPane {
+.replyListPane {
   width: 40%;
 }
 
-.detailPane {
+.viewReplyPane {
   flex: 1;
 }
 

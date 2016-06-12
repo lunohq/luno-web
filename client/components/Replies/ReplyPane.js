@@ -101,7 +101,7 @@ class Answer extends Component {
     }
 
     return (
-      <Paper className={s.detailPane}>
+      <Paper className={s.viewReplyPane}>
         <Subheader className={s.header}>
           Last edited by
           <div>
