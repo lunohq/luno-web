@@ -103,7 +103,7 @@ class Answer extends Component {
     return (
       <Paper className={s.viewReplyPane}>
         <Subheader className={s.header}>
-          Last edited by
+          Last updated on
           <div>
             {actionButtons}
           </div>
@@ -112,9 +112,12 @@ class Answer extends Component {
         <section className={s.form}>
           <Field
             autoComplete='off'
-            className={s.field}
             component={TextField}
+            floatingLabelFixed={true}
             floatingLabelText={t('Title')}
+            fullWidth={true}
+            hintText={t('Add a title')}
+            multiLine={true}
             name='answer.title'
             onFocus={this.handleFocus}
             ref='title'
@@ -122,9 +125,11 @@ class Answer extends Component {
           />
           <Field
             autoComplete='off'
-            className={s.field}
             component={TextField}
             floatingLabelText={t('Reply')}
+            floatingLabelFixed={true}
+            fullWidth={true}
+            hintText={t('Add a reply')}
             multiLine={true}
             name='answer.body'
             onFocus={this.handleFocus}
@@ -146,8 +151,8 @@ export default withStyles(s)(reduxForm({
   form: FORM_NAME,
   initialValues: {
     answer: {
-      title: 'Some Title',
-      body: 'Reply',
+      title: '',
+      body: '',
     },
   },
   validate,

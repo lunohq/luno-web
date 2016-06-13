@@ -1,21 +1,5 @@
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
-// .header {
-//     composes: row between-xs middle-xs from 's/vendor/flexboxgrid.css';
-//     height: 75px;
-// }
-
-.form {
-    composes: row col-xs from 's/vendor/flexboxgrid.css';
-}
-
-.field {
-    composes: col-xs-12 from 's/vendor/flexboxgrid.css';
-}
-
-
-// --------------------------------
-
 .root {
     display: flex;
     margin-left: 256px;
@@ -45,15 +29,9 @@
     padding-right: 6px;
 }
 
-.content {
-    composes: content from 's/layout.scss';
-}
-
-.detailContent {
-  padding: 0px 16px;
-}
-
-.body {
-    font-size: 1.6rem;
-    margin-bottom: 60px;
+.form {
+    composes: row col-xs from 's/vendor/flexboxgrid.css';
+    margin-left: 0;
+    margin-right: 0;
+    padding: 0px 16px;
 }
