@@ -25,10 +25,11 @@ class Tracker {
     if (this.initialized || viewer.anonymous || viewer.assumed) return
 
     // Convert relay ids so we can identify the user across platforms
-    let userId, teamId
+    let userId, teamId, createdBy
     try {
       userId = atob(viewer.id).split(':')[1]
       teamId = atob(viewer.team.id).split(':')[1]
+      createdBy = atob(viewer.team.createdBy).split(':')[1]
     } catch (err) {
       Raven.captureException(err, { extra: { viewer } })
       return
@@ -52,6 +53,7 @@ class Tracker {
       'Team ID': teamId,
       'Username': viewer.username,
       'Team Name': viewer.team ? viewer.team.name : null,
+      'Role': createdBy === userId ? 'CREATOR' : viewer.role,
     })
     mixpanel.people.set_once({
       'First Seen': new Date(),

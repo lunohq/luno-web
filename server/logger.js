@@ -67,9 +67,12 @@ const logger = new winston.Logger({
       depth: config.winston.logger.console.depth,
       prettyPrint: config.winston.logger.console.prettyPrint,
     }),
-    new RavenWinston({ dsn: config.sentry.dsn, patchGlobal: true, level: 'warn' }),
   ],
 })
+
+if (process.env.NODE_ENV !== 'local') {
+  logger.add(RavenWinston, { dsn: config.sentry.dsn, patchGlobal: true, level: 'warn' })
+}
 
 logger.rewriters.push(rewriteError)
 logger.rewriters.push(scrub)

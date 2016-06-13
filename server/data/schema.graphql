@@ -156,6 +156,7 @@ type Team implements Node {
   id: ID!
   name: String
   slack: SlackInfo
+  createdBy: ID!
   members(after: String, first: Int, before: String, last: Int): SlackMemberConnection
   users(after: String, first: Int, before: String, last: Int): UserConnection
   staff(after: String, first: Int, before: String, last: Int): UserConnection
