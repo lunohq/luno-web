@@ -15,11 +15,11 @@
 }
 
 .replyListPane {
-  composes: row col-xs-5 from 's/vendor/flexboxgrid.css';
+  width: 40%;
 }
 
 .viewReplyPane {
-  composes: row col-xs from 's/vendor/flexboxgrid.css';
+  flex: 1;
 }
 
 .header {
