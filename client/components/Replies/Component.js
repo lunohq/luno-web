@@ -24,7 +24,7 @@ class Replies extends Component {
     const replies = this.props.bot.answers.edges
 
     return (
-      <DocumentTitle title={t('!!! Topic Name')}>
+      <DocumentTitle title={t('Lunobot - Luno')}>
         <div className={s.root}>
           <RepliesList replies={replies} />
           <ViewEditReply />
