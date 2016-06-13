@@ -9,6 +9,8 @@ import FlatButton from 'material-ui/FlatButton'
 import t from 'u/gettext'
 import withStyles from 'u/withStyles'
 
+import ViewEditReply from './ViewEditReply'
+
 import s from './style.scss'
 
 let SelectableList = MakeSelectable(List)
@@ -49,17 +51,23 @@ SelectableList = wrapState(SelectableList)
 
 class RepliesList extends Component {
 
+  handleViewReply = (reply) => {
+    alert(`${reply.title} ${reply.body} ${reply.id}`)
+    
+  }
+
   render() {
     const { replies } = this.props
     const replyRows = []
     for (const index in replies) {
-      const {node: {title, id } } = replies[index]
+      const { node } = replies[index]
       replyRows.push(
         <ListItem
-          primaryText={title}
-          secondaryText={`Last updated on ${id}`}
-          value={`${index}`}
           key={index}
+          onTouchTap={() => this.handleViewReply(node)}
+          primaryText={node.title}
+          secondaryText={`Last updated on ${node.id}`}
+          value={`${index}`}
         />
       )
       replyRows.push(<Divider key={`${index}-divider`}/>)

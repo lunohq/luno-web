@@ -42,7 +42,7 @@ class TextField extends Component {
 
 }
 
-class Reply extends Component {
+class ViewEditReply extends Component {
 
   state = {
     editing: false,
@@ -59,8 +59,7 @@ class Reply extends Component {
     this.props.reset()
   }
 
-  // handleCreate = () => {}
-  handleUpdate = () => this.setState({editing: false})
+  handleSave = () => this.setState({editing: false})
   handleFocus = () => this.setState({editing: true})
 
   showDeleteDialog = () => this.setState({ showDeleteDialog: true })
@@ -86,7 +85,7 @@ class Reply extends Component {
           disabled={(!initialValues && pristine) || !valid}
           key='create'
           label={initialValues ? t('Update') : t('Create')}
-          onTouchTap={this.handleUpdate}
+          onTouchTap={this.handleSave}
           primary
         />,
       ]
@@ -157,4 +156,4 @@ export default withStyles(s)(reduxForm({
     },
   },
   validate,
-})(Reply))
+})(ViewEditReply))
