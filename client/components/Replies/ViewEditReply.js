@@ -16,13 +16,13 @@ import DeleteDialog from './DeleteDialog'
 
 import s from './style.scss'
 
-export const FORM_NAME = 'form/answer'
+export const FORM_NAME = 'form/reply'
 
 const validate = values => {
   const errors = {}
   const requiredFields = ['title', 'body']
   requiredFields.forEach(field => {
-    if (!values.answer[field]) {
+    if (!values.reply[field]) {
       errors[field] = 'Required'
       errors._error = true
     }
@@ -42,7 +42,7 @@ class TextField extends Component {
 
 }
 
-class Answer extends Component {
+class Reply extends Component {
 
   state = {
     editing: false,
@@ -59,12 +59,13 @@ class Answer extends Component {
     this.props.reset()
   }
 
-  handleCreate = () => {}
+  // handleCreate = () => {}
+  handleUpdate = () => this.setState({editing: false})
   handleFocus = () => this.setState({editing: true})
 
   showDeleteDialog = () => this.setState({ showDeleteDialog: true })
   hideDeleteDialog = () => this.setState({ showDeleteDialog: false })
-  handleDeleteAnswer = () => {
+  handleDeleteReply = () => {
     this.hideDeleteDialog()
   }
 
@@ -85,7 +86,7 @@ class Answer extends Component {
           disabled={(!initialValues && pristine) || !valid}
           key='create'
           label={initialValues ? t('Update') : t('Create')}
-          onTouchTap={this.handleCreate}
+          onTouchTap={this.handleUpdate}
           primary
         />,
       ]
@@ -118,7 +119,7 @@ class Answer extends Component {
             fullWidth={true}
             hintText={t('Add a title')}
             multiLine={true}
-            name='answer.title'
+            name='reply.title'
             onFocus={this.handleFocus}
             ref='title'
             withRef={true}
@@ -131,13 +132,13 @@ class Answer extends Component {
             fullWidth={true}
             hintText={t('Add a reply')}
             multiLine={true}
-            name='answer.body'
+            name='reply.body'
             onFocus={this.handleFocus}
             rows={2}
           />
           <DeleteDialog
             onCancel={this.hideDeleteDialog}
-            onConfirm={this.handleDeleteAnswer}
+            onConfirm={this.handleDeleteReply}
             open={this.state.showDeleteDialog}
           />
         </section>
@@ -150,10 +151,10 @@ class Answer extends Component {
 export default withStyles(s)(reduxForm({
   form: FORM_NAME,
   initialValues: {
-    answer: {
+    reply: {
       title: '',
       body: '',
     },
   },
   validate,
-})(Answer))
+})(Reply))
