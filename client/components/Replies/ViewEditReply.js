@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react'
-import { reduxForm, Field } from 'redux-form'
+import { reduxForm, Field, destroy, initialize } from 'redux-form'
 
 import IconButton from 'material-ui/IconButton'
 import FlatButton from 'material-ui/FlatButton'
@@ -22,7 +22,7 @@ const validate = values => {
   const errors = {}
   const requiredFields = ['title', 'body']
   requiredFields.forEach(field => {
-    if (!values.reply[field]) {
+    if (values.reply && !values.reply[field]) {
       errors[field] = 'Required'
       errors._error = true
     }
@@ -47,6 +47,28 @@ class ViewEditReply extends Component {
   state = {
     editing: false,
     showDeleteDialog: false,
+  }
+
+  componentWillMount() {
+    if (this.props.reply) {
+      this.initialize(this.props.reply)
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const newReply = (
+      (this.props.reply && nextProps.reply && this.props.reply.id !== nextProps.reply.id) ||
+      (!this.props.reply && nextProps.reply)
+    )
+    if (newReply) {
+      this.initialize(nextProps.reply)
+    }
+  }
+
+  initialize(reply) {
+    const initialValues = {reply}
+    this.context.store.dispatch(initialize(FORM_NAME, initialValues))
+    this.setState({editing: false})
   }
 
   handleEdit = () => {
@@ -147,13 +169,15 @@ class ViewEditReply extends Component {
 
 }
 
+ViewEditReply.propTypes = {
+  reply: PropTypes.object,
+}
+
+ViewEditReply.contextTypes = {
+  store: PropTypes.object.isRequired,
+}
+
 export default withStyles(s)(reduxForm({
   form: FORM_NAME,
-  initialValues: {
-    reply: {
-      title: '',
-      body: '',
-    },
-  },
   validate,
 })(ViewEditReply))

@@ -51,11 +51,6 @@ SelectableList = wrapState(SelectableList)
 
 class RepliesList extends Component {
 
-  handleViewReply = (reply) => {
-    alert(`${reply.title} ${reply.body} ${reply.id}`)
-    
-  }
-
   render() {
     const { replies } = this.props
     const replyRows = []
@@ -64,7 +59,7 @@ class RepliesList extends Component {
       replyRows.push(
         <ListItem
           key={index}
-          onTouchTap={() => this.handleViewReply(node)}
+          onTouchTap={() => this.props.onChange(node)}
           primaryText={node.title}
           secondaryText={`Last updated on ${node.id}`}
           value={`${index}`}

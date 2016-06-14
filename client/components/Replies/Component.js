@@ -20,14 +20,26 @@ import ViewEditReply from './ViewEditReply'
 import s from './style.scss'
 
 class Replies extends Component {
+  state={
+    reply: null,
+  }
+
+  componentWillMount() {
+    this.setState({reply:this.props.bot.answers.edges[0].node})
+  }
+
+  handleViewReply = (reply) => {
+    this.setState({reply})
+  }
+
   render() {
     const replies = this.props.bot.answers.edges
 
     return (
       <DocumentTitle title={t('Lunobot - Luno')}>
         <div className={s.root}>
-          <RepliesList replies={replies} />
-          <ViewEditReply />
+          <RepliesList onChange={this.handleViewReply} replies={replies} />
+          <ViewEditReply reply={this.state.reply}/>
         </div>
       </DocumentTitle>
     )
