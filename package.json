@@ -4,7 +4,7 @@
   "description": "Luno web app",
   "scripts": {
     "start": "npm run update && babel-node server/index.js",
-    "dev": "npm run update && ./bin/server",
+    "dev": "npm run lint && npm run update && ./bin/server",
     "build": "./bin/build",
     "update": "babel-node server/utils/updateSchema.js",
     "webpack": "webpack --config webpack/release.js",
