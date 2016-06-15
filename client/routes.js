@@ -1,5 +1,4 @@
 import React from 'react'
-import Relay from 'react-relay'
 import { IndexRoute, Route } from 'react-router'
 
 import ViewerQueries from './queries/Viewer'
@@ -9,6 +8,7 @@ import AnswersContainer from 'c/Answers/Container'
 import AdminContainer from 'c/Admin/Container'
 import Loading from 'c/Loading'
 
+/* eslint-disable react/prop-types */
 export default (
   <Route
     path='/'
@@ -28,4 +28,4 @@ export default (
     />
   </Route>
 )
-
+/* eslint-enable react/prop-types */

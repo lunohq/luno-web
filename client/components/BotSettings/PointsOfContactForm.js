@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { Field, FieldArray, reduxForm } from 'redux-form'
 
-import t from 'u/gettext'
 import withStyles from 'u/withStyles'
 import colors from 's/colors'
 
@@ -11,10 +10,6 @@ import CrossIcon from 'c/CrossIcon'
 import s from './points-of-contact-form-style.scss'
 
 export const FORM_NAME = 'form/bot-settings/points-of-contact'
-
-function getItemName(item) {
-  return `@${item.name}`
-}
 
 const Contact = ({ contacts, index, onRemove, value }) => (
   <li className={s.token} onTouchTap={() => onRemove(contacts, value, index)}>
@@ -27,6 +22,13 @@ const Contact = ({ contacts, index, onRemove, value }) => (
     />
   </li>
 )
+
+Contact.propTypes = {
+  contacts: PropTypes.array.isRequired,
+  index: PropTypes.number,
+  onRemove: PropTypes.func.isRequired,
+  value: PropTypes.any,
+}
 
 const Contacts = ({ dataSource, onRemove, onNewRequest, onUpdateInput, searchText, fields }) => {
   const tokens = fields.map((contact, index) => (
@@ -56,14 +58,28 @@ const Contacts = ({ dataSource, onRemove, onNewRequest, onUpdateInput, searchTex
   )
 }
 
+Contacts.propTypes = {
+  dataSource: PropTypes.array,
+  fields: PropTypes.array,
+  onNewRequest: PropTypes.func.isRequired,
+  onRemove: PropTypes.func.isRequired,
+  onUpdateInput: PropTypes.func.isRequired,
+  searchText: PropTypes.string,
+}
+
 class PointsOfContactForm extends Component {
+
+  state = {
+    searchText: '',
+    members: [],
+  }
 
   componentWillMount() {
     this.initialize(this.props)
     this.initializeData(this.props, this.props)
   }
 
-  componentWillReceiveProps(nextProps, nextState) {
+  componentWillReceiveProps(nextProps) {
     if (nextProps.existing !== this.props.existing) {
       this.initializeData(nextProps, this.state)
     }
@@ -110,11 +126,6 @@ class PointsOfContactForm extends Component {
     this.props.initialize({ contacts })
   }
 
-  state = {
-    searchText: '',
-    members: [],
-  }
-
   handleNewRequest = (item, index) => {
     if (index !== -1) {
       const { array: { push }, handleSubmit } = this.props
@@ -157,8 +168,11 @@ class PointsOfContactForm extends Component {
 }
 
 PointsOfContactForm.propTypes = {
+  array: PropTypes.object,
   // Existing points of contact
   existing: PropTypes.array,
+  handleSubmit: PropTypes.func.isRequired,
+  initialize: PropTypes.func.isRequired,
   // All slack team members
   members: PropTypes.array.isRequired,
   onSubmit: PropTypes.func.isRequired,

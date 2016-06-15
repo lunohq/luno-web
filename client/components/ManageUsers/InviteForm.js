@@ -1,8 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { Field, reduxForm } from 'redux-form'
 
-import TextField from 'material-ui/TextField'
-
 import t from 'u/gettext'
 import AutoCompleteMembers, { createDataSource } from 'c/AutoCompleteMembers'
 
@@ -18,7 +16,7 @@ const validate = values => {
   return errors
 }
 
-const Username = ({ members, onNewRequest, onUpdateInput, searchText, onChange, touched, error }) => {
+const Username = ({ members, onChange, touched, error, ...other }) => {
   const dataSource = createDataSource(members)
   return (
     <AutoCompleteMembers
@@ -27,10 +25,16 @@ const Username = ({ members, onNewRequest, onUpdateInput, searchText, onChange, 
       onNewRequest={(item, index) => {
         onChange(members[index].node)
       }}
-      onUpdateInput={onUpdateInput}
-      searchText={searchText}
+      {...other}
     />
   )
+}
+
+Username.propTypes = {
+  error: PropTypes.string,
+  members: PropTypes.array.isRequired,
+  onChange: PropTypes.func.isRequired,
+  touched: PropTypes.bool,
 }
 
 class InviteForm extends Component {
@@ -60,6 +64,7 @@ class InviteForm extends Component {
 }
 
 InviteForm.propTypes = {
+  initialValues: PropTypes.object.isRequired,
   members: PropTypes.array.isRequired,
 }
 

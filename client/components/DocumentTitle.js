@@ -3,11 +3,6 @@ import React, { Component, PropTypes } from 'react'
 
 class DocumentTitle extends Component {
 
-  static propTypes = {
-    title: PropTypes.string,
-    children: PropTypes.object,
-  }
-
   static defaultProps = {
     title: '',
   }
@@ -49,6 +44,11 @@ class DocumentTitle extends Component {
     )
   }
 
+}
+
+DocumentTitle.propTypes = {
+  children: PropTypes.object,
+  title: PropTypes.string,
 }
 
 export default DocumentTitle

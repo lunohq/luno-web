@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react'
-import { Link } from 'react-router'
 import Drawer from 'material-ui/Drawer'
 import { List, ListItem, MakeSelectable } from 'material-ui/List'
 import Subheader from 'material-ui/Subheader'
@@ -52,7 +51,7 @@ class Navigation extends Component {
   render() {
     const { location: { pathname } } = this.props
     return (
-      <Drawer containerStyle={{left: NAV_WIDTH}}>
+      <Drawer containerStyle={{ left: NAV_WIDTH }}>
         <SelectableList defaultValue={pathname}>
           <Subheader>{t('Admin Settings')}</Subheader>
           <ListItem

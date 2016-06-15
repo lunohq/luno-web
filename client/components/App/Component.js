@@ -13,15 +13,6 @@ import s from './style.scss'
 
 class App extends Component {
 
-  handleLogout = () => {
-    const { viewer } = this.props;
-    Relay.Store.commitUpdate(
-      new LogoutMutation({ viewer }),
-      { onSuccess: () => this.context.router.push('/') },
-    )
-    tracker.clear()
-  }
-
   getChildContext() {
     return {
       insertCss: (...styles) => {
@@ -30,13 +21,6 @@ class App extends Component {
         }
       },
       viewer: this.props.viewer,
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    tracker.init(nextProps.viewer)
-    if (this.props.location.pathname !== nextProps.location.pathname && !this.props.viewer.assumed) {
-      tracker.trackPageView(this.props.location)
     }
   }
 
@@ -49,8 +33,24 @@ class App extends Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    tracker.init(nextProps.viewer)
+    if (this.props.location.pathname !== nextProps.location.pathname && !this.props.viewer.assumed) {
+      tracker.trackPageView(this.props.location)
+    }
+  }
+
   componentWillUnmount() {
     this.removeCss()
+  }
+
+  handleLogout = () => {
+    const { viewer } = this.props;
+    Relay.Store.commitUpdate(
+      new LogoutMutation({ viewer }),
+      { onSuccess: () => this.context.router.push('/') },
+    )
+    tracker.clear()
   }
 
   render() {
@@ -92,6 +92,9 @@ App.childContextTypes = {
 
 App.propTypes = {
   children: PropTypes.object,
+  location: PropTypes.shape({
+    pathname: PropTypes.string.isRequired,
+  }).isRequired,
   viewer: PropTypes.object.isRequired,
 }
 

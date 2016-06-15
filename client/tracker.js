@@ -25,7 +25,9 @@ class Tracker {
     if (this.initialized || viewer.anonymous || viewer.assumed) return
 
     // Convert relay ids so we can identify the user across platforms
-    let userId, teamId, createdBy
+    let userId
+    let teamId
+    let createdBy
     try {
       userId = atob(viewer.id).split(':')[1]
       teamId = atob(viewer.team.id).split(':')[1]
@@ -51,9 +53,9 @@ class Tracker {
       $first_name: viewer.username,
       'User ID': userId,
       'Team ID': teamId,
-      'Username': viewer.username,
+      Username: viewer.username,
       'Team Name': viewer.team ? viewer.team.name : null,
-      'Role': createdBy === userId ? 'CREATOR' : viewer.role,
+      Role: createdBy === userId ? 'CREATOR' : viewer.role,
     })
     mixpanel.people.set_once({
       'First Seen': new Date(),
@@ -83,4 +85,6 @@ class Tracker {
 
 }
 
+/* eslint-disable no-undef */
 export default new Tracker(__MIXPANEL_TOKEN__)
+/* eslint-enable no-undef */

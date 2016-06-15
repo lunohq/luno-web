@@ -28,7 +28,6 @@ class FormDialog extends Component {
       primaryActionLabel,
       open,
       form,
-      ...other,
     } = this.props
 
     const actions = [
@@ -67,16 +66,16 @@ FormDialog.defaultProps = {
 }
 
 FormDialog.propTypes = {
-  secondaryActionLabel: PropTypes.string,
-  primaryActionLabel: PropTypes.string,
+  dialogProps: PropTypes.object,
   form: PropTypes.shape({
     name: PropTypes.string.isRequired,
     node: PropTypes.node.isRequired,
   }),
-  open: PropTypes.bool.isRequired,
-  dialogProps: PropTypes.object,
-  onSubmit: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
+  primaryActionLabel: PropTypes.string,
+  secondaryActionLabel: PropTypes.string,
 }
 
 FormDialog.contextTypes = {

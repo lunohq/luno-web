@@ -6,7 +6,7 @@ import DocumentTitle from 'c/DocumentTitle'
 
 import s from './style.scss'
 
-const BrandedContainer = ({ children, title = 'Luno' }) => (
+const BrandedContainer = ({ children, title = t('Luno') }) => (
   <DocumentTitle title={title}>
     <div className={s.root}>
       <div className={s.container}>

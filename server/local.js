@@ -62,7 +62,7 @@ function startRelayServer() {
       rewrites: [
         { from: /\/login/, to: noop },
         { from: /\/oauth/, to: noop },
-        { from: /\/l\/admin/, to: noop},
+        { from: /\/l\/admin/, to: noop },
       ],
     },
   })

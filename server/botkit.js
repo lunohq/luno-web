@@ -32,6 +32,7 @@ botkit.findTeamById = async (id, cb) => {
     }
     cb(err, fullTeam)
   })
+  return null
 }
 
 botkit.on('create_bot', async (bot) => {

@@ -3,8 +3,6 @@ import React, { PropTypes } from 'react'
 import Dialog from 'c/Dialog'
 import FlatButton from 'material-ui/FlatButton'
 
-import t from 'u/gettext'
-
 const ActionDialog = ({ secondaryActionLabel, primaryActionLabel, onSecondaryAction, onPrimaryAction, children, ...other }) => {
   const actions = [
     <FlatButton
@@ -27,11 +25,11 @@ const ActionDialog = ({ secondaryActionLabel, primaryActionLabel, onSecondaryAct
 }
 
 ActionDialog.propTypes = {
-  secondaryActionLabel: PropTypes.string.isRequired,
-  primaryActionLabel: PropTypes.string.isRequired,
-  onSecondaryAction: PropTypes.func.isRequired,
-  onPrimaryAction: PropTypes.func.isRequired,
   children: PropTypes.node.isRequired,
+  onPrimaryAction: PropTypes.func.isRequired,
+  onSecondaryAction: PropTypes.func.isRequired,
+  primaryActionLabel: PropTypes.string.isRequired,
+  secondaryActionLabel: PropTypes.string.isRequired,
 }
 
 export default ActionDialog

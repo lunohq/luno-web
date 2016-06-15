@@ -11,12 +11,12 @@ const AuthenticatedLanding = ({ children, onLogout, viewer }) => {
   if (viewer.assumed) {
     assumeNotification = (
       <Snackbar
-        open={true}
+        open
         message={`Viewing as ${viewer.username} in ${viewer.team.name}`}
         action='end'
         onActionTouchTap={onLogout}
         onRequestClose={() => {}}
-        style={{zIndex: 0}}
+        style={{ zIndex: 0 }}
       />
     )
   }

@@ -1,5 +1,5 @@
-import React, { Component, PropTypes } from 'react'
-import { Field, reduxForm } from 'redux-form'
+import React, { PropTypes } from 'react'
+import { reduxForm } from 'redux-form'
 
 import RoleField from './RoleField'
 

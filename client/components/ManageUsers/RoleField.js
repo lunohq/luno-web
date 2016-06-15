@@ -19,6 +19,7 @@ const Label = ({ primaryText, secondaryText }) => (
 
 Label.propTypes = {
   primaryText: PropTypes.string.isRequired,
+  secondaryText: PropTypes.string.isRequired,
 }
 
 const RoleField = (props) => (

@@ -15,7 +15,7 @@ const debug = require('debug')('server:tracker')
 const TEAM_EVENT = 'Team Event'
 const ADMIN_ACTION = 'Admin Action'
 
-/*eslint-disable camelcase */
+/* eslint-disable camelcase */
 class Tracker {
 
   constructor(token) {
@@ -136,6 +136,6 @@ class Tracker {
   }
 
 }
-/*eslint-enable camelcase*/
+/* eslint-enable camelcase */
 
 export default new Tracker(config.mixpanel.token)
