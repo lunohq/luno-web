@@ -1,5 +1,7 @@
 .root {
+    composes: row from 's/vendor/flexboxgrid.css';
     overflow-x: hidden;
+    height: 100vh;
 }
 
 .main {
@@ -7,5 +9,6 @@
     // 60px for left nav width + 40px
     padding: 0 40px 0 100px;
     padding-left: 100px;
-    height: 100vh;
+    height: 100%;
+    width: 100%;
 }

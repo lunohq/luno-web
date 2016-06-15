@@ -23,17 +23,15 @@ const AuthenticatedLanding = ({ children, onLogout, viewer }) => {
 
   return (
     <div className={s.root}>
-      <section>
-        <Navigation
-          isAdmin={viewer.isAdmin}
-          onLogout={onLogout}
-          team={viewer.team}
-        />
-        <main className={s.main}>
-          {children}
-          {assumeNotification}
-        </main>
-      </section>
+      <Navigation
+        isAdmin={viewer.isAdmin}
+        onLogout={onLogout}
+        team={viewer.team}
+      />
+      <main className={s.main}>
+        {children}
+        {assumeNotification}
+      </main>
     </div>
   )
 }
