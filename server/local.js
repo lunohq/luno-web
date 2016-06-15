@@ -51,9 +51,7 @@ function startRelayServer() {
     proxy: {
       '/graphql': `http://localhost:${config.graphql.port}`
     },
-    stats: {
-      colors: true
-    },
+    stats: 'errors-only',
     hot: true,
     historyApiFallback: {
       verbose: true,
