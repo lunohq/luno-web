@@ -86,7 +86,7 @@ function oauth(converse, app) {
 
     let token
     try {
-      token = await generateToken({ secret: config.token.secret, user: user })
+      token = await generateToken({ secret: config.token.secret, user })
     } catch (err) {
       logger.error('OAuth Token Transfer Failure', metadata({ query: req.query.error, err }))
       return res.redirect('/')

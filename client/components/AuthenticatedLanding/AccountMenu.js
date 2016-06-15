@@ -3,6 +3,8 @@ import Popover from 'material-ui/Popover'
 import Menu from 'material-ui/Menu'
 import MenuItem from 'material-ui/MenuItem'
 
+import t from 'u/gettext'
+
 import AccountCircleIcon from '../AccountCircleIcon'
 
 class AccountMenu extends Component {
@@ -47,15 +49,15 @@ class AccountMenu extends Component {
         <Popover
           open={this.state.open}
           anchorEl={this.state.anchorEl}
-          anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
-          targetOrigin={{horizontal: 'left', vertical: 'bottom'}}
+          anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+          targetOrigin={{ horizontal: 'left', vertical: 'bottom' }}
           onRequestClose={this.handleRequestClose}
         >
           <Menu>
             {(() => !isAdmin ? null : (
-              <MenuItem onTouchTap={this.handleSettingsTouchTap} primaryText="Admin Settings" />
+              <MenuItem onTouchTap={this.handleSettingsTouchTap} primaryText={t('Admin Settings')} />
             ))()}
-            <MenuItem onTouchTap={onLogout} primaryText={`Sign Out (${team.name})`} />
+            <MenuItem onTouchTap={onLogout} primaryText={t(`Sign Out (${team.name})`)} />
           </Menu>
         </Popover>
       </a>
@@ -71,6 +73,12 @@ AccountMenu.contextTypes = {
       name: PropTypes.string.isRequired,
     }).isRequired,
   }).isRequired,
+}
+
+AccountMenu.propTypes = {
+  className: PropTypes.string,
+  isAdmin: PropTypes.bool,
+  onLogout: PropTypes.func.isRequired,
 }
 
 export default AccountMenu

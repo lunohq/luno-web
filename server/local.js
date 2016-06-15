@@ -51,9 +51,7 @@ function startRelayServer() {
     proxy: {
       '/graphql': `http://localhost:${config.graphql.port}`
     },
-    stats: {
-      colors: true
-    },
+    stats: 'errors-only',
     hot: true,
     historyApiFallback: {
       verbose: true,
@@ -62,7 +60,7 @@ function startRelayServer() {
       rewrites: [
         { from: /\/login/, to: noop },
         { from: /\/oauth/, to: noop },
-        { from: /\/l\/admin/, to: noop},
+        { from: /\/l\/admin/, to: noop },
       ],
     },
   })

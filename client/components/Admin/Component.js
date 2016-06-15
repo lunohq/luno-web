@@ -41,10 +41,11 @@ class Admin extends Component {
 }
 
 Admin.propTypes = {
+  location: PropTypes.object.isRequired,
+  params: PropTypes.object.isRequired,
   viewer: PropTypes.shape({
     isAdmin: PropTypes.bool.isRequired,
   }).isRequired,
-  location: PropTypes.object.isRequired,
 }
 
 export default withStyles(s)(Admin)

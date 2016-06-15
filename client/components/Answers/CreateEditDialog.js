@@ -74,7 +74,7 @@ class CreateEditDialog extends Component {
     return (
       <Dialog
         actions={actions}
-        autoScrollBodyContent={true}
+        autoScrollBodyContent
         modal={false}
         open={open}
         onRequestClose={this.cancelForm}

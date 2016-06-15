@@ -45,9 +45,9 @@ const UsersTable = ({ users, onDelete, onEdit }) => {
 }
 
 UsersTable.propTypes = {
-  users: PropTypes.array.isRequired,
   onDelete: PropTypes.func.isRequired,
   onEdit: PropTypes.func.isRequired,
+  users: PropTypes.array.isRequired,
 }
 
 export default UsersTable

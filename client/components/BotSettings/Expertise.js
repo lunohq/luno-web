@@ -21,7 +21,6 @@ const validate = values => {
 }
 
 const Purpose = ({ handleSubmit, onBlur, onSave, ...props }) => {
-
   function handleBlur(event) {
     onBlur(event)
     handleSubmit(onSave)()
@@ -46,6 +45,14 @@ const Purpose = ({ handleSubmit, onBlur, onSave, ...props }) => {
   )
 }
 
+Purpose.propTypes = {
+  error: PropTypes.string,
+  handleSubmit: PropTypes.func.isRequired,
+  onBlur: PropTypes.func.isRequired,
+  onSave: PropTypes.func.isRequired,
+  touched: PropTypes.bool,
+}
+
 class Expertise extends Component {
 
   componentWillMount() {
@@ -56,7 +63,7 @@ class Expertise extends Component {
   }
 
   render() {
-    const { bot, onSave, handleSubmit } = this.props
+    const { onSave, handleSubmit } = this.props
     return (
       <div>
         <div>
@@ -84,6 +91,8 @@ class Expertise extends Component {
 
 Expertise.propTypes = {
   bot: PropTypes.object.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  initialize: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
 }
 

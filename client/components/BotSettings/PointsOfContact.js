@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react'
+import React, { PropTypes } from 'react'
 
 import t from 'u/gettext'
 import withStyles from 'u/withStyles'
@@ -30,8 +30,8 @@ const PointsOfContact = ({ bot, members, onSave }) => (
 
 PointsOfContact.propTypes = {
   bot: PropTypes.object.isRequired,
-  onSave: PropTypes.func.isRequired,
   members: PropTypes.array.isRequired,
+  onSave: PropTypes.func.isRequired,
 }
 
 export default withStyles(s)(PointsOfContact)

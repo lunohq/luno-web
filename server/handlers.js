@@ -3,32 +3,6 @@ import { es } from 'luno-core'
 import logger, { metadata } from './logger'
 import { uploadResult } from './actions/bot'
 
-export function handleSlashCommand(bot, message) {
-  let command
-  let text
-  const parts = message.text.split(' ')
-  if (parts) {
-    command = parts[0]
-    text = parts.slice(1).join(' ').trim()
-  }
-
-  if (command.startsWith('explain')) {
-    const verbose = command.includes('[v]')
-    const match = command.match(/\[id:([^\]]+)\]/)
-    if (match) {
-      return handleExplainId({ bot, message, text, id: match[1] })
-    } else {
-      return handleExplain({ bot, message, text, verbose })
-    }
-  } else if (command.startsWith('validate')) {
-    return handleValidate({ bot, message, text })
-  } else if (command.startsWith('analyze')) {
-    return handleAnalyze({ bot, message, text })
-  } else {
-    return handleDefault({ bot, message })
-  }
-}
-
 function formatResult({ _source: source, _score: score }) {
   return `*title:* ${source.title}, *score*: ${score}`
 }
@@ -139,4 +113,28 @@ export async function handleAnalyze({ bot, message, text }) {
 
 export function handleDefault({ bot, message }) {
   bot.replyPrivate(message, ':wave:')
+}
+
+export function handleSlashCommand(bot, message) {
+  let command
+  let text
+  const parts = message.text.split(' ')
+  if (parts) {
+    command = parts[0]
+    text = parts.slice(1).join(' ').trim()
+  }
+
+  if (command.startsWith('explain')) {
+    const verbose = command.includes('[v]')
+    const match = command.match(/\[id:([^\]]+)\]/)
+    if (match) {
+      return handleExplainId({ bot, message, text, id: match[1] })
+    }
+    return handleExplain({ bot, message, text, verbose })
+  } else if (command.startsWith('validate')) {
+    return handleValidate({ bot, message, text })
+  } else if (command.startsWith('analyze')) {
+    return handleAnalyze({ bot, message, text })
+  }
+  return handleDefault({ bot, message })
 }

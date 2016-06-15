@@ -1,5 +1,5 @@
 import { Server } from 'converse'
-import { db, converse, events } from 'luno-core'
+import { converse, events } from 'luno-core'
 
 import config from './config/environment'
 import logger from './logger'
@@ -32,7 +32,7 @@ async function publishCreateBot(team) {
   try {
     await events.publish.createBot(team.id)
   } catch (err) {
-    logger.error('Error publishing `create_bot`', { team: team, err })
+    logger.error('Error publishing `create_bot`', { team, err })
   }
   logger.info('Published `create_bot` notification')
 }

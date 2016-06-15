@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { PropTypes } from 'react'
 import { Field, reduxForm } from 'redux-form'
 import t from 'u/gettext'
 
@@ -28,6 +28,11 @@ const Title = (props) => (
   />
 )
 
+Title.propTypes = {
+  error: PropTypes.string,
+  touched: PropTypes.bool,
+}
+
 const Body = (props) => (
   <TextField
     errorText={props.touched ? props.error : undefined}
@@ -38,6 +43,11 @@ const Body = (props) => (
     {...props}
   />
 )
+
+Body.propTypes = {
+  error: PropTypes.string,
+  touched: PropTypes.bool,
+}
 
 const Form = () => (
   <div>

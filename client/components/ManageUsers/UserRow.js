@@ -42,9 +42,9 @@ const UserRow = ({ user, onDelete, onEdit }, { viewer: { id: userId } }) => {
 }
 
 UserRow.propTypes = {
-  user: PropTypes.object.isRequired,
   onDelete: PropTypes.func.isRequired,
   onEdit: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired,
 }
 
 UserRow.contextTypes = {

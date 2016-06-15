@@ -28,5 +28,7 @@ async function execute({ script }) {
 
 execute({ script: process.argv[2] }).catch((err) => {
   logger.error(err)
+  /* eslint-disable no-undef */
   os.exit(1)
+  /* eslint-enable no-undef */
 })
