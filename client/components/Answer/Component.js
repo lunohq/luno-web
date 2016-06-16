@@ -34,33 +34,44 @@ class Answer extends Component {
 
   state = {
     editing: false,
+    focused: false,
   }
 
   componentWillMount() {
-    const { answer } = this.props
-    if (answer) {
-      this.initialize(answer)
-    }
+    this.initialize(this.props)
   }
 
-  componentWillReceiveProps({ answer: nextAnswer }) {
+  componentWillReceiveProps(nextProps) {
     const { answer } = this.props
+    const { answer: nextAnswer } = nextProps
     const newAnswer = (answer && nextAnswer && answer.id !== nextAnswer.id) || (!answer && nextAnswer)
     if (newAnswer) {
-      this.initialize(nextAnswer)
+      this.initialize(nextProps)
     }
   }
 
   componentDidMount() {
-    if (!this.props.answer.id) {
-      this.refs.title.getRenderedComponent().focus()
+    if (this.props.focused) {
+      this.focus()
     }
   }
 
-  initialize(answer) {
-    const initialValues = { answer }
-    this.context.store.dispatch(initialize(FORM_NAME, initialValues))
-    this.setState({ editing: false })
+  componentDidUpdate() {
+    if (!this.state.focused && this.props.focused) {
+      this.setState({ focused: true }, () => this.focus())
+    }
+  }
+
+  initialize({ answer }) {
+    if (answer) {
+      const initialValues = { answer }
+      this.context.store.dispatch(initialize(FORM_NAME, initialValues))
+    }
+    this.setState({ editing: false, focused: false })
+  }
+
+  focus() {
+    this.refs.title.getRenderedComponent().focus()
   }
 
   handleEdit = () => {
@@ -69,8 +80,10 @@ class Answer extends Component {
   }
 
   handleCancel = () => {
+    const { onCancel, reset } = this.props
     this.setState({ editing: false })
-    this.props.reset()
+    reset()
+    onCancel()
   }
 
   handleDelete = () => this.props.onDelete(this.props.answer)
@@ -159,9 +172,11 @@ class Answer extends Component {
 }
 
 Answer.propTypes = {
+  answer: PropTypes.object,
+  focused: PropTypes.bool,
+  onCancel: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
   pristine: PropTypes.bool,
-  answer: PropTypes.object,
   reset: PropTypes.func.isRequired,
   valid: PropTypes.bool,
 }

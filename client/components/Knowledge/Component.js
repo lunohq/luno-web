@@ -32,10 +32,9 @@ class Knowledge extends Component {
 
   initialize(props) {
     const { params: { answerId } } = props
-    const answers = this.get()
+    const answers = this.getAnswerEdges()
     if (!answerId) {
-      const { node: answer } = answers[0]
-      this.context.router.push(`/knowledge/${answer.id}`)
+      this.routeToDefault()
       return
     }
 
@@ -58,33 +57,49 @@ class Knowledge extends Component {
     return bots.edges[0].node
   }
 
-  get() {
+  getAnswerEdges() {
     const { answers: { edges } } = this.getBot()
     return edges
   }
 
+  routeToDefault() {
+    const answerEdges = this.getAnswerEdges()
+    const { node: answer } = answerEdges[0]
+    this.context.router.replace(`/knowledge/${answer.id}`)
+  }
+
   handleNewAnswer = () => this.context.router.push('/knowledge/new')
+
   handleChangeAnswer = answer => {
     this.context.router.push(`/knowledge/${answer.id || 'new'}`)
   }
+
   handleDeleteAnswer = answer => { console.log('delete answer', answer) }
+
+  handleCancelAnswer = () => {
+    if (!this.state.activeAnswer.id) {
+      this.routeToDefault()
+    }
+  }
+
   displayDeleteAnswerDialog = answer => this.setState({
     deleteAnswerDialogOpen: true,
     answerToDelete: answer,
   })
+
   hideDeleteAnswerDialog = () => this.setState({
     deleteAnswerDialogOpen: false,
     answerToDelete: null,
   })
 
   render() {
-    let answerEdges = this.get()
+    let answerEdges = this.getAnswerEdges()
     const { params: { answerId } } = this.props
     if (answerId === 'new') {
       answerEdges = [{ node: this.state.activeAnswer }]
-      answerEdges.push(...this.get())
+      answerEdges.push(...this.getAnswerEdges())
     }
-
+    const focused = answerId === 'new'
     return (
       <DocumentTitle title={t('Knowledge')}>
         <div className={s.root}>
@@ -100,8 +115,10 @@ class Knowledge extends Component {
             </div>
             <div className={s.answer}>
               <Answer
-                onDelete={this.displayDeleteAnswerDialog}
                 answer={this.state.activeAnswer}
+                onCancel={this.handleCancelAnswer}
+                onDelete={this.displayDeleteAnswerDialog}
+                focused={focused}
               />
             </div>
           </section>

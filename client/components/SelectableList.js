@@ -11,8 +11,16 @@ function wrapState(ComposedComponent) {
     }
 
     componentWillMount() {
+      this.initialize(this.props)
+    }
+
+    componentWillReceiveProps(nextProps) {
+      this.initialize(nextProps)
+    }
+
+    initialize(props) {
       this.setState({
-        selectedIndex: this.props.defaultValue,
+        selectedIndex: props.defaultValue,
       })
     }
 

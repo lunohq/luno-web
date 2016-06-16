@@ -23,7 +23,6 @@ class AnswerList extends Component {
       const { node } = answerEdges[index]
       let title = node.title
       if (!node.id) {
-        debugger
         title = 'New Answer'
       }
       // include space so empty changed still gets 2 lines
@@ -43,7 +42,6 @@ class AnswerList extends Component {
       )
       answerRows.push(<Divider key={`${index}-divider`} />)
     }
-    debugger
 
     return (
       <Paper className={s.root}>
