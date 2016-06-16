@@ -16,9 +16,8 @@ class App extends Component {
   getChildContext() {
     return {
       insertCss: (...styles) => {
-        for (const style of styles) {
-          style._insertCss()
-        }
+        const removeCss = styles.map(style => style._insertCss())
+        return () => removeCss.forEach(f => f())
       },
       viewer: this.props.viewer,
     }
