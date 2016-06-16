@@ -1,5 +1,6 @@
 .root {
     height: 100%;
+    overflow: scroll;
 }
 .header {
     composes: row between-xs middle-xs from 's/vendor/flexboxgrid.css';
