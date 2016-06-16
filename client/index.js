@@ -12,7 +12,9 @@ Relay.injectNetworkLayer(
   new Relay.DefaultNetworkLayer('/graphql', { credentials: 'same-origin' }),
 )
 /* eslint-disable no-undef */
-Raven.config(__SENTRY_DSN__).install()
+if (__ENABLE_SENTRY__) {
+  Raven.config(__SENTRY_DSN__).install()
+}
 /* eslint-enable no-undef */
 
 const store = configureStore()
