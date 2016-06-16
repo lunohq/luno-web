@@ -114,7 +114,7 @@ class Answer extends Component {
         <FlatButton
           disabled={(!answer && pristine) || !valid}
           key='create'
-          label={answer ? t('Update') : t('Create')}
+          label={answer.id ? t('Update') : t('Create')}
           onTouchTap={handleSubmit(this.handleSave)}
           primary
         />,
