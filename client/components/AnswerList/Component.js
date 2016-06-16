@@ -50,6 +50,7 @@ class AnswerList extends Component {
             Lunobot
             <div>
               <FlatButton
+                disabled={!!!answer.id}
                 label={t('Add Answer')}
                 onTouchTap={this.props.onNew}
                 primary
