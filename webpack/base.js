@@ -31,6 +31,9 @@ module.exports = (options) => ({
     }, {
       test: /\.(png|jpg|jpeg|ico|gif|svg|woff|woff2)$/,
       loader: 'url-loader?limit=10000&name=assets/[name].[hash].[ext]'
+    }, {
+      test: /\.json$/,
+      loaders: ['json-loader']
     }],
   },
   plugins: options.plugins.concat([

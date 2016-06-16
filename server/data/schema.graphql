@@ -2,6 +2,7 @@ type Answer implements Node {
   id: ID!
   title: String
   body: String
+  changed: String
 }
 
 type AnswerConnection {

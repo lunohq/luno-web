@@ -9,6 +9,7 @@ import Subheader from 'material-ui/Subheader'
 
 import t from 'u/gettext'
 import withStyles from 'u/withStyles'
+import moment from 'u/moment'
 import colors from 's/colors'
 
 import TextField from 'c/ReduxForm/TextField'
@@ -102,10 +103,11 @@ class Reply extends Component {
       ]
     }
 
+    const changed = moment(reply.changed).format('MMM Do, YYYY')
     return (
       <Paper className={s.root}>
         <Subheader className={s.header}>
-          Last updated on
+          {t(`Last updated on ${changed}`)}
           <div>
             {actionButtons}
           </div>

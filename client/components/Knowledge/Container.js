@@ -25,6 +25,7 @@ export default Relay.createContainer(Component, {
                     id
                     title
                     body
+                    changed
                   }
                 }
               }

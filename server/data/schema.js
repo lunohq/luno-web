@@ -325,6 +325,10 @@ const GraphQLAnswer = new GraphQLObjectType({
       type: GraphQLString,
       description: 'Body of the Answer',
     },
+    changed: {
+      type: GraphQLString,
+      description: 'Date the Answer was changed',
+    },
   }),
   interfaces: [nodeInterface],
 })

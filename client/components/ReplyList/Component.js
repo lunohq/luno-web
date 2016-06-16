@@ -8,6 +8,7 @@ import FlatButton from 'material-ui/FlatButton'
 
 import t from 'u/gettext'
 import withStyles from 'u/withStyles'
+import moment from 'u/moment'
 
 import SelectableList from 'c/SelectableList'
 
@@ -20,12 +21,13 @@ class ReplyList extends Component {
     const replyRows = []
     for (const index in replies) {
       const { node } = replies[index]
+      const changed = moment(node.changed).format('MMM Do, YYYY')
       replyRows.push(
         <ListItem
           key={index}
           onTouchTap={() => this.props.onChange(node)}
           primaryText={node.title}
-          secondaryText={t(`Last updated on ${node.changed}`)}
+          secondaryText={t(`Last updated on ${changed}`)}
           value={node.id}
         />
       )
