@@ -41,6 +41,12 @@ class Answer extends Component {
     this.initialize(this.props)
   }
 
+  componentDidMount() {
+    if (this.props.focused) {
+      this.focus()
+    }
+  }
+
   componentWillReceiveProps(nextProps) {
     const { answer } = this.props
     const { answer: nextAnswer } = nextProps
@@ -51,17 +57,14 @@ class Answer extends Component {
     if (newAnswer) {
       this.initialize(nextProps)
     }
-  }
-
-  componentDidMount() {
-    if (this.props.focused) {
-      this.focus()
+    if (!this.state.focused && this.props.focused) {
+      this.setState({ focused: true })
     }
   }
 
   componentDidUpdate() {
     if (!this.state.focused && this.props.focused) {
-      this.setState({ focused: true }, () => this.focus())
+      this.focus()
     }
   }
 
@@ -182,6 +185,7 @@ class Answer extends Component {
 Answer.propTypes = {
   answer: PropTypes.object,
   focused: PropTypes.bool,
+  handleSubmit: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,

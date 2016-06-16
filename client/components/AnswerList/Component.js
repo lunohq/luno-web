@@ -65,8 +65,6 @@ class AnswerList extends Component {
 }
 
 AnswerList.propTypes = {
-  onNew: PropTypes.func.isRequired,
-  onChange: PropTypes.func.isRequired,
   answer: PropTypes.shape({
     id: PropTypes.string,
   }).isRequired,
@@ -77,6 +75,8 @@ AnswerList.propTypes = {
       changed: PropTypes.string,
     }).isRequired,
   })).isRequired,
+  onNew: PropTypes.func.isRequired,
+  onChange: PropTypes.func.isRequired,
 }
 
 export default withStyles(s)(AnswerList)

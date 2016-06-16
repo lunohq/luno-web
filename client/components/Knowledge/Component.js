@@ -55,17 +55,17 @@ class Knowledge extends Component {
     this.setState({ activeAnswer })
   }
 
-  getBot(props=this.props) {
+  getBot(props = this.props) {
     const { viewer: { bots } } = props
     return bots.edges[0].node
   }
 
-  getAnswerEdges(props=this.props) {
+  getAnswerEdges(props = this.props) {
     const { answers: { edges } } = this.getBot(props)
     return edges
   }
 
-  routeToDefault({ props=this.props, ignoreId }) {
+  routeToDefault({ props = this.props, ignoreId }) {
     const answerEdges = this.getAnswerEdges(props)
     let answerId = 'new'
     for (const { node: answer } of answerEdges) {
