@@ -5,10 +5,10 @@ import t from 'u/gettext'
 import CommonDeleteDialog from 'c/DeleteDialog'
 
 const DeleteDialog = ({ answer, ...other }) => {
-  const answerTitle = answer ? answer.title : t('this answer')
+  const answerTitle = answer ? answer.title : t('this reply')
   return (
     <CommonDeleteDialog
-      title={t('Confirm delete answer?')}
+      title={t('Confirm delete reply?')}
       modal={false}
       {...other}
     >

@@ -51,7 +51,7 @@ class AnswerList extends Component {
             <div>
               <FlatButton
                 disabled={!!!answer.id}
-                label={t('Add Answer')}
+                label={t('Add Reply')}
                 onTouchTap={this.props.onNew}
                 primary
               />
