@@ -16,13 +16,13 @@ import TextField from 'c/ReduxForm/TextField'
 
 import s from './style.scss'
 
-export const FORM_NAME = 'form/reply'
+export const FORM_NAME = 'form/answer'
 
 const validate = values => {
   const errors = {}
   const requiredFields = ['title', 'body']
   requiredFields.forEach(field => {
-    if (values.reply && !values.reply[field]) {
+    if (values.answer && !values.answer[field]) {
       errors[field] = 'Required'
       errors._error = true
     }
@@ -30,29 +30,35 @@ const validate = values => {
   return errors
 }
 
-class Reply extends Component {
+class Answer extends Component {
 
   state = {
     editing: false,
   }
 
   componentWillMount() {
-    const { reply } = this.props
-    if (reply) {
-      this.initialize(reply)
+    const { answer } = this.props
+    if (answer) {
+      this.initialize(answer)
     }
   }
 
-  componentWillReceiveProps({ reply: nextReply }) {
-    const { reply } = this.props
-    const newReply = (reply && nextReply && reply.id !== nextReply.id) || (!reply && nextReply)
-    if (newReply) {
-      this.initialize(nextReply)
+  componentWillReceiveProps({ answer: nextAnswer }) {
+    const { answer } = this.props
+    const newAnswer = (answer && nextAnswer && answer.id !== nextAnswer.id) || (!answer && nextAnswer)
+    if (newAnswer) {
+      this.initialize(nextAnswer)
     }
   }
 
-  initialize(reply) {
-    const initialValues = { reply }
+  componentDidMount() {
+    if (!this.props.answer.id) {
+      this.refs.title.getRenderedComponent().focus()
+    }
+  }
+
+  initialize(answer) {
+    const initialValues = { answer }
     this.context.store.dispatch(initialize(FORM_NAME, initialValues))
     this.setState({ editing: false })
   }
@@ -67,12 +73,12 @@ class Reply extends Component {
     this.props.reset()
   }
 
-  handleDelete = () => this.props.onDelete(this.props.reply)
+  handleDelete = () => this.props.onDelete(this.props.answer)
   handleSave = () => this.setState({ editing: false })
   handleFocus = () => this.setState({ editing: true })
 
   render() {
-    const { pristine, valid, reply } = this.props
+    const { pristine, valid, answer } = this.props
     const { editing } = this.state
 
     let actionButtons
@@ -85,9 +91,9 @@ class Reply extends Component {
           secondary
         />,
         <FlatButton
-          disabled={(!reply && pristine) || !valid}
+          disabled={(!answer && pristine) || !valid}
           key='create'
-          label={reply ? t('Update') : t('Create')}
+          label={answer ? t('Update') : t('Create')}
           onTouchTap={this.handleSave}
           primary
         />,
@@ -103,11 +109,18 @@ class Reply extends Component {
       ]
     }
 
-    const changed = moment(reply.changed).format('MMM Do, YYYY')
+    let changed
+    if (answer.changed) {
+      changed = moment(answer.changed).format('MMM Do, YYYY')
+      changed = t(`Last updated on ${changed}`)
+    }
+
     return (
       <Paper className={s.root}>
         <Subheader className={s.header}>
-          {t(`Last updated on ${changed}`)}
+          <div>
+            {changed}
+          </div>
           <div>
             {actionButtons}
           </div>
@@ -121,7 +134,7 @@ class Reply extends Component {
             fullWidth
             hintText={t('Add a title')}
             multiLine
-            name='reply.title'
+            name='answer.title'
             onFocus={this.handleFocus}
             ref='title'
             withRef
@@ -129,12 +142,12 @@ class Reply extends Component {
           <Field
             autoComplete='off'
             component={TextField}
-            floatingLabelText={t('Reply')}
+            floatingLabelText={t('Answer')}
             floatingLabelFixed
             fullWidth
-            hintText={t('Add a reply')}
+            hintText={t('Add a answer')}
             multiLine
-            name='reply.body'
+            name='answer.body'
             onFocus={this.handleFocus}
             rows={2}
           />
@@ -145,19 +158,19 @@ class Reply extends Component {
 
 }
 
-Reply.propTypes = {
+Answer.propTypes = {
   onDelete: PropTypes.func.isRequired,
   pristine: PropTypes.bool,
-  reply: PropTypes.object,
+  answer: PropTypes.object,
   reset: PropTypes.func.isRequired,
   valid: PropTypes.bool,
 }
 
-Reply.contextTypes = {
+Answer.contextTypes = {
   store: PropTypes.object.isRequired,
 }
 
 export default withStyles(s)(reduxForm({
   form: FORM_NAME,
   validate,
-})(Reply))
+})(Answer))

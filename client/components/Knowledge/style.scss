@@ -12,11 +12,11 @@
     height: 100%;
 }
 
-.replyList {
+.answerList {
     composes: col-xs-4 from 's/vendor/flexboxgrid.css';
 }
 
-.reply {
+.answer {
     composes: col-xs from 's/vendor/flexboxgrid.css';
     padding-left: 10px;
 }

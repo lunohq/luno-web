@@ -4,8 +4,8 @@ import t from 'u/gettext'
 import withStyles from 'u/withStyles'
 
 import DocumentTitle from 'c/DocumentTitle'
-import ReplyList from 'c/ReplyList/Component'
-import Reply from 'c/Reply/Component'
+import AnswerList from 'c/AnswerList/Component'
+import Answer from 'c/Answer/Component'
 
 import DeleteDialog from './DeleteDialog'
 import Navigation from './Navigation'
@@ -15,9 +15,9 @@ import s from './style.scss'
 class Knowledge extends Component {
 
   state = {
-    activeReply: null,
-    deleteReplyDialogOpen: false,
-    replyToDelete: null,
+    activeAnswer: {},
+    deleteAnswerDialogOpen: false,
+    answerToDelete: null,
   }
 
   componentWillMount() {
@@ -25,26 +25,32 @@ class Knowledge extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { params: { replyId } } = this.props
-    const { params: { replyId: nextReplyId } } = nextProps
-    if (replyId !== nextReplyId) this.initialize(nextProps)
+    const { params: { answerId } } = this.props
+    const { params: { answerId: nextAnswerId } } = nextProps
+    if (answerId !== nextAnswerId) this.initialize(nextProps)
   }
 
   initialize(props) {
-    const { params: { replyId } } = props
-    const answers = this.getAnswers()
-    if (!replyId) {
-      const { node: reply } = answers[0]
-      this.context.router.push(`/knowledge/${reply.id}`)
+    const { params: { answerId } } = props
+    const answers = this.get()
+    if (!answerId) {
+      const { node: answer } = answers[0]
+      this.context.router.push(`/knowledge/${answer.id}`)
       return
     }
 
-    for (const { node: reply } of answers) {
-      if (reply.id === replyId) {
-        this.setState({ activeReply: reply })
-        break
+    let activeAnswer
+    if (answerId === 'new') {
+      activeAnswer = {}
+    } else {
+      for (const { node: answer } of answers) {
+        if (answer.id === answerId) {
+          activeAnswer = answer
+          break
+        }
       }
     }
+    this.setState({ activeAnswer })
   }
 
   getBot() {
@@ -52,51 +58,59 @@ class Knowledge extends Component {
     return bots.edges[0].node
   }
 
-  getAnswers() {
-    const { answers: { edges: answers } } = this.getBot()
-    return answers
+  get() {
+    const { answers: { edges } } = this.getBot()
+    return edges
   }
 
-  handleChangeReply = reply => {
-    this.context.router.push(`/knowledge/${reply.id}`)
+  handleNewAnswer = () => this.context.router.push('/knowledge/new')
+  handleChangeAnswer = answer => {
+    this.context.router.push(`/knowledge/${answer.id || 'new'}`)
   }
-  handleDeleteReply = reply => { console.log('delete reply', reply) }
-  displayDeleteReplyDialog = reply => this.setState({
-    deleteReplyDialogOpen: true,
-    replyToDelete: reply,
+  handleDeleteAnswer = answer => { console.log('delete answer', answer) }
+  displayDeleteAnswerDialog = answer => this.setState({
+    deleteAnswerDialogOpen: true,
+    answerToDelete: answer,
   })
-  hideDeleteReplyDialog = () => this.setState({
-    deleteReplyDialogOpen: false,
-    replyToDelete: null,
+  hideDeleteAnswerDialog = () => this.setState({
+    deleteAnswerDialogOpen: false,
+    answerToDelete: null,
   })
 
   render() {
-    const { params: { replyId } } = this.props
+    let answerEdges = this.get()
+    const { params: { answerId } } = this.props
+    if (answerId === 'new') {
+      answerEdges = [{ node: this.state.activeAnswer }]
+      answerEdges.push(...this.get())
+    }
+
     return (
       <DocumentTitle title={t('Knowledge')}>
         <div className={s.root}>
           <Navigation />
           <section className={s.content}>
-            <div className={s.replyList}>
-              <ReplyList
-                defaultValue={replyId}
-                onChange={this.handleChangeReply}
-                replies={this.getAnswers()}
+            <div className={s.answerList}>
+              <AnswerList
+                onChange={this.handleChangeAnswer}
+                onNew={this.handleNewAnswer}
+                answerEdges={answerEdges}
+                answer={this.state.activeAnswer}
               />
             </div>
-            <div className={s.reply}>
-              <Reply
-                onDelete={this.displayDeleteReplyDialog}
-                reply={this.state.activeReply}
+            <div className={s.answer}>
+              <Answer
+                onDelete={this.displayDeleteAnswerDialog}
+                answer={this.state.activeAnswer}
               />
             </div>
           </section>
-          {(() => !this.state.replyToDelete ? null : (
+          {(() => !this.state.answerToDelete ? null : (
             <DeleteDialog
-              open={this.state.deleteReplyDialogOpen}
-              reply={this.state.replyToDelete}
-              onCancel={this.hideDeleteReplyDialog}
-              onConfirm={this.handleDeleteReply}
+              open={this.state.deleteAnswerDialogOpen}
+              answer={this.state.answerToDelete}
+              onCancel={this.hideDeleteAnswerDialog}
+              onConfirm={this.handleDeleteAnswer}
             />
           ))()}
         </div>

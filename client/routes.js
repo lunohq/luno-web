@@ -23,7 +23,7 @@ export default (
       render={({ props }) => props ? <KnowledgeContainer {...props} /> : <Loading />}
     />
     <Route
-      path='knowledge/:replyId'
+      path='knowledge/:answerId'
       component={KnowledgeContainer}
       queries={ViewerQueries}
       render={({ props }) => props ? <KnowledgeContainer {...props} /> : <Loading />}
