@@ -1,0 +1,17 @@
+.root {
+    height: 100%;
+}
+
+.header {
+    composes: row between-xs middle-xs from 's/vendor/flexboxgrid.css';
+    margin-left: 0;
+    margin-right: 0;
+    padding-right: 6px;
+}
+
+.form {
+    composes: row col-xs from 's/vendor/flexboxgrid.css';
+    margin-left: 0;
+    margin-right: 0;
+    padding: 0px 16px;
+}

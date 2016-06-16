@@ -1,51 +1,14 @@
-import React, { Component, PropTypes } from 'react'
-import { Link } from 'react-router'
+import React from 'react'
 import Drawer from 'material-ui/Drawer'
-import { List, ListItem, MakeSelectable } from 'material-ui/List'
-import Subheader from 'material-ui/Subheader'
+import { ListItem } from 'material-ui/List'
 
 import t from 'u/gettext'
 
 import { NAV_WIDTH } from 'c/AuthenticatedLanding/Navigation'
-
-let SelectableList = MakeSelectable(List)
-
-function wrapState(ComposedComponent) {
-  return class SelectableList extends Component {
-    static propTypes = {
-      children: PropTypes.node.isRequired,
-      defaultValue: PropTypes.string.isRequired,
-    }
-
-    componentWillMount() {
-      this.setState({
-        selectedIndex: this.props.defaultValue,
-      })
-    }
-
-    handleRequestChange = (event, index) => {
-      this.setState({
-        selectedIndex: index,
-      })
-    }
-
-    render() {
-      return (
-        <ComposedComponent
-          value={this.state.selectedIndex}
-          onChange={this.handleRequestChange}
-        >
-          {this.props.children}
-        </ComposedComponent>
-      )
-    }
-  }
-}
-
-SelectableList = wrapState(SelectableList)
+import SelectableList from 'c/SelectableList'
 
 const Navigation = () => (
-  <Drawer containerStyle={{left: NAV_WIDTH}}>
+  <Drawer containerStyle={{ left: NAV_WIDTH }}>
     <SelectableList defaultValue={'0'}>
       <ListItem primaryText={t('Lunobot')} value={'0'} />
     </SelectableList>

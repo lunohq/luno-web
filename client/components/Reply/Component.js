@@ -1,10 +1,9 @@
 import React, { Component, PropTypes } from 'react'
-import { reduxForm, Field, destroy, initialize } from 'redux-form'
+import { reduxForm, Field, initialize } from 'redux-form'
 
 import IconButton from 'material-ui/IconButton'
 import FlatButton from 'material-ui/FlatButton'
 import FontIcon from 'material-ui/FontIcon'
-import MaterialTextField from 'material-ui/TextField'
 import Paper from 'material-ui/Paper'
 import Subheader from 'material-ui/Subheader'
 
@@ -12,7 +11,7 @@ import t from 'u/gettext'
 import withStyles from 'u/withStyles'
 import colors from 's/colors'
 
-import DeleteDialog from './DeleteDialog'
+import TextField from 'c/ReduxForm/TextField'
 
 import s from './style.scss'
 
@@ -30,68 +29,49 @@ const validate = values => {
   return errors
 }
 
-class TextField extends Component {
-
-  focus = () => {
-    this.refs.field.focus()
-  }
-
-  render() {
-    return <MaterialTextField ref='field' {...this.props} />
-  }
-
-}
-
-class ViewEditReply extends Component {
+class Reply extends Component {
 
   state = {
     editing: false,
-    showDeleteDialog: false,
   }
 
   componentWillMount() {
-    if (this.props.reply) {
-      this.initialize(this.props.reply)
+    const { reply } = this.props
+    if (reply) {
+      this.initialize(reply)
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    const newReply = (
-      (this.props.reply && nextProps.reply && this.props.reply.id !== nextProps.reply.id) ||
-      (!this.props.reply && nextProps.reply)
-    )
+  componentWillReceiveProps({ reply: nextReply }) {
+    const { reply } = this.props
+    const newReply = (reply && nextReply && reply.id !== nextReply.id) || (!reply && nextReply)
     if (newReply) {
-      this.initialize(nextProps.reply)
+      this.initialize(nextReply)
     }
   }
 
   initialize(reply) {
-    const initialValues = {reply}
+    const initialValues = { reply }
     this.context.store.dispatch(initialize(FORM_NAME, initialValues))
-    this.setState({editing: false})
+    this.setState({ editing: false })
   }
 
   handleEdit = () => {
     this.refs.title.getRenderedComponent().focus()
-    this.setState({editing: true})
+    this.setState({ editing: true })
   }
 
   handleCancel = () => {
-    this.setState({editing: false})
+    this.setState({ editing: false })
     this.props.reset()
   }
 
-  handleSave = () => this.setState({editing: false})
-  handleFocus = () => this.setState({editing: true})
-
-  showDeleteDialog = () => this.setState({ showDeleteDialog: true })
-  hideDeleteDialog = () => this.setState({ showDeleteDialog: false })
-  handleDeleteReply = () => {
-    this.hideDeleteDialog()
-  }
+  handleDelete = () => this.props.onDelete(this.props.reply)
+  handleSave = () => this.setState({ editing: false })
+  handleFocus = () => this.setState({ editing: true })
 
   render() {
-    const { pristine, valid, initialValues } = this.props
+    const { pristine, valid, reply } = this.props
     const { editing } = this.state
 
     let actionButtons
@@ -104,9 +84,9 @@ class ViewEditReply extends Component {
           secondary
         />,
         <FlatButton
-          disabled={(!initialValues && pristine) || !valid}
+          disabled={(!reply && pristine) || !valid}
           key='create'
-          label={initialValues ? t('Update') : t('Create')}
+          label={reply ? t('Update') : t('Create')}
           onTouchTap={this.handleSave}
           primary
         />,
@@ -116,51 +96,45 @@ class ViewEditReply extends Component {
         <IconButton key='edit' onTouchTap={this.handleEdit}>
           <FontIcon className='material-icons' color={colors.darkGrey}>edit</FontIcon>
         </IconButton>,
-        <IconButton key='delete' onTouchTap={this.showDeleteDialog}>
+        <IconButton key='delete' onTouchTap={this.handleDelete}>
           <FontIcon className='material-icons' color={colors.darkGrey}>delete</FontIcon>
         </IconButton>,
       ]
     }
 
     return (
-      <Paper className={s.viewReplyPane}>
+      <Paper className={s.root}>
         <Subheader className={s.header}>
           Last updated on
           <div>
             {actionButtons}
           </div>
         </Subheader>
-
         <section className={s.form}>
           <Field
             autoComplete='off'
             component={TextField}
-            floatingLabelFixed={true}
+            floatingLabelFixed
             floatingLabelText={t('Title')}
-            fullWidth={true}
+            fullWidth
             hintText={t('Add a title')}
-            multiLine={true}
+            multiLine
             name='reply.title'
             onFocus={this.handleFocus}
             ref='title'
-            withRef={true}
+            withRef
           />
           <Field
             autoComplete='off'
             component={TextField}
             floatingLabelText={t('Reply')}
-            floatingLabelFixed={true}
-            fullWidth={true}
+            floatingLabelFixed
+            fullWidth
             hintText={t('Add a reply')}
-            multiLine={true}
+            multiLine
             name='reply.body'
             onFocus={this.handleFocus}
             rows={2}
-          />
-          <DeleteDialog
-            onCancel={this.hideDeleteDialog}
-            onConfirm={this.handleDeleteReply}
-            open={this.state.showDeleteDialog}
           />
         </section>
       </Paper>
@@ -169,15 +143,19 @@ class ViewEditReply extends Component {
 
 }
 
-ViewEditReply.propTypes = {
+Reply.propTypes = {
+  onDelete: PropTypes.func.isRequired,
+  pristine: PropTypes.bool,
   reply: PropTypes.object,
+  reset: PropTypes.func.isRequired,
+  valid: PropTypes.bool,
 }
 
-ViewEditReply.contextTypes = {
+Reply.contextTypes = {
   store: PropTypes.object.isRequired,
 }
 
 export default withStyles(s)(reduxForm({
   form: FORM_NAME,
   validate,
-})(ViewEditReply))
+})(Reply))

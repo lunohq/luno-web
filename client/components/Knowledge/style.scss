@@ -1,0 +1,22 @@
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+.root {
+    height: 100%;
+}
+
+.content {
+    composes: row from 's/vendor/flexboxgrid.css';
+    margin-top: 10px;
+    // width of Knowledge topic drawer
+    margin-left: 256px;
+    height: 100%;
+}
+
+.replyList {
+    composes: col-xs-4 from 's/vendor/flexboxgrid.css';
+}
+
+.reply {
+    composes: col-xs from 's/vendor/flexboxgrid.css';
+    padding-left: 10px;
+}
