@@ -16,7 +16,7 @@ import s from './style.scss'
 class ReplyList extends Component {
 
   render() {
-    const { replies } = this.props
+    const { replies, defaultValue } = this.props
     const replyRows = []
     for (const index in replies) {
       const { node } = replies[index]
@@ -26,15 +26,20 @@ class ReplyList extends Component {
           onTouchTap={() => this.props.onChange(node)}
           primaryText={node.title}
           secondaryText={t(`Last updated on ${node.changed}`)}
-          value={`${index}`}
+          value={node.id}
         />
       )
       replyRows.push(<Divider key={`${index}-divider`} />)
     }
 
+    let defaultReplyId = defaultValue
+    if (!defaultValue) {
+      defaultReplyId = replies[0].node.id
+    }
+
     return (
       <Paper className={s.root}>
-        <SelectableList defaultValue='0'>
+        <SelectableList defaultValue={defaultReplyId}>
           <Subheader className={s.header}>
             Lunobot
             <div>
@@ -49,9 +54,11 @@ class ReplyList extends Component {
 }
 
 ReplyList.propTypes = {
+  defaultValue: PropTypes.string,
   onChange: PropTypes.func.isRequired,
   replies: PropTypes.arrayOf(PropTypes.shape({
     node: PropTypes.shape({
+      id: PropTypes.string.isRequired,
       title: PropTypes.string.isRequired,
       changed: PropTypes.string.isRequired,
     }).isRequired,

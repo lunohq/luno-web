@@ -21,9 +21,30 @@ class Knowledge extends Component {
   }
 
   componentWillMount() {
+    this.initialize(this.props)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { params: { replyId } } = this.props
+    const { params: { replyId: nextReplyId } } = nextProps
+    if (replyId !== nextReplyId) this.initialize(nextProps)
+  }
+
+  initialize(props) {
+    const { params: { replyId } } = props
     const answers = this.getAnswers()
-    const { node: reply } = answers[0]
-    this.setState({ activeReply: reply })
+    if (!replyId) {
+      const { node: reply } = answers[0]
+      this.context.router.push(`/knowledge/${reply.id}`)
+      return
+    }
+
+    for (const { node: reply } of answers) {
+      if (reply.id === replyId) {
+        this.setState({ activeReply: reply })
+        break
+      }
+    }
   }
 
   getBot() {
@@ -36,7 +57,9 @@ class Knowledge extends Component {
     return answers
   }
 
-  handleChangeReply = reply => this.setState({ activeReply: reply })
+  handleChangeReply = reply => {
+    this.context.router.push(`/knowledge/${reply.id}`)
+  }
   handleDeleteReply = reply => { console.log('delete reply', reply) }
   displayDeleteReplyDialog = reply => this.setState({
     deleteReplyDialogOpen: true,
@@ -48,6 +71,7 @@ class Knowledge extends Component {
   })
 
   render() {
+    const { params: { replyId } } = this.props
     return (
       <DocumentTitle title={t('Knowledge')}>
         <div className={s.root}>
@@ -55,6 +79,7 @@ class Knowledge extends Component {
           <section className={s.content}>
             <div className={s.replyList}>
               <ReplyList
+                defaultValue={replyId}
                 onChange={this.handleChangeReply}
                 replies={this.getAnswers()}
               />
@@ -82,7 +107,14 @@ class Knowledge extends Component {
 }
 
 Knowledge.propTypes = {
+  params: PropTypes.object.isRequired,
   viewer: PropTypes.object.isRequired,
+}
+
+Knowledge.contextTypes = {
+  router: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
 }
 
 export default withStyles(s)(Knowledge)
