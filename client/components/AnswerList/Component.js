@@ -75,8 +75,8 @@ AnswerList.propTypes = {
       changed: PropTypes.string,
     }).isRequired,
   })).isRequired,
-  onNew: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
+  onNew: PropTypes.func.isRequired,
 }
 
 export default withStyles(s)(AnswerList)
