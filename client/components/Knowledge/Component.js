@@ -41,19 +41,15 @@ class Knowledge extends Component {
     const { params: { answerId } } = props
     const answers = this.getAnswerEdges(props)
     if (!answerId) {
-      this.routeToDefault(props)
+      this.routeToDefault({ props })
       return
     }
 
-    let activeAnswer
-    if (answerId === 'new') {
-      activeAnswer = {}
-    } else {
-      for (const { node: answer } of answers) {
-        if (answer.id === answerId) {
-          activeAnswer = answer
-          break
-        }
+    let activeAnswer = {}
+    for (const { node: answer } of answers) {
+      if (answer.id === answerId) {
+        activeAnswer = answer
+        break
       }
     }
     this.setState({ activeAnswer })
@@ -69,10 +65,16 @@ class Knowledge extends Component {
     return edges
   }
 
-  routeToDefault(props=this.props) {
+  routeToDefault({ props=this.props, ignoreId }) {
     const answerEdges = this.getAnswerEdges(props)
-    const { node: answer } = answerEdges[0]
-    this.context.router.replace(`/knowledge/${answer.id}`)
+    let answerId = 'new'
+    for (const { node: answer } of answerEdges) {
+      if (answer.id !== ignoreId) {
+        answerId = answer.id
+        break
+      }
+    }
+    this.context.router.replace(`/knowledge/${answerId}`)
   }
 
   handleNewAnswer = () => this.context.router.push('/knowledge/new')
@@ -81,7 +83,15 @@ class Knowledge extends Component {
     this.context.router.push(`/knowledge/${answer.id || 'new'}`)
   }
 
-  handleDeleteAnswer = answer => { console.log('delete answer', answer) }
+  handleDeleteAnswer = () => {
+    const { answerToDelete: answer } = this.state
+    if (answer) {
+      const bot = this.getBot()
+      Relay.Store.commitUpdate(new DeleteAnswerMutation({ answer, bot }))
+      this.routeToDefault({ ignoreId: answer.id })
+    }
+    this.hideDeleteAnswerDialog()
+  }
 
   handleCancelAnswer = () => {
     if (!this.state.activeAnswer.id) {
