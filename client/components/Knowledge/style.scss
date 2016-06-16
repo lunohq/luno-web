@@ -6,7 +6,7 @@
 
 .content {
     composes: row from 's/vendor/flexboxgrid.css';
-    margin-top: 10px;
+    padding: 10px 0;
     // width of Knowledge topic drawer
     margin-left: 256px;
     height: 100%;
