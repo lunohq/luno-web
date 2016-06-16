@@ -25,7 +25,7 @@ const Navigation = ({ isAdmin, onLogout }) => {
     >
       <div className={s.container}>
         <div className={s.topButtons}>
-          <Link className={isSelected('/knowledge')} to='/knowledge'>
+          <Link className={isSelected('/knowledge', true)} to='/knowledge'>
             <QuestionAnswerIcon />
           </Link>
         </div>
