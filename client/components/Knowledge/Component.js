@@ -1,7 +1,12 @@
 import React, { Component, PropTypes } from 'react'
+import Relay from 'react-relay'
 
 import t from 'u/gettext'
 import withStyles from 'u/withStyles'
+
+import CreateAnswerMutation from 'm/CreateAnswerMutation'
+import DeleteAnswerMutation from 'm/DeleteAnswerMutation'
+import UpdateAnswerMutation from 'm/UpdateAnswerMutation'
 
 import DocumentTitle from 'c/DocumentTitle'
 import AnswerList from 'c/AnswerList/Component'
@@ -27,14 +32,16 @@ class Knowledge extends Component {
   componentWillReceiveProps(nextProps) {
     const { params: { answerId } } = this.props
     const { params: { answerId: nextAnswerId } } = nextProps
-    if (answerId !== nextAnswerId) this.initialize(nextProps)
+    if (answerId !== nextAnswerId || this.getAnswerEdges(this.props) !== this.getAnswerEdges(nextProps)) {
+      this.initialize(nextProps)
+    }
   }
 
   initialize(props) {
     const { params: { answerId } } = props
-    const answers = this.getAnswerEdges()
+    const answers = this.getAnswerEdges(props)
     if (!answerId) {
-      this.routeToDefault()
+      this.routeToDefault(props)
       return
     }
 
@@ -52,18 +59,18 @@ class Knowledge extends Component {
     this.setState({ activeAnswer })
   }
 
-  getBot() {
-    const { viewer: { bots } } = this.props
+  getBot(props=this.props) {
+    const { viewer: { bots } } = props
     return bots.edges[0].node
   }
 
-  getAnswerEdges() {
-    const { answers: { edges } } = this.getBot()
+  getAnswerEdges(props=this.props) {
+    const { answers: { edges } } = this.getBot(props)
     return edges
   }
 
-  routeToDefault() {
-    const answerEdges = this.getAnswerEdges()
+  routeToDefault(props=this.props) {
+    const answerEdges = this.getAnswerEdges(props)
     const { node: answer } = answerEdges[0]
     this.context.router.replace(`/knowledge/${answer.id}`)
   }
@@ -80,6 +87,18 @@ class Knowledge extends Component {
     if (!this.state.activeAnswer.id) {
       this.routeToDefault()
     }
+  }
+
+  handleSubmitAnswer = ({ answer }) => {
+    let mutation
+    if (!answer.id) {
+      const bot = this.getBot()
+      mutation = new CreateAnswerMutation({ bot, ...answer })
+    } else {
+      mutation = new UpdateAnswerMutation({ answer, ...answer })
+    }
+
+    Relay.Store.commitUpdate(mutation)
   }
 
   displayDeleteAnswerDialog = answer => this.setState({
@@ -118,6 +137,7 @@ class Knowledge extends Component {
                 answer={this.state.activeAnswer}
                 onCancel={this.handleCancelAnswer}
                 onDelete={this.displayDeleteAnswerDialog}
+                onSubmit={this.handleSubmitAnswer}
                 focused={focused}
               />
             </div>

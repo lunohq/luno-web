@@ -44,7 +44,10 @@ class Answer extends Component {
   componentWillReceiveProps(nextProps) {
     const { answer } = this.props
     const { answer: nextAnswer } = nextProps
-    const newAnswer = (answer && nextAnswer && answer.id !== nextAnswer.id) || (!answer && nextAnswer)
+    const newAnswer = (
+      (answer && nextAnswer && answer !== nextAnswer) ||
+      (!answer && nextAnswer)
+    )
     if (newAnswer) {
       this.initialize(nextProps)
     }
@@ -86,12 +89,17 @@ class Answer extends Component {
     onCancel()
   }
 
+  handleSave = (values) => {
+    this.setState({ editing: false })
+    this.props.onSubmit(values)
+  }
+
   handleDelete = () => this.props.onDelete(this.props.answer)
-  handleSave = () => this.setState({ editing: false })
+
   handleFocus = () => this.setState({ editing: true })
 
   render() {
-    const { pristine, valid, answer } = this.props
+    const { handleSubmit, pristine, valid, answer } = this.props
     const { editing } = this.state
 
     let actionButtons
@@ -107,7 +115,7 @@ class Answer extends Component {
           disabled={(!answer && pristine) || !valid}
           key='create'
           label={answer ? t('Update') : t('Create')}
-          onTouchTap={this.handleSave}
+          onTouchTap={handleSubmit(this.handleSave)}
           primary
         />,
       ]
@@ -176,6 +184,7 @@ Answer.propTypes = {
   focused: PropTypes.bool,
   onCancel: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
   pristine: PropTypes.bool,
   reset: PropTypes.func.isRequired,
   valid: PropTypes.bool,
