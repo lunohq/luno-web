@@ -482,6 +482,7 @@ const GraphQLUpdateAnswerMutation = mutationWithClientMutationId({
     },
   },
   mutateAndGetPayload: async ({ id: globalId, title, body }, { rootValue: root }) => {
+    const { uid: updatedBy } = root
     const { id: compositeId } = fromGlobalId(globalId)
     const [botId, id] = db.client.deconstructId(compositeId)
 
@@ -490,6 +491,7 @@ const GraphQLUpdateAnswerMutation = mutationWithClientMutationId({
       title,
       botId,
       id,
+      updatedBy,
     })
     tracker.trackUpdateAnswer({ root, id })
     return answer
