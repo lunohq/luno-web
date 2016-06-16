@@ -98,7 +98,12 @@ class Knowledge extends Component {
       mutation = new UpdateAnswerMutation({ answer, ...answer })
     }
 
-    Relay.Store.commitUpdate(mutation)
+    Relay.Store.commitUpdate(mutation, { onSuccess: ({ createAnswer }) => {
+      if (createAnswer) {
+        const { answerEdge: { node: { id } } } = createAnswer
+        this.context.router.replace(`/knowledge/${id}`)
+      }
+    } })
   }
 
   displayDeleteAnswerDialog = answer => this.setState({
