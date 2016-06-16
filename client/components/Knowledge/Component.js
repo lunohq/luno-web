@@ -15,14 +15,15 @@ import s from './style.scss'
 class Knowledge extends Component {
 
   state = {
-    reply: null,
+    activeReply: null,
     deleteReplyDialogOpen: false,
     replyToDelete: null,
   }
 
   componentWillMount() {
-    const { answers } = this.getBot()
-    this.setState({ reply: answers[0] })
+    const answers = this.getAnswers()
+    const { node: reply } = answers[0]
+    this.setState({ activeReply: reply })
   }
 
   getBot() {
@@ -30,7 +31,12 @@ class Knowledge extends Component {
     return bots.edges[0].node
   }
 
-  handleChangeReply = reply => this.setState({ reply })
+  getAnswers() {
+    const { answers: { edges: answers } } = this.getBot()
+    return answers
+  }
+
+  handleChangeReply = reply => this.setState({ activeReply: reply })
   handleDeleteReply = reply => { console.log('delete reply', reply) }
   displayDeleteReplyDialog = reply => this.setState({
     deleteReplyDialogOpen: true,
@@ -42,7 +48,6 @@ class Knowledge extends Component {
   })
 
   render() {
-    const { answers: { edges: answers } } = this.getBot()
     return (
       <DocumentTitle title={t('Knowledge')}>
         <div className={s.root}>
@@ -51,13 +56,13 @@ class Knowledge extends Component {
             <div className={s.replyList}>
               <ReplyList
                 onChange={this.handleChangeReply}
-                replies={answers}
+                replies={this.getAnswers()}
               />
             </div>
             <div className={s.reply}>
               <Reply
                 onDelete={this.displayDeleteReplyDialog}
-                reply={this.state.reply}
+                reply={this.state.activeReply}
               />
             </div>
           </section>
