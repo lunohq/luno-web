@@ -65,7 +65,7 @@ class Knowledge extends Component {
     return edges
   }
 
-  routeToDefault({ props = this.props, ignoreId }) {
+  routeToDefault({ props = this.props, ignoreId } = {}) {
     const answerEdges = this.getAnswerEdges(props)
     let answerId = 'new'
     for (const { node: answer } of answerEdges) {
