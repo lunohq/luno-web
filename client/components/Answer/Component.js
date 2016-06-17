@@ -149,33 +149,35 @@ class Answer extends Component {
             {actionButtons}
           </div>
         </Subheader>
-        <section className={s.form}>
-          <Field
-            autoComplete='off'
-            component={TextField}
-            floatingLabelFixed
-            floatingLabelText={t('Title')}
-            fullWidth
-            hintText={t('Add a title')}
-            multiLine
-            name='answer.title'
-            onFocus={this.handleFocus}
-            ref='title'
-            withRef
-          />
-          <Field
-            autoComplete='off'
-            component={TextField}
-            floatingLabelText={t('Reply')}
-            floatingLabelFixed
-            fullWidth
-            hintText={t('Add a reply')}
-            multiLine
-            name='answer.body'
-            onFocus={this.handleFocus}
-            rows={2}
-          />
-        </section>
+        <div className={s.content}>
+          <section className={s.form}>
+            <Field
+              autoComplete='off'
+              component={TextField}
+              floatingLabelFixed
+              floatingLabelText={t('Title')}
+              fullWidth
+              hintText={t('Add a title')}
+              multiLine
+              name='answer.title'
+              onFocus={this.handleFocus}
+              ref='title'
+              withRef
+            />
+            <Field
+              autoComplete='off'
+              component={TextField}
+              floatingLabelText={t('Reply')}
+              floatingLabelFixed
+              fullWidth
+              hintText={t('Add a reply')}
+              multiLine
+              name='answer.body'
+              onFocus={this.handleFocus}
+              rows={2}
+            />
+          </section>
+        </div>
       </Paper>
     )
   }

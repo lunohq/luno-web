@@ -12,7 +12,7 @@ import moment from 'u/moment'
 
 import SelectableList from 'c/SelectableList'
 
-import s from './style.scss'
+import s from 'c/Answer/style.scss'
 
 class AnswerList extends Component {
 
@@ -45,20 +45,22 @@ class AnswerList extends Component {
 
     return (
       <Paper className={s.root}>
-        <SelectableList defaultValue={answer.id || 'new'}>
-          <Subheader className={s.header}>
-            Lunobot
-            <div>
-              <FlatButton
-                disabled={!!!answer.id}
-                label={t('Add Reply')}
-                onTouchTap={this.props.onNew}
-                primary
-              />
-            </div>
-          </Subheader>
-          {answerRows}
-        </SelectableList>
+        <Subheader className={s.header}>
+          Lunobot
+          <div>
+            <FlatButton
+              disabled={!!!answer.id}
+              label={t('Add Reply')}
+              onTouchTap={this.props.onNew}
+              primary
+            />
+          </div>
+        </Subheader>
+        <div className={s.content}>
+          <SelectableList defaultValue={answer.id || 'new'}>
+              {answerRows}
+          </SelectableList>
+        </div>
       </Paper>
     )
   }
