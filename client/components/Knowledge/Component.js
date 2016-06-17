@@ -8,8 +8,7 @@ import CreateAnswerMutation from 'm/CreateAnswerMutation'
 import DeleteAnswerMutation from 'm/DeleteAnswerMutation'
 import UpdateAnswerMutation from 'm/UpdateAnswerMutation'
 
-import { NAV_WIDTH } from 'c/AuthenticatedLanding/Navigation'
-import { MENU_WIDTH } from 'c/AuthenticatedLanding/Navigation'
+import { NAV_WIDTH, MENU_WIDTH } from 'c/AuthenticatedLanding/Navigation'
 import DocumentTitle from 'c/DocumentTitle'
 import AnswerList from 'c/AnswerList/Component'
 import Answer from 'c/Answer/Component'
@@ -137,7 +136,7 @@ class Knowledge extends Component {
     }
     const focused = answerId === 'new'
     const marginLeft = {
-      marginLeft: +NAV_WIDTH + +MENU_WIDTH,
+      marginLeft: NAV_WIDTH + MENU_WIDTH,
     }
     return (
       <DocumentTitle title={t('Knowledge')}>
