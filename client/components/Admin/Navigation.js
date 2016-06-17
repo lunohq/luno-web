@@ -6,6 +6,7 @@ import Subheader from 'material-ui/Subheader'
 import t from 'u/gettext'
 
 import { NAV_WIDTH } from 'c/AuthenticatedLanding/Navigation'
+import { MENU_WIDTH } from 'c/AuthenticatedLanding/Navigation'
 import SelectableList from 'c/SelectableList'
 
 class Navigation extends Component {
@@ -16,7 +17,10 @@ class Navigation extends Component {
   render() {
     const { location: { pathname } } = this.props
     return (
-      <Drawer containerStyle={{ left: NAV_WIDTH }}>
+      <Drawer
+        containerStyle={{ left: NAV_WIDTH }}
+        width={MENU_WIDTH}
+      >
         <SelectableList defaultValue={pathname}>
           <Subheader>{t('Admin Settings')}</Subheader>
           <ListItem

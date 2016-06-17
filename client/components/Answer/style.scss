@@ -1,23 +1,25 @@
 .root {
-    height: calc(100vh - 10px); //less the top padding height
+  margin-top: 10px;
+  height: calc(100vh - 10px); //less the top margin
 }
 
 .header {
-    composes: row between-xs middle-xs from 's/vendor/flexboxgrid.css';
-    margin-left: 0;
-    margin-right: 0;
-    padding-right: 6px;
-    height: 48px;
+  composes: row between-xs middle-xs from 's/vendor/flexboxgrid.css';
+  margin-left: 0;
+  margin-right: 0;
+  padding-right: 6px;
+  height: 48px;
 }
 
 .content {
-  height: calc(100% - 48px); //less the header height
+  height: calc(100% - 48px - 80px); //less header height and padding bottom
   overflow: scroll;
+  padding-bottom: 80px;
 }
 
 .form {
-    composes: row col-xs from 's/vendor/flexboxgrid.css';
-    margin-left: 0;
-    margin-right: 0;
-    padding: 0px 16px;
+  composes: row col-xs from 's/vendor/flexboxgrid.css';
+  margin-left: 0;
+  margin-right: 0;
+  padding: 0px 16px;
 }

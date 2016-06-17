@@ -1,5 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 
+import { NAV_WIDTH } from 'c/AuthenticatedLanding/Navigation'
+import { MENU_WIDTH } from 'c/AuthenticatedLanding/Navigation'
 import withStyles from 'u/withStyles'
 import BotSettingsContainer from 'c/BotSettings/Container'
 import ManageUsersContainer from 'c/ManageUsers/Container'
@@ -27,11 +29,19 @@ class Admin extends Component {
         break
       default:
     }
+
+    const marginLeft = {
+      marginLeft: +NAV_WIDTH + +MENU_WIDTH,
+    }
+
     return (
       <div>
         <section>
           <Navigation location={location} />
-          <section className={s.content}>
+          <section
+            className={s.content}
+            style={marginLeft}
+          >
             {content}
           </section>
         </section>

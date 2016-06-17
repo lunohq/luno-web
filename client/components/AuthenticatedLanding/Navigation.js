@@ -9,6 +9,7 @@ import AccountMenu from './AccountMenu'
 import s from './nav-style.scss'
 
 export const NAV_WIDTH = 60
+export const MENU_WIDTH = 200
 
 const Navigation = ({ isAdmin, onLogout }) => {
   const isSelected = (path, fuzzy) => {

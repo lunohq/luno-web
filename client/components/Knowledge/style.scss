@@ -6,9 +6,7 @@
 
 .content {
     composes: row from 's/vendor/flexboxgrid.css';
-    padding: 10px 0;
-    // width of Knowledge topic drawer
-    margin-left: 256px;
+    padding: 0px 15px;
     height: 100%;
 }
 
@@ -19,4 +17,8 @@
 .answer {
     composes: col-xs from 's/vendor/flexboxgrid.css';
     padding-left: 10px;
+}
+
+.marginleft {
+  margin-left: 300px;
 }
