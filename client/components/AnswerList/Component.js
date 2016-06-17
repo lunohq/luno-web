@@ -23,7 +23,7 @@ class AnswerList extends Component {
       const { node } = answerEdges[index]
       let title = node.title
       if (!node.id) {
-        title = 'New Answer'
+        title = 'New Reply'
       }
       // include space so empty changed still gets 2 lines
       let changed = ' '
