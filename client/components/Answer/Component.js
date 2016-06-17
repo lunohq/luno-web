@@ -166,10 +166,10 @@ class Answer extends Component {
           <Field
             autoComplete='off'
             component={TextField}
-            floatingLabelText={t('Answer')}
+            floatingLabelText={t('Reply')}
             floatingLabelFixed
             fullWidth
-            hintText={t('Add a answer')}
+            hintText={t('Add a reply')}
             multiLine
             name='answer.body'
             onFocus={this.handleFocus}
