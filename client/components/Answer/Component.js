@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react'
+import ReactDOM from 'react-dom'
 import { reduxForm, Field, initialize } from 'redux-form'
 import keycode from 'keycode'
+import scroll from 'smoothscroll'
 
 import IconButton from 'material-ui/IconButton'
 import FlatButton from 'material-ui/FlatButton'
@@ -43,6 +45,7 @@ class Answer extends Component {
   state = {
     editing: false,
     focused: false,
+    newAnswer: false,
   }
 
   componentWillMount() {
@@ -68,11 +71,15 @@ class Answer extends Component {
     if (!this.state.focused && this.props.focused) {
       this.setState({ focused: true })
     }
+    this.setState({ newAnswer }, () => this.setState({ newAnswer: false }))
   }
 
   componentDidUpdate() {
     if (!this.state.focused && this.props.focused) {
       this.focus()
+    }
+    if (this.state.newAnswer) {
+      this.resetScroll()
     }
   }
 
@@ -86,6 +93,10 @@ class Answer extends Component {
 
   focus() {
     this.refs.title.getRenderedComponent().focus()
+  }
+
+  resetScroll() {
+    ReactDOM.findDOMNode(this.refs.container).scrollTop = 0
   }
 
   handleEdit = () => {
@@ -163,7 +174,7 @@ class Answer extends Component {
             {actionButtons}
           </div>
         </Subheader>
-        <div className={s.content}>
+        <div className={s.content} ref='container'>
           <section className={s.form}>
             <Field
               autoComplete='off'
