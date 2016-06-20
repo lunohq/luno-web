@@ -2,7 +2,6 @@ import React, { Component, PropTypes } from 'react'
 import ReactDOM from 'react-dom'
 import { reduxForm, Field, initialize } from 'redux-form'
 import keycode from 'keycode'
-import scroll from 'smoothscroll'
 
 import IconButton from 'material-ui/IconButton'
 import FlatButton from 'material-ui/FlatButton'
