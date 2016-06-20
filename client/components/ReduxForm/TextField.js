@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import MaterialTextField from 'material-ui/TextField'
 
 class TextField extends Component {
@@ -12,6 +12,11 @@ class TextField extends Component {
     return <MaterialTextField ref='field' errorText={touched && error} {...other} />
   }
 
+}
+
+TextField.propTypes = {
+  error: PropTypes.string,
+  touched: PropTypes.bool,
 }
 
 export default TextField
