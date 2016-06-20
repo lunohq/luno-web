@@ -53,6 +53,10 @@ class Knowledge extends Component {
         break
       }
     }
+    if (!activeAnswer.id) {
+      this.routeToDefault({ props })
+      return
+    }
     this.setState({ activeAnswer })
   }
 
