@@ -24,7 +24,7 @@ const Contact = ({ contacts, index, onRemove, value }) => (
 )
 
 Contact.propTypes = {
-  contacts: PropTypes.array.isRequired,
+  contacts: PropTypes.object.isRequired,
   index: PropTypes.number,
   onRemove: PropTypes.func.isRequired,
   value: PropTypes.any,
@@ -60,7 +60,7 @@ const Contacts = ({ dataSource, onRemove, onNewRequest, onUpdateInput, searchTex
 
 Contacts.propTypes = {
   dataSource: PropTypes.array,
-  fields: PropTypes.array,
+  fields: PropTypes.object,
   onNewRequest: PropTypes.func.isRequired,
   onRemove: PropTypes.func.isRequired,
   onUpdateInput: PropTypes.func.isRequired,
