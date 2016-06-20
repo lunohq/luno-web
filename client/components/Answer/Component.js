@@ -158,7 +158,6 @@ class Answer extends Component {
               floatingLabelText={t('Title')}
               fullWidth
               hintText={t('Add a title')}
-              multiLine
               name='answer.title'
               onFocus={this.handleFocus}
               ref='title'
