@@ -3,13 +3,17 @@ import Drawer from 'material-ui/Drawer'
 import { ListItem } from 'material-ui/List'
 
 import t from 'u/gettext'
+import withStyles from 'u/withStyles'
 
 import { NAV_WIDTH } from 'c/AuthenticatedLanding/Navigation'
 import { MENU_WIDTH } from 'c/AuthenticatedLanding/Navigation'
 import SelectableList from 'c/SelectableList'
 
+import s from './style.scss'
+
 const Navigation = () => (
   <Drawer
+    containerClassName={s.navPaddingTop}
     containerStyle={{ left: NAV_WIDTH }}
     width={MENU_WIDTH}
   >
@@ -19,4 +23,4 @@ const Navigation = () => (
   </Drawer>
 )
 
-export default Navigation
+export default withStyles(s)(Navigation)

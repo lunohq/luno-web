@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 
-import { NAV_WIDTH } from 'c/AuthenticatedLanding/Navigation'
-import { MENU_WIDTH } from 'c/AuthenticatedLanding/Navigation'
+import { NAV_WIDTH, MENU_WIDTH } from 'c/AuthenticatedLanding/Navigation'
 import withStyles from 'u/withStyles'
 import BotSettingsContainer from 'c/BotSettings/Container'
 import ManageUsersContainer from 'c/ManageUsers/Container'
@@ -31,7 +30,7 @@ class Admin extends Component {
     }
 
     const marginLeft = {
-      marginLeft: +NAV_WIDTH + +MENU_WIDTH,
+      marginLeft: NAV_WIDTH + MENU_WIDTH,
     }
 
     return (
