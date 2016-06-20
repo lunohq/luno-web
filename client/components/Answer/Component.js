@@ -23,10 +23,17 @@ const validate = values => {
   const requiredFields = ['title', 'body']
   requiredFields.forEach(field => {
     if (values.answer && !values.answer[field]) {
-      errors[field] = 'Required'
+      if (!errors.answer) errors.answer = {}
+      errors.answer[field] = t('Required')
       errors._error = true
     }
   })
+
+  if (values.answer && values.answer.title && values.answer.title.split(' ').length > 15) {
+    if (!errors.answer) errors.answer = {}
+    errors.answer.title = t('Title must be less than 15 words')
+  }
+
   return errors
 }
 
@@ -153,6 +160,7 @@ class Answer extends Component {
           <section className={s.form}>
             <Field
               autoComplete='off'
+              className={s.field}
               component={TextField}
               floatingLabelFixed
               floatingLabelText={t('Title')}
@@ -166,6 +174,7 @@ class Answer extends Component {
             <Field
               autoComplete='off'
               component={TextField}
+              className={s.field}
               floatingLabelText={t('Reply')}
               floatingLabelFixed
               fullWidth
