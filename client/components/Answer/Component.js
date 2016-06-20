@@ -134,7 +134,7 @@ class Answer extends Component {
     }
 
     let changed
-    if (answer.changed) {
+    if (answer.changed && !editing) {
       changed = moment(answer.changed).format('MMM Do, YYYY')
       changed = t(`Last updated on ${changed}`)
     }
