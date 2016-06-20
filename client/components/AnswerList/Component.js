@@ -1,4 +1,6 @@
 import React, { Component, PropTypes } from 'react'
+import ReactDOM from 'react-dom'
+import scroll from 'smoothscroll'
 
 import Paper from 'material-ui/Paper'
 import { ListItem } from 'material-ui/List'
@@ -15,6 +17,15 @@ import SelectableList from 'c/SelectableList'
 import s from 'c/Answer/style.scss'
 
 class AnswerList extends Component {
+
+  componentDidUpdate() {
+    const { answer } = this.props
+    // Scroll to the top for new answers
+    if (!answer.id) {
+      const c = ReactDOM.findDOMNode(this.refs.container)
+      scroll(0, undefined, undefined, c)
+    }
+  }
 
   render() {
     const { answerEdges, answer } = this.props
@@ -56,7 +67,7 @@ class AnswerList extends Component {
             />
           </div>
         </Subheader>
-        <div className={s.content}>
+        <div className={s.content} ref='container'>
           <SelectableList defaultValue={answer.id || 'new'}>
               {answerRows}
           </SelectableList>
