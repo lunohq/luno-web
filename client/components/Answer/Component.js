@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { reduxForm, Field, initialize } from 'redux-form'
+import keycode from 'keycode'
 
 import IconButton from 'material-ui/IconButton'
 import FlatButton from 'material-ui/FlatButton'
@@ -108,6 +109,12 @@ class Answer extends Component {
 
   handleFocus = () => this.setState({ editing: true })
 
+  handleIgnoreEnter = (event) => {
+    if (keycode(event) === 'enter') {
+      event.preventDefault()
+    }
+  }
+
   render() {
     const { handleSubmit, pristine, valid, answer } = this.props
     const { editing } = this.state
@@ -166,8 +173,10 @@ class Answer extends Component {
               floatingLabelText={t('Title')}
               fullWidth
               hintText={t('Add a title')}
+              multiLine
               name='answer.title'
               onFocus={this.handleFocus}
+              onKeyDown={this.handleIgnoreEnter}
               ref='title'
               withRef
             />
