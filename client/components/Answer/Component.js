@@ -33,7 +33,7 @@ const validate = values => {
 
   if (values.answer && values.answer.title && values.answer.title.split(' ').length > 15) {
     if (!errors.answer) errors.answer = {}
-    errors.answer.title = t('Title must be less than 15 words')
+    errors.answer.title = t('Title cannot be more than 15 words')
   }
 
   return errors
