@@ -48,6 +48,7 @@ class AnswerList extends Component {
           onTouchTap={() => this.props.onChange(node)}
           primaryText={title}
           secondaryText={changed}
+          style={{lineHeight: "19px"}}
           value={node.id || 'new'}
         />
       )
@@ -61,6 +62,7 @@ class AnswerList extends Component {
           <div>
             <FlatButton
               disabled={!!!answer.id}
+              hoverColor='#ffffff'
               label={t('Add Reply')}
               onTouchTap={this.props.onNew}
               primary
