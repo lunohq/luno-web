@@ -133,6 +133,7 @@ class Answer extends Component {
     if (editing) {
       actionButtons = [
         <FlatButton
+          hoverColor='#ffffff'
           key='cancel'
           label={t('Cancel')}
           onTouchTap={this.handleCancel}
@@ -140,6 +141,7 @@ class Answer extends Component {
         />,
         <FlatButton
           disabled={(!answer && pristine) || !valid}
+          hoverColor='#ffffff'
           key='create'
           label={answer.id ? t('Update') : t('Create')}
           onTouchTap={handleSubmit(this.handleSave)}

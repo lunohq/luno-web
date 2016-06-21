@@ -62,6 +62,7 @@ class AnswerList extends Component {
           <div>
             <FlatButton
               disabled={!!!answer.id}
+              hoverColor='#ffffff'
               label={t('Add Reply')}
               onTouchTap={this.props.onNew}
               primary
