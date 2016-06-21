@@ -33,7 +33,7 @@
     "isomorphic-style-loader": "^1.0.0",
     "json-loader": "^0.5.4",
     "keycode": "^2.1.2",
-    "material-ui": "git+https://github.com/lunohq/material-ui-dist.git#d2830bd2bf2370608c7a125771acb9b8ceb12161",
+    "material-ui": "git+https://github.com/lunohq/material-ui-dist.git#51c3ead23d20d75d22b81fc65c46567ad7a28e15",
     "mixpanel-browser": "^2.7.2",
     "node-sass": "^3.4.2",
     "postcss": "^5.0.21",
