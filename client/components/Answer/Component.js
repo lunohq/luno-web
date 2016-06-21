@@ -45,6 +45,7 @@ class Answer extends Component {
     editing: false,
     focused: false,
     newAnswer: false,
+    mightCancel: false,
   }
 
   componentWillMount() {
@@ -105,7 +106,7 @@ class Answer extends Component {
 
   handleCancel = () => {
     const { onCancel, reset } = this.props
-    this.setState({ editing: false })
+    this.setState({ editing: false, mightCancel: false })
     reset()
     onCancel()
   }
@@ -114,6 +115,9 @@ class Answer extends Component {
     this.setState({ editing: false })
     this.props.onSubmit(values)
   }
+
+  handleCancelOnMouseEnter = () => this.setState({ mightCancel: true })
+  handleCancelOnMouseLeave = () => this.setState({ mightCancel: false })
 
   handleDelete = () => this.props.onDelete(this.props.answer)
 
@@ -135,6 +139,8 @@ class Answer extends Component {
         <FlatButton
           key='cancel'
           label={t('Cancel')}
+          onMouseEnter={this.handleCancelOnMouseEnter}
+          onMouseLeave={this.handleCancelOnMouseLeave}
           onTouchTap={this.handleCancel}
           secondary
         />,
@@ -182,6 +188,7 @@ class Answer extends Component {
               floatingLabelFixed
               floatingLabelText={t('Title')}
               fullWidth
+              hideError={this.state.mightCancel}
               hintText={t('Add a title')}
               multiLine
               name='answer.title'
@@ -197,6 +204,7 @@ class Answer extends Component {
               floatingLabelText={t('Reply')}
               floatingLabelFixed
               fullWidth
+              hideError={this.state.mightCancel}
               hintText={t('Add a reply')}
               multiLine
               name='answer.body'

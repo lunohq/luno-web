@@ -8,8 +8,14 @@ class TextField extends Component {
   }
 
   render() {
-    const { dirty, touched, error, ...other } = this.props
-    return <MaterialTextField ref='field' errorText={(dirty || touched) && error} {...other} />
+    const { dirty, touched, error, hideError, ...other } = this.props
+    return (
+      <MaterialTextField
+        ref='field'
+        errorText={!hideError && (dirty || touched) && error}
+        {...other}
+      />
+    )
   }
 
 }
