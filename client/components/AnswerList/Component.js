@@ -48,6 +48,7 @@ class AnswerList extends Component {
           onTouchTap={() => this.props.onChange(node)}
           primaryText={title}
           secondaryText={changed}
+          style={{ lineHeight: '20px' }}
           value={node.id || 'new'}
         />
       )
