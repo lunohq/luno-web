@@ -685,7 +685,12 @@ const GraphQLInviteUserMutation = mutationWithClientMutationId({
       logger.error('Error sending invite notification', { err, team, invitedBy, userId })
     }
 
-    tracker.trackInviteUser({ root, teamId, userId })
+    tracker.trackInviteUser({
+      root,
+      teamId,
+      userId,
+      role: GraphQLUserRole.serialize(role),
+    })
     return user
   },
 })

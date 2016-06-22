@@ -94,13 +94,16 @@ class Tracker {
     this.track(ADMIN_ACTION, data)
   }
 
-  trackInviteUser({ root, teamId, userId }) {
+  trackInviteUser({ root, teamId, userId, role }) {
     const data = {
       root,
       Type: 'Invite User',
       'Target User ID': userId,
     }
     const distinctId = this.getDistinctId(teamId, userId)
+    this.mixpanel.people.set(distinctId, {
+      Role: role,
+    })
     this.mixpanel.people.set_once(distinctId, {
       Invited: (new Date()).toISOString(),
     })
