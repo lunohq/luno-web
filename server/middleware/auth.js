@@ -75,6 +75,7 @@ function oauth(converse, app) {
 
     debug('Checking if app is installed', { team })
     const installed = await isBotInstalled(team)
+    debug('App install status', { installed })
     if (!installed) {
       logger.info('Routing initial user through install', { team: res.locals.team, user: res.locals.user })
       return res.redirect(converse.getInstallURL(team.id))

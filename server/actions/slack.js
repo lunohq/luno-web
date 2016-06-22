@@ -23,7 +23,7 @@ function getClient(teamIdOrTeam) {
 export async function isBotInstalled(team) {
   let installed = false
   if (team.slack && team.slack.bot) {
-    const client = getClient(team)
+    const client = await getClient(team)
     let response
     try {
       response = await client.auth.test()
