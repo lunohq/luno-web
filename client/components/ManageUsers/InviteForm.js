@@ -16,7 +16,7 @@ const validate = values => {
   return errors
 }
 
-const Username = ({ members, onChange, touched, error, ...other }) => {
+const Username = ({ members, onBlur, onChange, touched, error, ...other }) => {
   const dataSource = createDataSource(members)
   return (
     <AutoCompleteMembers
