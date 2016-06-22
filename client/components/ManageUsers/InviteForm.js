@@ -16,6 +16,7 @@ const validate = values => {
   return errors
 }
 
+/* eslint-disable no-unused-vars */
 const Username = ({ members, onBlur, onChange, touched, error, ...other }) => {
   const dataSource = createDataSource(members)
   return (
@@ -29,10 +30,12 @@ const Username = ({ members, onBlur, onChange, touched, error, ...other }) => {
     />
   )
 }
+/* eslint-enable no-unused-vars */
 
 Username.propTypes = {
   error: PropTypes.string,
   members: PropTypes.array.isRequired,
+  onBlur: PropTypes.func,
   onChange: PropTypes.func.isRequired,
   touched: PropTypes.bool,
 }
