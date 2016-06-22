@@ -35,6 +35,10 @@ class Tracker {
     })
   }
 
+  getDistinctId(teamId, userId) {
+    return `${teamId}:${userId}`
+  }
+
   track(TEAM_EVENT, { root, ...other }) {
     const data = {
       client: 'server',
@@ -46,7 +50,7 @@ class Tracker {
         return
       }
 
-      data.distinct_id = `${root.tid}:${root.uid}`
+      data.distinct_id = this.getDistinctId(root.tid, root.uid)
       data['User ID'] = root.uid
       data['Team ID'] = root.tid
     }
@@ -56,7 +60,7 @@ class Tracker {
 
   trackCreateUser(user) {
     debug('Tracking create user', user)
-    const distinctId = `${user.teamId}:${user.id}`
+    const distinctId = this.getDistinctId(user.teamId, user.id)
     const data = {
       distinct_id: distinctId,
       Type: 'Create User',
@@ -90,12 +94,16 @@ class Tracker {
     this.track(ADMIN_ACTION, data)
   }
 
-  trackInviteUser({ root, id }) {
+  trackInviteUser({ root, teamId, userId }) {
     const data = {
       root,
       Type: 'Invite User',
-      'Target User ID': id,
+      'Target User ID': userId,
     }
+    const distinctId = this.getDistinctId(teamId, userId)
+    this.mixpanel.people.set_once(distinctId, {
+      Invited: (new Date()).toISOString(),
+    })
     this.track(ADMIN_ACTION, data)
   }
 
