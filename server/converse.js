@@ -5,6 +5,22 @@ import config from './config/environment'
 import logger from './logger'
 import tracker from './tracker'
 
+/**
+ * Given the way we handle invites, a user can be "new" but have already been
+ * created in our db.
+ *
+ * This allows us to treat users who may be in our system but not authorized
+ * with slack yet as new users.
+ *
+ */
+function isNewUser(user) {
+  let newUser = !user
+  if (user && (!user.scopes || !user.scopes.length)) {
+    newUser = true
+  }
+  return newUser
+}
+
 const server = new Server({
   clientId: config.slack.clientId,
   clientSecret: config.slack.clientSecret,
@@ -13,6 +29,7 @@ const server = new Server({
     install: ['bot', 'commands'],
   },
   storage: converse.storage,
+  isNewUser,
   logger,
 })
 
