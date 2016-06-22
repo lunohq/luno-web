@@ -21,7 +21,9 @@ class TextField extends Component {
 }
 
 TextField.propTypes = {
+  dirty: PropTypes.bool,
   error: PropTypes.string,
+  hideError: PropTypes.bool,
   touched: PropTypes.bool,
 }
 
