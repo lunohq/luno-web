@@ -5,6 +5,7 @@ import { db } from 'luno-core'
 
 import config from '../config/environment'
 import { generateToken, setCookie } from '../actions/auth'
+import { isBotInstalled } from '../actions/slack'
 import { sendAccessRequest } from '../actions/notifications'
 import logger, { metadata } from '../logger'
 
@@ -73,7 +74,8 @@ function oauth(converse, app) {
     let { locals: { user } } = res
 
     debug('Checking if app is installed', { team })
-    if (!team.slack || !team.slack.bot) {
+    const installed = await isBotInstalled(team)
+    if (!installed) {
       logger.info('Routing initial user through install', { team: res.locals.team, user: res.locals.user })
       return res.redirect(converse.getInstallURL(team.id))
     }

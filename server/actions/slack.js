@@ -3,17 +3,40 @@ import { db } from 'luno-core'
 
 export class SlackMember {}
 
-function getClient(teamId) {
+function getClient(teamIdOrTeam) {
   return new Promise(async (resolve, reject) => {
     let team
-    try {
-      team = await db.team.getTeam(teamId)
-    } catch (err) {
-      return reject(err)
+    if (teamIdOrTeam.slack && teamIdOrTeam.slack.bot && teamIdOrTeam.slack.bot.token) {
+      team = teamIdOrTeam
+    } else {
+      try {
+        team = await db.team.getTeam(teamId)
+      } catch (err) {
+        return reject(err)
+      }
     }
 
     return resolve(new WebClient(team.slack.bot.token))
   })
+}
+
+export async function isBotInstalled(team) {
+  let installed = false
+  if (team.slack && team.slack.bot) {
+    const client = getClient(team)
+    let response
+    try {
+      response = await client.auth.test()
+    } catch (err) {
+      installed = false
+      return installed
+    }
+
+    if (response && response.ok) {
+      installed = true
+    }
+  }
+  return installed
 }
 
 export function getMember(teamId, id) {
