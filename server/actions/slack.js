@@ -10,7 +10,7 @@ function getClient(teamIdOrTeam) {
       team = teamIdOrTeam
     } else {
       try {
-        team = await db.team.getTeam(teamId)
+        team = await db.team.getTeam(teamIdOrTeam)
       } catch (err) {
         return reject(err)
       }
