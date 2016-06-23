@@ -361,7 +361,7 @@ const GraphQLQuery = new GraphQLObjectType({
     node: nodeField,
     viewer: {
       type: GraphQLUser,
-      resolve: async (source, args, { rootValue }) => {
+      resolve: async (source, args, context, { rootValue }) => {
         let user = new db.user.AnonymousUser()
 
         if (!rootValue) {
