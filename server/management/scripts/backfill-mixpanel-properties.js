@@ -28,7 +28,7 @@ export default async function() {
         logger.info(`! email not found for user`, { user })
       }
       logger.info(`...updating user props: ${distinctId}`, { props })
-      mixpanel.set(distinctId, props)
+      mixpanel.people.set(distinctId, props)
     }
     // Throttle updates so we don't exceed our provisioned throughput
     await sleep(1)
