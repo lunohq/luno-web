@@ -8,6 +8,7 @@ import { db } from 'luno-core'
 import schema from '../../data/schema'
 import logger from '../../logger'
 import config from '../../config/environment/index'
+import { sleep } from './helpers'
 
 const UserRole = schema.getType('UserRole')
 
@@ -25,10 +26,8 @@ export default async function() {
       }
       if (user.email) {
         props.$email = user.email
-        mixpanel.people.unset(distinctId, 'Email')
       } else if (user.profile && user.profile.email) {
         props.$email = user.profile.email
-        mixpanel.people.unset(distinctId, 'Email')
         logger.info('! email not found for user', { user })
       } else {
         logger.info('!! no email found for user', { user })
@@ -36,5 +35,6 @@ export default async function() {
       logger.info(`...updating user props: ${distinctId}`, { props })
       mixpanel.people.set(distinctId, props)
     }
+    await sleep(1)
   }
 }
