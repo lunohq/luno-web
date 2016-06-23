@@ -7,7 +7,6 @@ import { db } from 'luno-core'
 
 import logger from '../../logger'
 import config from '../../config/environment/index'
-import { sleep } from './helpers'
 
 export default async function() {
   const mixpanel = Mixpanel.init(config.mixpanel.token)
@@ -25,9 +24,9 @@ export default async function() {
         props.Email = user.email
       } else if (user.profile && user.profile.email) {
         props.Email = user.profile.email
-        logger.info(`! email not found for user`, { user })
+        logger.info('! email not found for user', { user })
       } else {
-        logger.info(`!! no email found for user`, { user })
+        logger.info('!! no email found for user', { user })
       }
       logger.info(`...updating user props: ${distinctId}`, { props })
       mixpanel.people.set(distinctId, props)
