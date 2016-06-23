@@ -39,20 +39,20 @@ class Tracker {
     return `${teamId}:${userId}`
   }
 
-  track(TEAM_EVENT, { root, ...other }) {
+  track(TEAM_EVENT, { auth, ...other }) {
     const data = {
       client: 'server',
       ...other,
     }
-    if (root) {
+    if (auth) {
       // don't track assumed actions
-      if (root.a) {
+      if (auth.a) {
         return
       }
 
-      data.distinct_id = this.getDistinctId(root.tid, root.uid)
-      data['User ID'] = root.uid
-      data['Team ID'] = root.tid
+      data.distinct_id = this.getDistinctId(auth.tid, auth.uid)
+      data['User ID'] = auth.uid
+      data['Team ID'] = auth.tid
     }
 
     this._track(TEAM_EVENT, data)
@@ -76,27 +76,27 @@ class Tracker {
     debug('Tracked create user')
   }
 
-  trackCreateAnswer({ root, id }) {
+  trackCreateAnswer({ auth, id }) {
     const data = {
-      root,
+      auth,
       Type: 'Create Answer',
       'Answer ID': id,
     }
     this.track(ADMIN_ACTION, data)
   }
 
-  trackUpdateUser({ root, id }) {
+  trackUpdateUser({ auth, id }) {
     const data = {
-      root,
+      auth,
       Type: 'Update User',
       'Target User ID': id,
     }
     this.track(ADMIN_ACTION, data)
   }
 
-  trackInviteUser({ root, teamId, userId, role }) {
+  trackInviteUser({ auth, teamId, userId, role }) {
     const data = {
-      root,
+      auth,
       Type: 'Invite User',
       'Target User ID': userId,
     }
@@ -110,36 +110,36 @@ class Tracker {
     this.track(ADMIN_ACTION, data)
   }
 
-  trackUpdateAnswer({ root, id }) {
+  trackUpdateAnswer({ auth, id }) {
     const data = {
-      root,
+      auth,
       Type: 'Update Answer',
       'Answer ID': id,
     }
     this.track(ADMIN_ACTION, data)
   }
 
-  trackDeleteAnswer({ root, id }) {
+  trackDeleteAnswer({ auth, id }) {
     const data = {
-      root,
+      auth,
       Type: 'Delete Answer',
       'Answer ID': id,
     }
     this.track(ADMIN_ACTION, data)
   }
 
-  trackUpdateBotPurpose({ root, id }) {
+  trackUpdateBotPurpose({ auth, id }) {
     const data = {
-      root,
+      auth,
       Type: 'Update Bot Purpose',
       'Bot ID': id,
     }
     this.track(ADMIN_ACTION, data)
   }
 
-  trackUpdateBotPointsOfContact({ root, id }) {
+  trackUpdateBotPointsOfContact({ auth, id }) {
     const data = {
-      root,
+      auth,
       Type: 'Update Bot Points of Contact',
       'Bot ID': id,
     }

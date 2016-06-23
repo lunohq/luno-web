@@ -72,7 +72,7 @@ function adminMutation({ resolve, ...other }) {
   return {
     resolve: async (source, args, context, info) => {
       // TODO this should be cached
-      const user = await db.user.getUser(source.uid)
+      const user = await db.user.getUser(context.auth.uid)
       if (!user.isAdmin) {
         throw new Error('Permission Denied')
       }
@@ -86,7 +86,7 @@ function staffMutation({ resolve, ...other }) {
   return {
     resolve: async (source, args, context, info) => {
       // TODO this should be cached
-      const user = await db.user.getUser(source.uid)
+      const user = await db.user.getUser(context.auth.uid)
       if (!user.isStaff) {
         throw new Error('Permission Denied')
       }
@@ -361,15 +361,15 @@ const GraphQLQuery = new GraphQLObjectType({
     node: nodeField,
     viewer: {
       type: GraphQLUser,
-      resolve: async (source, args, context, { rootValue }) => {
+      resolve: async (source, args, { auth }) => {
         let user = new db.user.AnonymousUser()
 
-        if (!rootValue) {
+        if (!auth) {
           return user
         }
 
-        user = await db.user.getUser(rootValue.uid)
-        if (rootValue.a) {
+        user = await db.user.getUser(auth.uid)
+        if (auth.a) {
           user.assumed = true
         }
         return user
@@ -424,8 +424,8 @@ const GraphQLCreateAnswerMutation = mutationWithClientMutationId({
       }
     },
   },
-  mutateAndGetPayload: async ({ title, body, botId: globalId }, { rootValue: root }) => {
-    const { uid: createdBy } = root
+  mutateAndGetPayload: async ({ title, body, botId: globalId }, { auth }) => {
+    const { uid: createdBy } = auth
     const { id: compositeId } = fromGlobalId(globalId)
     const [teamId, botId] = db.client.deconstructId(compositeId)
     const answer = await db.answer.createAnswer({
@@ -435,7 +435,7 @@ const GraphQLCreateAnswerMutation = mutationWithClientMutationId({
       teamId,
       createdBy,
     })
-    tracker.trackCreateAnswer({ root, id: answer.id })
+    tracker.trackCreateAnswer({ auth, id: answer.id })
     return { answer, teamId, botId }
   },
 })
@@ -455,11 +455,11 @@ const GraphQLDeleteAnswerMutation = mutationWithClientMutationId({
       resolve: ({ globalId }) => globalId,
     },
   },
-  mutateAndGetPayload: async ({ id: globalId }, { rootValue: root }) => {
+  mutateAndGetPayload: async ({ id: globalId }, { auth }) => {
     const { id: compositeId } = fromGlobalId(globalId)
     const [botId, id] = db.client.deconstructId(compositeId)
     const { teamId } = await db.answer.deleteAnswer(botId, id)
-    tracker.trackDeleteAnswer({ id, root })
+    tracker.trackDeleteAnswer({ id, auth })
     return {
       botId,
       globalId,
@@ -481,8 +481,8 @@ const GraphQLUpdateAnswerMutation = mutationWithClientMutationId({
       resolve: (answer) => answer,
     },
   },
-  mutateAndGetPayload: async ({ id: globalId, title, body }, { rootValue: root }) => {
-    const { uid: updatedBy } = root
+  mutateAndGetPayload: async ({ id: globalId, title, body }, { auth }) => {
+    const { uid: updatedBy } = auth
     const { id: compositeId } = fromGlobalId(globalId)
     const [botId, id] = db.client.deconstructId(compositeId)
 
@@ -493,7 +493,7 @@ const GraphQLUpdateAnswerMutation = mutationWithClientMutationId({
       id,
       updatedBy,
     })
-    tracker.trackUpdateAnswer({ root, id })
+    tracker.trackUpdateAnswer({ auth, id })
     return answer
   },
 })
@@ -511,7 +511,7 @@ const GraphQLUpdateBotPurposeMutation = mutationWithClientMutationId({
       resolve: (bot) => bot,
     },
   },
-  mutateAndGetPayload: async ({ id: globalId, purpose }, { rootValue: root }) => {
+  mutateAndGetPayload: async ({ id: globalId, purpose }, { auth }) => {
     const { id: compositeId } = fromGlobalId(globalId)
     const [teamId, id] = db.client.deconstructId(compositeId)
 
@@ -520,7 +520,7 @@ const GraphQLUpdateBotPurposeMutation = mutationWithClientMutationId({
       id,
       purpose: purpose || null,
     })
-    tracker.trackUpdateBotPurpose({ root, id })
+    tracker.trackUpdateBotPurpose({ auth, id })
     return bot
   },
 })
@@ -543,7 +543,7 @@ const GraphQLUpdateBotPointsOfContactMutation = mutationWithClientMutationId({
       resolve: bot => bot,
     },
   },
-  mutateAndGetPayload: async ({ id: globalId, pointsOfContact: globalIds }, { rootValue: root }) => {
+  mutateAndGetPayload: async ({ id: globalId, pointsOfContact: globalIds }, { auth }) => {
     const { id: compositeId } = fromGlobalId(globalId)
     const [teamId, id] = db.client.deconstructId(compositeId)
     debug('Points of contact', { globalIds })
@@ -554,7 +554,7 @@ const GraphQLUpdateBotPointsOfContactMutation = mutationWithClientMutationId({
       teamId,
       id,
     })
-    tracker.trackUpdateBotPointsOfContact({ root, id })
+    tracker.trackUpdateBotPointsOfContact({ auth, id })
     return bot
   },
 })
@@ -567,15 +567,15 @@ const GraphQLLogoutMutation = mutationWithClientMutationId({
       resolve: user => user,
     },
   },
-  mutateAndGetPayload: async (_, { rootValue }) => {
-    await db.token.deleteToken(rootValue.t.id, rootValue.uid)
-    if (rootValue.a) {
-      await db.admin.endToken(rootValue.a.id)
+  mutateAndGetPayload: async (_, { auth }) => {
+    await db.token.deleteToken(auth.t.id, auth.uid)
+    if (auth.a) {
+      await db.admin.endToken(auth.a.id)
     }
     const user = new db.user.AnonymousUser()
     // this value is needed to invalidate the relay cache for the currently
     // logged in user
-    user.id = rootValue.uid
+    user.id = auth.uid
     return user
   },
 })
@@ -596,9 +596,9 @@ const GraphQLUpdateUserMutation = mutationWithClientMutationId({
       resolve: (user) => user,
     },
   },
-  mutateAndGetPayload: async ({ id: globalId, role }, { rootValue: root }) => {
+  mutateAndGetPayload: async ({ id: globalId, role }, { auth }) => {
     const { id } = fromGlobalId(globalId)
-    const { tid: teamId, uid: sourceUserId } = root
+    const { tid: teamId, uid: sourceUserId } = auth
     const params = {
       id,
       role,
@@ -621,7 +621,7 @@ const GraphQLUpdateUserMutation = mutationWithClientMutationId({
         logger.error('Error sending promotion notification', { err, team, sourceUserId, userId: id })
       }
     }
-    tracker.trackUpdateUser({ root, id })
+    tracker.trackUpdateUser({ auth, id })
     return user
   },
 })
@@ -660,9 +660,9 @@ const GraphQLInviteUserMutation = mutationWithClientMutationId({
       },
     },
   },
-  mutateAndGetPayload: async ({ userId: globalId, role, username }, { rootValue: root }) => {
+  mutateAndGetPayload: async ({ userId: globalId, role, username }, { auth }) => {
     const { id: userId } = fromGlobalId(globalId)
-    const { tid: teamId, uid: invitedBy } = root
+    const { tid: teamId, uid: invitedBy } = auth
     const params = {
       role,
       teamId,
@@ -686,7 +686,7 @@ const GraphQLInviteUserMutation = mutationWithClientMutationId({
     }
 
     tracker.trackInviteUser({
-      root,
+      auth,
       teamId,
       userId,
       role: GraphQLUserRole.serialize(role),

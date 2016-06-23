@@ -30,7 +30,6 @@ function startGraphQLServer(schema) {
       graphiql: true,
       pretty: true,
       context: { auth: request.auth },
-      rootValue: request.auth,
       schema,
     }
   }))

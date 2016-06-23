@@ -34,7 +34,6 @@ relayServer.use('/', express.static(path.join(__dirname, '../output', process.en
 relayServer.use('/graphql', graphQLHTTP(request => ({
   schema,
   context: { auth: request.auth },
-  rootValue: request.auth,
 })))
 relayServer.use(raven.middleware.express.errorHandler(config.sentry.dsn))
 relayServer.listen(config.port, () => console.log(chalk.green(`Relay is listening on port ${config.port}`)))
