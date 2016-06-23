@@ -32,7 +32,5 @@ export default async function() {
       logger.info(`...updating user props: ${distinctId}`, { props })
       mixpanel.people.set(distinctId, props)
     }
-    // Throttle updates so we don't exceed our provisioned throughput
-    await sleep(2)
   }
 }
