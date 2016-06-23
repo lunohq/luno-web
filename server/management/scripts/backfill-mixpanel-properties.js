@@ -5,6 +5,7 @@
 import Mixpanel from 'mixpanel'
 import { db } from 'luno-core'
 
+import { GraphQLUserRole } from '../../data/schema'
 import logger from '../../logger'
 import config from '../../config/environment/index'
 
@@ -18,7 +19,7 @@ export default async function() {
       const user = users[index]
       const distinctId = `${team.id}:${user.id}`
       const props = {
-        Role: user.role,
+        Role: GraphQLUserRole.serialize(user.role),
       }
       if (user.email) {
         props.Email = user.email
