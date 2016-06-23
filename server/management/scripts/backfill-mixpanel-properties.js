@@ -24,9 +24,11 @@ export default async function() {
         Role: UserRole.serialize(user.role),
       }
       if (user.email) {
-        props.Email = user.email
+        props.$email = user.email
+        mixpanel.people.unset(distinctId, 'Email')
       } else if (user.profile && user.profile.email) {
-        props.Email = user.profile.email
+        props.$email = user.profile.email
+        mixpanel.people.unset(distinctId, 'Email')
         logger.info('! email not found for user', { user })
       } else {
         logger.info('!! no email found for user', { user })
