@@ -13,6 +13,7 @@ import schema from './data/schema'
 import auth from './middleware/auth'
 import slashCommands from './middleware/slashCommands'
 import admin from './middleware/admin'
+import formatError from './utils/formatError'
 
 import converse from './converse'
 
@@ -33,6 +34,7 @@ relayServer.use(historyApiFallback())
 relayServer.use('/', express.static(path.join(__dirname, '../output', process.env.NODE_ENV)))
 relayServer.use('/graphql', graphQLHTTP(request => ({
   schema,
+  formatError,
   context: { auth: request.auth },
 })))
 relayServer.use(raven.middleware.express.errorHandler(config.sentry.dsn))

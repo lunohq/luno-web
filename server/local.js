@@ -10,6 +10,7 @@ import morgan from 'morgan'
 
 import webpackConfig from '../webpack/local'
 import requireUncached from './utils/requireUncached'
+import formatError from './utils/formatError'
 import config from './config/environment'
 import schema from './data/schema'
 import updateSchema from './utils/updateSchema'
@@ -31,6 +32,7 @@ function startGraphQLServer(schema) {
       pretty: true,
       context: { auth: request.auth },
       schema,
+      formatError,
     }
   }))
   graphQLServer = graphql.listen(
