@@ -33,6 +33,6 @@ export default async function() {
       mixpanel.people.set(distinctId, props)
     }
     // Throttle updates so we don't exceed our provisioned throughput
-    await sleep(1)
+    await sleep(2)
   }
 }
