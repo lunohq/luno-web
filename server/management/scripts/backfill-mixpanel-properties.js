@@ -26,6 +26,8 @@ export default async function() {
       } else if (user.profile && user.profile.email) {
         props.Email = user.profile.email
         logger.info(`! email not found for user`, { user })
+      } else {
+        logger.info(`!! no email found for user`, { user })
       }
       logger.info(`...updating user props: ${distinctId}`, { props })
       mixpanel.people.set(distinctId, props)
