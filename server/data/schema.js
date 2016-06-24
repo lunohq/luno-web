@@ -49,6 +49,9 @@ const { nodeInterface, nodeField } = nodeDefinitions(
     } else if (type === 'SlackMember') {
       const [teamId, id] = db.client.deconstructId(id)
       return getMember(teamId, id)
+    } else if (type === 'Topic') {
+      const [teamId, id] = db.client.deconstructId(id)
+      return db.topic.getTopic({ teamId, id })
     }
     return null
   },
@@ -63,6 +66,8 @@ const { nodeInterface, nodeField } = nodeDefinitions(
       return GraphQLAnswer
     } else if (obj instanceof SlackMember) {
       return GraphQLSlackMember
+    } else if (obj instanceof db.topic.Topic) {
+      return GraphQLTopic
     }
     return null
   },
@@ -243,6 +248,18 @@ const GraphQLUser = new GraphQLObjectType({
         return null
       },
     },
+    topics: {
+      type: TopicsConnection,
+      description: 'Topics the User has access to',
+      args: connectionArgs,
+      resolve: async (user, args) => {
+        if (!user.anonymous) {
+          const defaultTopic = db.topic.getDefaultTopic(user.teamId)
+          return connectionFromArray([defaultTopic], args)
+        }
+        return null
+      },
+    },
     anonymous: {
       type: GraphQLBoolean,
       description: 'Boolean indicating whether or not the user is authenticated',
@@ -312,6 +329,19 @@ const GraphQLBot = new GraphQLObjectType({
   interfaces: [nodeInterface],
 })
 
+const GraphQLTopic = new GraphQLObjectType({
+  name: 'Topic',
+  description: 'Topic within our system',
+  fields: () => ({
+    id: globalIdField('Topic', obj => db.client.compositeId(obj.teamId, obj.id)),
+    isDefault: {
+      type: GraphQLBoolean,
+      description: 'Boolean indicating this is the default topic',
+    },
+  }),
+  interfaces: [nodeInterface],
+})
+
 const GraphQLAnswer = new GraphQLObjectType({
   name: 'Answer',
   description: 'An answer that is tied to a Bot',
@@ -343,6 +373,11 @@ const { connectionType: UsersConnection, edgeType: GraphQLUserEdge } = connectio
 const { connectionType: BotsConnection } = connectionDefinitions({
   name: 'Bot',
   nodeType: GraphQLBot,
+})
+
+const { connectionType: TopicsConnection } = connectionDefinitions({
+  name: 'Topic',
+  nodeType: GraphQLTopic,
 })
 
 const { connectionType: AnswersConnection, edgeType: GraphQLAnswerEdge } = connectionDefinitions({

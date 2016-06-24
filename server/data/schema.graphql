@@ -152,6 +152,21 @@ type Team implements Node {
   admins(after: String, first: Int, before: String, last: Int): UserConnection
 }
 
+type Topic implements Node {
+  id: ID!
+  isDefault: Boolean
+}
+
+type TopicConnection {
+  pageInfo: PageInfo!
+  edges: [TopicEdge]
+}
+
+type TopicEdge {
+  node: Topic
+  cursor: String!
+}
+
 input UpdateAnswerInput {
   id: ID!
   title: String!
@@ -203,6 +218,7 @@ type User implements Node {
   username: String
   team: Team
   bots(after: String, first: Int, before: String, last: Int): BotConnection
+  topics(after: String, first: Int, before: String, last: Int): TopicConnection
   anonymous: Boolean
   assumed: Boolean
   role: UserRole
