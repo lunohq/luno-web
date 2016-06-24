@@ -475,7 +475,7 @@ const GraphQLCreateAnswerMutation = mutationWithClientMutationId({
       teamId,
       createdBy,
     })
-    if (config.features.replies) {
+    if (config.features.replies && topicId) {
       const { id: topicCompositeId } = fromGlobalId(globalTopicId)
       const [teamId, topicId] = db.client.deconstructId(topicCompositeId)
       debug('Copying answer to reply', { topicId })
@@ -493,7 +493,14 @@ const GraphQLCreateAnswerMutation = mutationWithClientMutationId({
         logger.error('Error copying answer to reply', { err, answer, topicId })
       }
       debug('Copied answer to reply', { reply })
+    } else if (!topicId) {
+      logger.warn('Can\'t copy reply', {
+        userId: auth.uid,
+        teamId: auth.tid,
+        answerId: answer.id,
+      })
     }
+
     tracker.trackCreateAnswer({ auth, id: answer.id })
     return { answer, teamId, botId }
   },
@@ -565,7 +572,7 @@ const GraphQLUpdateAnswerMutation = mutationWithClientMutationId({
       id,
       updatedBy,
     })
-    if (config.features.replies) {
+    if (config.features.replies && topicId) {
       debug('Updating reply', { teamId, id, topicId })
       let reply
       try {
@@ -574,7 +581,14 @@ const GraphQLUpdateAnswerMutation = mutationWithClientMutationId({
         logger.error('Error updating reply', { err, answer })
       }
       debug('Updated reply', { reply })
+    } else if (!topicId) {
+      logger.warn('Can\'t update reply', {
+        userId: auth.uid,
+        teamId: auth.tid,
+        answerId: answer.id,
+      })
     }
+
     tracker.trackUpdateAnswer({ auth, id })
     return answer
   },
