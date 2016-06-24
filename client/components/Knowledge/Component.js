@@ -65,6 +65,11 @@ class Knowledge extends Component {
     return bots.edges[0].node
   }
 
+  getTopic() {
+    const { viewer: { topics } } = this.props
+    return topics.edges[0].node
+  }
+
   getAnswerEdges(props = this.props) {
     const { answers: { edges } } = this.getBot(props)
     return edges
@@ -108,7 +113,8 @@ class Knowledge extends Component {
     let mutation
     if (!answer.id) {
       const bot = this.getBot()
-      mutation = new CreateAnswerMutation({ bot, ...answer })
+      const topic = this.getTopic()
+      mutation = new CreateAnswerMutation({ bot, topic, ...answer })
     } else {
       mutation = new UpdateAnswerMutation({ answer, ...answer })
     }

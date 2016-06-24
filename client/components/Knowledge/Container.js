@@ -13,6 +13,16 @@ export default Relay.createContainer(Component, {
   fragments: {
     viewer: () => Relay.QL`
       fragment on User {
+        topics(first: 1) {
+          edges {
+            node {
+              ${CreateAnswerMutation.getFragment('topic')}
+              id
+              isDefault
+            }
+          }
+        }
+
         bots(first: 1) {
           edges {
             node {

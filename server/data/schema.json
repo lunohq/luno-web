@@ -1841,6 +1841,16 @@
               "defaultValue": null
             },
             {
+              "name": "topicId",
+              "description": "ID of the default Topic to copy this Answer to",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
               "name": "clientMutationId",
               "description": null,
               "type": {

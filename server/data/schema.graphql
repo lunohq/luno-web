@@ -41,6 +41,7 @@ input CreateAnswerInput {
   title: String!
   body: String!
   botId: String!
+  topicId: String
   clientMutationId: String!
 }
 

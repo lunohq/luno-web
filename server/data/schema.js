@@ -430,6 +430,10 @@ const GraphQLCreateAnswerMutation = mutationWithClientMutationId({
       description: 'ID of the Bot for this Answer',
       type: new GraphQLNonNull(GraphQLString),
     },
+    topicId: {
+      description: 'ID of the default Topic to copy this Answer to',
+      type: GraphQLString,
+    },
   },
   outputFields: {
     bot: {
