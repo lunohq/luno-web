@@ -475,7 +475,7 @@ const GraphQLCreateAnswerMutation = mutationWithClientMutationId({
       teamId,
       createdBy,
     })
-    if (config.features.replies && topicId) {
+    if (config.features.replies && globalTopicId) {
       const { id: topicCompositeId } = fromGlobalId(globalTopicId)
       const [teamId, topicId] = db.client.deconstructId(topicCompositeId)
       debug('Copying answer to reply', { topicId })
@@ -493,7 +493,7 @@ const GraphQLCreateAnswerMutation = mutationWithClientMutationId({
         logger.error('Error copying answer to reply', { err, answer, topicId })
       }
       debug('Copied answer to reply', { reply })
-    } else if (!topicId) {
+    } else if (!globalTopicId) {
       logger.warn('Can\'t copy reply', {
         userId: auth.uid,
         teamId: auth.tid,
@@ -561,10 +561,7 @@ const GraphQLUpdateAnswerMutation = mutationWithClientMutationId({
   mutateAndGetPayload: async ({ id: globalId, title, body, topicId: globalTopicId }, { auth }) => {
     const { uid: updatedBy } = auth
     const { id: compositeId } = fromGlobalId(globalId)
-    const { id: compositeTopicId } = fromGlobalId(globalTopicId)
     const [botId, id] = db.client.deconstructId(compositeId)
-    const [teamId, topicId] = db.client.deconstructId(compositeTopicId)
-
     const answer = await db.answer.updateAnswer({
       body,
       title,
@@ -572,7 +569,9 @@ const GraphQLUpdateAnswerMutation = mutationWithClientMutationId({
       id,
       updatedBy,
     })
-    if (config.features.replies && topicId) {
+    if (config.features.replies && globalTopicId) {
+      const { id: compositeTopicId } = fromGlobalId(globalTopicId)
+      const [teamId, topicId] = db.client.deconstructId(compositeTopicId)
       debug('Updating reply', { teamId, id, topicId })
       let reply
       try {
@@ -581,7 +580,7 @@ const GraphQLUpdateAnswerMutation = mutationWithClientMutationId({
         logger.error('Error updating reply', { err, answer })
       }
       debug('Updated reply', { reply })
-    } else if (!topicId) {
+    } else if (!globalTopicId) {
       logger.warn('Can\'t update reply', {
         userId: auth.uid,
         teamId: auth.tid,
