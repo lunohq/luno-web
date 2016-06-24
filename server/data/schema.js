@@ -27,6 +27,7 @@ import {
 import { db } from 'luno-core'
 import tracker from '../tracker'
 import logger from '../logger'
+import config from '../config/environment'
 
 import { getMember, getMembers, SlackMember } from '../actions/slack'
 import { sendInvite, sendAdminPromotion } from '../actions/notifications'
@@ -463,9 +464,9 @@ const GraphQLCreateAnswerMutation = mutationWithClientMutationId({
       }
     },
   },
-  mutateAndGetPayload: async ({ title, body, botId: globalId }, { auth }) => {
+  mutateAndGetPayload: async ({ title, body, botId: globalBotId, topicId: globalTopicId }, { auth }) => {
     const { uid: createdBy } = auth
-    const { id: compositeId } = fromGlobalId(globalId)
+    const { id: compositeId } = fromGlobalId(globalBotId)
     const [teamId, botId] = db.client.deconstructId(compositeId)
     const answer = await db.answer.createAnswer({
       title,
@@ -474,6 +475,24 @@ const GraphQLCreateAnswerMutation = mutationWithClientMutationId({
       teamId,
       createdBy,
     })
+    if (config.features.writeReplies) {
+      const { id: topicCompositeId } = fromGlobalId(globalTopicId)
+      const [teamId, topicId] = db.client.deconstructId(topicCompositeId)
+      debug('Copying answer to reply', { topicId })
+      let reply
+      try {
+        reply = await db.reply.createReply({
+          title,
+          body,
+          teamId,
+          createdBy,
+          topicId,
+        })
+      } catch (err) {
+        logger.error('Error copying answer to reply', { err, answer, topicId })
+      }
+      debug('Copied answer to reply', { reply })
+    }
     tracker.trackCreateAnswer({ auth, id: answer.id })
     return { answer, teamId, botId }
   },
