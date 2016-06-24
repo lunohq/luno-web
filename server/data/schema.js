@@ -475,13 +475,14 @@ const GraphQLCreateAnswerMutation = mutationWithClientMutationId({
       teamId,
       createdBy,
     })
-    if (config.features.writeReplies) {
+    if (config.features.replies) {
       const { id: topicCompositeId } = fromGlobalId(globalTopicId)
       const [teamId, topicId] = db.client.deconstructId(topicCompositeId)
       debug('Copying answer to reply', { topicId })
       let reply
       try {
         reply = await db.reply.createReply({
+          id: answer.id,
           title,
           body,
           teamId,
@@ -517,6 +518,16 @@ const GraphQLDeleteAnswerMutation = mutationWithClientMutationId({
     const { id: compositeId } = fromGlobalId(globalId)
     const [botId, id] = db.client.deconstructId(compositeId)
     const { teamId } = await db.answer.deleteAnswer(botId, id)
+    if (config.features.replies) {
+      debug('Deleting reply', { teamId, id })
+      let reply
+      try {
+        reply = await db.reply.deleteReply({ teamId, id })
+      } catch (err) {
+        logger.error('Error deleting reply', { err, teamId, id })
+      }
+      debug('Deleted reply', { reply })
+    }
     tracker.trackDeleteAnswer({ id, auth })
     return {
       botId,
@@ -532,6 +543,7 @@ const GraphQLUpdateAnswerMutation = mutationWithClientMutationId({
     id: { type: new GraphQLNonNull(GraphQLID) },
     title: { type: new GraphQLNonNull(GraphQLString) },
     body: { type: new GraphQLNonNull(GraphQLString) },
+    topicId: { type: GraphQLString },
   },
   outputFields: {
     answer: {
@@ -539,10 +551,12 @@ const GraphQLUpdateAnswerMutation = mutationWithClientMutationId({
       resolve: (answer) => answer,
     },
   },
-  mutateAndGetPayload: async ({ id: globalId, title, body }, { auth }) => {
+  mutateAndGetPayload: async ({ id: globalId, title, body, topicId: globalTopicId }, { auth }) => {
     const { uid: updatedBy } = auth
     const { id: compositeId } = fromGlobalId(globalId)
+    const { id: compositeTopicId } = fromGlobalId(globalTopicId)
     const [botId, id] = db.client.deconstructId(compositeId)
+    const [teamId, topicId] = db.client.deconstructId(compositeTopicId)
 
     const answer = await db.answer.updateAnswer({
       body,
@@ -551,6 +565,16 @@ const GraphQLUpdateAnswerMutation = mutationWithClientMutationId({
       id,
       updatedBy,
     })
+    if (config.features.replies) {
+      debug('Updating reply', { teamId, id, topicId })
+      let reply
+      try {
+        reply = await db.reply.updateReply({ teamId, id, body, title, updatedBy, topicId })
+      } catch (err) {
+        logger.error('Error updating reply', { err, answer })
+      }
+      debug('Updated reply', { reply })
+    }
     tracker.trackUpdateAnswer({ auth, id })
     return answer
   },

@@ -2059,6 +2059,16 @@
               "defaultValue": null
             },
             {
+              "name": "topicId",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
               "name": "clientMutationId",
               "description": null,
               "type": {

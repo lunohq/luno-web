@@ -7,6 +7,11 @@ export default class UpdateAnswerMutation extends Relay.Mutation {
         id
       }
     `,
+    topic: () => Relay.QL`
+      fragment on Topic {
+        id
+      }
+    `,
   }
 
   getMutation() {
@@ -31,11 +36,12 @@ export default class UpdateAnswerMutation extends Relay.Mutation {
   }
 
   getVariables() {
-    const { answer: { id }, title, body } = this.props
+    const { answer: { id }, topic: { id: topicId }, title, body } = this.props
     return {
       body,
       id,
       title,
+      topicId,
     }
   }
 

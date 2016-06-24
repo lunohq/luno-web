@@ -172,6 +172,7 @@ input UpdateAnswerInput {
   id: ID!
   title: String!
   body: String!
+  topicId: String
   clientMutationId: String!
 }
 

@@ -110,13 +110,13 @@ class Knowledge extends Component {
   }
 
   handleSubmitAnswer = ({ answer }) => {
+    const topic = this.getTopic()
     let mutation
     if (!answer.id) {
       const bot = this.getBot()
-      const topic = this.getTopic()
       mutation = new CreateAnswerMutation({ bot, topic, ...answer })
     } else {
-      mutation = new UpdateAnswerMutation({ answer, ...answer })
+      mutation = new UpdateAnswerMutation({ answer, topic, ...answer })
     }
 
     Relay.Store.commitUpdate(mutation, { onSuccess: ({ createAnswer }) => {

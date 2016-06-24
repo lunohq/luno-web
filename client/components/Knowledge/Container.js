@@ -17,6 +17,7 @@ export default Relay.createContainer(Component, {
           edges {
             node {
               ${CreateAnswerMutation.getFragment('topic')}
+              ${UpdateAnswerMutation.getFragment('topic')}
               id
               isDefault
             }

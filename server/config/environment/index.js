@@ -37,7 +37,7 @@ const config = {
   },
   dashboardUrl: process.env.DASHBOARD_URL,
   features: {
-    writeReplies: parseInt(process.env.FEATURE_FLAGS_WRITE_REPLIES, 10) === 1 || false,
+    replies: parseInt(process.env.FEATURE_FLAGS_REPLIES, 10) === 1 || false,
   },
 }
 

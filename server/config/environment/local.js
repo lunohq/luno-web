@@ -18,6 +18,6 @@ export default {
   },
   dashboardUrl: 'localhost:3000',
   features: {
-    writeReplies: true,
+    replies: true,
   },
 }
