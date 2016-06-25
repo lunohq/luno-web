@@ -67,7 +67,11 @@ class Knowledge extends Component {
 
   getTopic() {
     const { viewer: { topics } } = this.props
-    return topics.edges[0].node
+    let topic
+    if (topics && topics.edges && topics.edges[0]) {
+      topic = topics.edges[0].node
+    }
+    return topic
   }
 
   getAnswerEdges(props = this.props) {

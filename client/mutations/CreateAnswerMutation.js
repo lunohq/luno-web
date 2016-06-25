@@ -41,7 +41,11 @@ export default class CreateAnswerMutation extends Relay.Mutation {
   }
 
   getVariables() {
-    const { title, body, bot: { id: botId }, topic: { id: topicId } } = this.props
+    const { title, body, bot: { id: botId }, topic } = this.props
+    let topicId
+    if (topic) {
+      topicId = topic.id
+    }
     return {
       body,
       title,
