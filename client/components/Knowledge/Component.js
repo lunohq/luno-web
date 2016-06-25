@@ -67,7 +67,8 @@ class Knowledge extends Component {
 
   getTopic() {
     const { viewer: { topics } } = this.props
-    let topic
+    // relay will complain if this isn't explicitly set to null
+    let topic = null
     if (topics && topics.edges && topics.edges[0]) {
       topic = topics.edges[0].node
     }
