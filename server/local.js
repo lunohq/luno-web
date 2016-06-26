@@ -12,7 +12,7 @@ import webpackConfig from '../webpack/local'
 import requireUncached from './utils/requireUncached'
 import formatError from './utils/formatError'
 import config from './config/environment'
-import schema from './data/schema'
+import schema from './graphql/schema'
 import updateSchema from './utils/updateSchema'
 import auth from './middleware/auth'
 import slashCommands from './middleware/slashCommands'
@@ -83,14 +83,14 @@ startGraphQLServer(schema)
 startRelayServer()
 
 // Watch JavaScript files in the data folder for changes, and update schema.json and schema.graphql
-gaze(path.join(__dirname, 'data/*.js'), (err, watcher) => {
+gaze(path.join(__dirname, 'graphql/**.js'), (err, watcher) => {
   if (err) console.error(chalk.red('Error: Watching files in data folder'))
   watcher.on('all', async () => {
     try {
       // Close the GraphQL server, update the schema.json and schema.graphql, and start the server again
       graphQLServer.close()
       await updateSchema()
-      const newSchema = requireUncached(path.join(__dirname, './data/schema')).default
+      const newSchema = requireUncached(path.join(__dirname, './graphql/schema')).default
       startGraphQLServer(newSchema)
 
       // Close the Relay server, and start it again

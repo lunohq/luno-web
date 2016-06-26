@@ -9,7 +9,7 @@ import { HTTPS as enforceHttps } from 'express-sslify'
 import raven from 'raven'
 
 import config from './config/environment'
-import schema from './data/schema'
+import schema from './graphql/schema'
 import auth from './middleware/auth'
 import slashCommands from './middleware/slashCommands'
 import admin from './middleware/admin'

@@ -406,18 +406,6 @@
               "deprecationReason": null
             },
             {
-              "name": "slack",
-              "description": "Slack info related to the Team",
-              "args": [],
-              "type": {
-                "kind": "OBJECT",
-                "name": "SlackInfo",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
               "name": "createdBy",
               "description": "The ID of an object",
               "args": [],
@@ -654,52 +642,6 @@
               "ofType": null
             }
           ],
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "OBJECT",
-          "name": "SlackInfo",
-          "description": "Slack info related to a Team",
-          "fields": [
-            {
-              "name": "bot",
-              "description": null,
-              "args": [],
-              "type": {
-                "kind": "OBJECT",
-                "name": "SlackBot",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
-          "inputFields": null,
-          "interfaces": [],
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "OBJECT",
-          "name": "SlackBot",
-          "description": null,
-          "fields": [
-            {
-              "name": "id",
-              "description": "Our main slack bot id for the Team",
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
-          "inputFields": null,
-          "interfaces": [],
           "enumValues": null,
           "possibleTypes": null
         },

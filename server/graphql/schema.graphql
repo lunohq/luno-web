@@ -112,14 +112,6 @@ type Query {
   viewer: User
 }
 
-type SlackBot {
-  id: String
-}
-
-type SlackInfo {
-  bot: SlackBot
-}
-
 type SlackMember implements Node {
   id: ID!
   userId: ID!
@@ -145,7 +137,6 @@ type SlackMemberProfile {
 type Team implements Node {
   id: ID!
   name: String
-  slack: SlackInfo
   createdBy: ID!
   members(after: String, first: Int, before: String, last: Int): SlackMemberConnection
   users(after: String, first: Int, before: String, last: Int): UserConnection
