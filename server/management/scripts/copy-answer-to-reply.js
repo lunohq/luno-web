@@ -46,7 +46,7 @@ function generateTopicItemRequest({ answer, topic }) {
   return { PutRequest: { Item: topicItem } }
 }
 
-async function processBatch({ team, answers, topic }) {
+async function processBatch({ answers, topic }) {
   let params = {
     RequestItems: {
       [db.reply.table]: answers.map(answer => generateCopyReplyRequest({ answer, topic })),
