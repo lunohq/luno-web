@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import Relay from 'react-relay'
+import { SubmissionError } from 'redux-form'
 
 import t from 'u/gettext'
 import withStyles from 'u/withStyles'
@@ -111,21 +112,30 @@ class Knowledge extends Component {
   }
 
   handleSubmitReply = ({ reply }) => {
-    const topic = this.getTopic()
-    let mutation
-    const bot = this.getBot()
-    if (!reply.id) {
-      mutation = new CreateReply({ bot, topic, ...reply })
-    } else {
-      mutation = new UpdateReply({ reply, bot, topic, ...reply })
-    }
-
-    Relay.Store.commitUpdate(mutation, { onSuccess: ({ createReply }) => {
-      if (createReply) {
-        const { replyEdge: { node: { id } } } = createReply
-        this.context.router.replace(`/knowledge/${id}`)
+    return new Promise((resolve, reject) => {
+      const topic = this.getTopic()
+      let mutation
+      const bot = this.getBot()
+      if (!reply.id) {
+        mutation = new CreateReply({ bot, topic, ...reply })
+      } else {
+        mutation = new UpdateReply({ reply, bot, topic, ...reply })
       }
-    } })
+
+      const onSuccess = ({ createReply }) => {
+        if (createReply) {
+          const { replyEdge: { node: { id } } } = createReply
+          this.context.router.replace(`/knowledge/${id}`)
+        }
+        resolve()
+      }
+
+      const onFailure = (transaction) => {
+        reject(new SubmissionError({ _error: transaction.getError() }))
+      }
+
+      Relay.Store.commitUpdate(mutation, { onSuccess, onFailure })
+    })
   }
 
   displayDeleteReplyDialog = reply => this.setState({

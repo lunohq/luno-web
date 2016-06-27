@@ -72,6 +72,9 @@ class Reply extends Component {
       this.setState({ focused: true })
     }
     this.setState({ newReply }, () => this.setState({ newReply: false }))
+    if (!this.props.error && nextProps.error) {
+      this.setState({ editing: true })
+    }
   }
 
   componentDidUpdate() {
@@ -113,7 +116,7 @@ class Reply extends Component {
 
   handleSave = (values) => {
     this.setState({ editing: false })
-    this.props.onSubmit(values)
+    return this.props.onSubmit(values)
   }
 
   handleCancelOnMouseEnter = () => this.setState({ mightCancel: true })
@@ -130,7 +133,7 @@ class Reply extends Component {
   }
 
   render() {
-    const { handleSubmit, pristine, valid, reply } = this.props
+    const { error, handleSubmit, pristine, valid, reply, submitting } = this.props
     const { editing } = this.state
 
     let actionButtons
@@ -152,6 +155,15 @@ class Reply extends Component {
           primary
         />,
       ]
+    } else if (submitting) {
+      actionButtons = [
+        <FlatButton
+          disabled
+          key='submitting'
+          label={reply.id ? t('Updating...') : t('Creating...') }
+          primary
+        />,
+      ]
     } else {
       actionButtons = [
         <IconButton key='edit' onTouchTap={this.handleEdit}>
@@ -163,17 +175,19 @@ class Reply extends Component {
       ]
     }
 
-    let changed
-    if (reply.changed && !editing) {
-      changed = moment(reply.changed).format('MMM Do, YYYY')
-      changed = t(`Last updated on ${changed}`)
+    let message
+    if (reply.changed && !editing && !submitting) {
+      const changed = moment(reply.changed).format('MMM Do, YYYY')
+      message = t(`Last updated on ${changed}`)
+    } else if (error) {
+      message = t('Internal error saving reply.')
     }
 
     return (
       <Paper className={s.root}>
         <Subheader className={s.header}>
           <div>
-            {changed}
+            <span className={error ? s.error : '' }>{message}</span>
           </div>
           <div>
             {actionButtons}
@@ -228,6 +242,7 @@ Reply.propTypes = {
   pristine: PropTypes.bool,
   reply: PropTypes.object,
   reset: PropTypes.func.isRequired,
+  submitting: PropTypes.bool,
   valid: PropTypes.bool,
 }
 
