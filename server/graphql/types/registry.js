@@ -17,7 +17,7 @@ class Registry {
   }
 
   getRegistration(nameOrInstance) {
-    return typeof nameOrInstance === 'object' ? this._modelMap[nameOrInstance] : this._typeMap[nameOrInstance]
+    return typeof nameOrInstance === 'object' ? this._modelMap[nameOrInstance.constructor] : this._typeMap[nameOrInstance]
   }
 }
 
@@ -39,7 +39,7 @@ function resolveGlobalId(globalId) {
 
 function resolveInstance(instance) {
   const registration = registry.getRegistration(instance)
-  if (!registration) throw new Error(`Unregistered type: ${instance}`)
+  if (!registration) throw new Error(`Unregistered model: ${instance}`)
   return registration.type
 }
 
