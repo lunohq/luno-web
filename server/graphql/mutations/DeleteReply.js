@@ -11,6 +11,8 @@ export default mutationWithClientMutationId({
   name: 'DeleteReply',
   inputFields: {
     id: { type: new GraphQLNonNull(GraphQLID) },
+    topicId: { type: new GraphQLNonNull(GraphQLID) },
+    botId: { type: new GraphQLNonNull(GraphQLID) },
   },
   outputFields: {
     topic: {

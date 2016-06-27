@@ -13,7 +13,8 @@ export default mutationWithClientMutationId({
     id: { type: new GraphQLNonNull(GraphQLID) },
     title: { type: new GraphQLNonNull(GraphQLString) },
     body: { type: new GraphQLNonNull(GraphQLString) },
-    topicId: { type: GraphQLString },
+    topicId: { type: new GraphQLNonNull(GraphQLID) },
+    botId: { type: new GraphQLNonNull(GraphQLID) }
   },
   outputFields: {
     reply: {

@@ -18,33 +18,33 @@ import TextField from 'c/ReduxForm/TextField'
 
 import s from './style.scss'
 
-export const FORM_NAME = 'form/answer'
+export const FORM_NAME = 'form/reply'
 
 const validate = values => {
   const errors = {}
   const requiredFields = ['title', 'body']
   requiredFields.forEach(field => {
-    if (values.answer && !values.answer[field]) {
-      if (!errors.answer) errors.answer = {}
-      errors.answer[field] = t('Required')
+    if (values.reply && !values.reply[field]) {
+      if (!errors.reply) errors.reply = {}
+      errors.reply[field] = t('Required')
       errors._error = true
     }
   })
 
-  if (values.answer && values.answer.title && values.answer.title.split(' ').length > 15) {
-    if (!errors.answer) errors.answer = {}
-    errors.answer.title = t('Title cannot be more than 15 words')
+  if (values.reply && values.reply.title && values.reply.title.split(' ').length > 15) {
+    if (!errors.reply) errors.reply = {}
+    errors.reply.title = t('Title cannot be more than 15 words')
   }
 
   return errors
 }
 
-class Answer extends Component {
+class Reply extends Component {
 
   state = {
     editing: false,
     focused: false,
-    newAnswer: false,
+    newReply: false,
     mightCancel: false,
   }
 
@@ -59,33 +59,33 @@ class Answer extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { answer } = this.props
-    const { answer: nextAnswer } = nextProps
-    const newAnswer = (
-      (answer && nextAnswer && answer !== nextAnswer) ||
-      (!answer && nextAnswer)
+    const { reply } = this.props
+    const { reply: nextReply } = nextProps
+    const newReply = (
+      (reply && nextReply && reply !== nextReply) ||
+      (!reply && nextReply)
     )
-    if (newAnswer) {
+    if (newReply) {
       this.initialize(nextProps)
     }
     if (!this.state.focused && this.props.focused) {
       this.setState({ focused: true })
     }
-    this.setState({ newAnswer }, () => this.setState({ newAnswer: false }))
+    this.setState({ newReply }, () => this.setState({ newReply: false }))
   }
 
   componentDidUpdate() {
     if (!this.state.focused && this.props.focused) {
       this.focus()
     }
-    if (this.state.newAnswer) {
+    if (this.state.newReply) {
       this.resetScroll()
     }
   }
 
-  initialize({ answer }) {
-    if (answer) {
-      const initialValues = { answer }
+  initialize({ reply }) {
+    if (reply) {
+      const initialValues = { reply }
       this.context.store.dispatch(initialize(FORM_NAME, initialValues))
     }
     this.setState({ editing: false, focused: false })
@@ -119,7 +119,7 @@ class Answer extends Component {
   handleCancelOnMouseEnter = () => this.setState({ mightCancel: true })
   handleCancelOnMouseLeave = () => this.setState({ mightCancel: false })
 
-  handleDelete = () => this.props.onDelete(this.props.answer)
+  handleDelete = () => this.props.onDelete(this.props.reply)
 
   handleFocus = () => this.setState({ editing: true })
 
@@ -130,7 +130,7 @@ class Answer extends Component {
   }
 
   render() {
-    const { handleSubmit, pristine, valid, answer } = this.props
+    const { handleSubmit, pristine, valid, reply } = this.props
     const { editing } = this.state
 
     let actionButtons
@@ -145,9 +145,9 @@ class Answer extends Component {
           secondary
         />,
         <FlatButton
-          disabled={(!answer && pristine) || !valid}
+          disabled={(!reply && pristine) || !valid}
           key='create'
-          label={answer.id ? t('Update') : t('Create')}
+          label={reply.id ? t('Update') : t('Create')}
           onTouchTap={handleSubmit(this.handleSave)}
           primary
         />,
@@ -164,8 +164,8 @@ class Answer extends Component {
     }
 
     let changed
-    if (answer.changed && !editing) {
-      changed = moment(answer.changed).format('MMM Do, YYYY')
+    if (reply.changed && !editing) {
+      changed = moment(reply.changed).format('MMM Do, YYYY')
       changed = t(`Last updated on ${changed}`)
     }
 
@@ -191,7 +191,7 @@ class Answer extends Component {
               hideError={this.state.mightCancel}
               hintText={t('Add a title')}
               multiLine
-              name='answer.title'
+              name='reply.title'
               onFocus={this.handleFocus}
               onKeyDown={this.handleIgnoreEnter}
               ref='title'
@@ -207,7 +207,7 @@ class Answer extends Component {
               hideError={this.state.mightCancel}
               hintText={t('Add a reply')}
               multiLine
-              name='answer.body'
+              name='reply.body'
               onFocus={this.handleFocus}
               rows={2}
             />
@@ -219,23 +219,23 @@ class Answer extends Component {
 
 }
 
-Answer.propTypes = {
-  answer: PropTypes.object,
+Reply.propTypes = {
   focused: PropTypes.bool,
   handleSubmit: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   pristine: PropTypes.bool,
+  reply: PropTypes.object,
   reset: PropTypes.func.isRequired,
   valid: PropTypes.bool,
 }
 
-Answer.contextTypes = {
+Reply.contextTypes = {
   store: PropTypes.object.isRequired,
 }
 
 export default withStyles(s)(reduxForm({
   form: FORM_NAME,
   validate,
-})(Answer))
+})(Reply))

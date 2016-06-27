@@ -4,14 +4,14 @@ import Relay from 'react-relay'
 import t from 'u/gettext'
 import withStyles from 'u/withStyles'
 
-import CreateAnswerMutation from 'm/CreateAnswerMutation'
-import DeleteAnswerMutation from 'm/DeleteAnswerMutation'
-import UpdateAnswerMutation from 'm/UpdateAnswerMutation'
+import CreateReply from 'm/CreateReply'
+import DeleteReply from 'm/DeleteReply'
+import UpdateReply from 'm/UpdateReply'
 
 import { NAV_WIDTH, MENU_WIDTH } from 'c/AuthenticatedLanding/Navigation'
 import DocumentTitle from 'c/DocumentTitle'
-import AnswerList from 'c/AnswerList/Component'
-import Answer from 'c/Answer/Component'
+import ReplyList from 'c/ReplyList/Component'
+import Reply from 'c/Reply/Component'
 
 import DeleteDialog from './DeleteDialog'
 import Navigation from './Navigation'
@@ -21,9 +21,9 @@ import s from './style.scss'
 class Knowledge extends Component {
 
   state = {
-    activeAnswer: {},
-    deleteAnswerDialogOpen: false,
-    answerToDelete: null,
+    activeReply: {},
+    deleteReplyDialogOpen: false,
+    replyToDelete: null,
   }
 
   componentWillMount() {
@@ -31,33 +31,11 @@ class Knowledge extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { params: { answerId } } = this.props
-    const { params: { answerId: nextAnswerId } } = nextProps
-    if (answerId !== nextAnswerId || this.getAnswerEdges(this.props) !== this.getAnswerEdges(nextProps)) {
+    const { params: { replyId } } = this.props
+    const { params: { replyId: nextReplyId } } = nextProps
+    if (replyId !== nextReplyId || this.getReplyEdges(this.props) !== this.getReplyEdges(nextProps)) {
       this.initialize(nextProps)
     }
-  }
-
-  initialize(props) {
-    const { params: { answerId } } = props
-    const answers = this.getAnswerEdges(props)
-    if (!answerId) {
-      this.routeToDefault({ props })
-      return
-    }
-
-    let activeAnswer = {}
-    for (const { node: answer } of answers) {
-      if (answer.id === answerId) {
-        activeAnswer = answer
-        break
-      }
-    }
-    if (answerId !== 'new' && !activeAnswer.id) {
-      this.routeToDefault({ props })
-      return
-    }
-    this.setState({ activeAnswer })
   }
 
   getBot(props = this.props) {
@@ -67,89 +45,107 @@ class Knowledge extends Component {
 
   getTopic() {
     const { viewer: { topics } } = this.props
-    // relay will complain if this isn't explicitly set to null
-    let topic = null
-    if (topics && topics.edges && topics.edges[0]) {
-      topic = topics.edges[0].node
-    }
-    return topic
+    return topics.edges[0].node
   }
 
-  getAnswerEdges(props = this.props) {
-    const { answers: { edges } } = this.getBot(props)
+  getReplyEdges(props = this.props) {
+    const { replies: { edges } } = this.getTopic(props)
     return edges
   }
 
-  routeToDefault({ props = this.props, ignoreId } = {}) {
-    const answerEdges = this.getAnswerEdges(props)
-    let answerId = 'new'
-    for (const { node: answer } of answerEdges) {
-      if (answer.id !== ignoreId) {
-        answerId = answer.id
+  initialize(props) {
+    const { params: { replyId } } = props
+    const replyEdges = this.getReplyEdges(props)
+    if (!replyId) {
+      this.routeToDefault({ props })
+      return
+    }
+
+    let activeReply = {}
+    for (const { node: reply } of replyEdges) {
+      if (reply.id === replyId) {
+        activeReply = reply
         break
       }
     }
-    this.context.router.replace(`/knowledge/${answerId}`)
-  }
-
-  handleNewAnswer = () => this.context.router.push('/knowledge/new')
-
-  handleChangeAnswer = answer => {
-    this.context.router.push(`/knowledge/${answer.id || 'new'}`)
-  }
-
-  handleDeleteAnswer = () => {
-    const { answerToDelete: answer } = this.state
-    if (answer) {
-      const bot = this.getBot()
-      Relay.Store.commitUpdate(new DeleteAnswerMutation({ answer, bot }))
-      this.routeToDefault({ ignoreId: answer.id })
+    if (replyId !== 'new' && !activeReply.id) {
+      this.routeToDefault({ props })
+      return
     }
-    this.hideDeleteAnswerDialog()
+    this.setState({ activeReply })
   }
 
-  handleCancelAnswer = () => {
-    if (!this.state.activeAnswer.id) {
+  routeToDefault({ props = this.props, ignoreId } = {}) {
+    const replyEdges = this.getReplyEdges(props)
+    let replyId = 'new'
+    for (const { node: reply } of replyEdges) {
+      if (reply.id !== ignoreId) {
+        replyId = reply.id
+        break
+      }
+    }
+    this.context.router.replace(`/knowledge/${replyId}`)
+  }
+
+  handleNewReply = () => this.context.router.push('/knowledge/new')
+
+  handleChangeReply = reply => {
+    this.context.router.push(`/knowledge/${reply.id || 'new'}`)
+  }
+
+  handleDeleteReply = () => {
+    const { replyToDelete: reply } = this.state
+    if (reply) {
+      const topic = this.getTopic()
+      const bot = this.getBot()
+      Relay.Store.commitUpdate(new DeleteReply({ topic, reply, bot }))
+      this.routeToDefault({ ignoreId: reply.id })
+    }
+    this.hideDeleteReplyDialog()
+  }
+
+  handleCancelReply = () => {
+    if (!this.state.activeReply.id) {
       this.routeToDefault()
     }
   }
 
-  handleSubmitAnswer = ({ answer }) => {
+  handleSubmitReply = ({ reply }) => {
     const topic = this.getTopic()
     let mutation
-    if (!answer.id) {
-      const bot = this.getBot()
-      mutation = new CreateAnswerMutation({ bot, topic, ...answer })
+    const bot = this.getBot()
+    if (!reply.id) {
+      mutation = new CreateReply({ bot, topic, ...reply })
     } else {
-      mutation = new UpdateAnswerMutation({ answer, topic, ...answer })
+      mutation = new UpdateReply({ reply, bot, topic, ...reply })
     }
 
-    Relay.Store.commitUpdate(mutation, { onSuccess: ({ createAnswer }) => {
-      if (createAnswer) {
-        const { answerEdge: { node: { id } } } = createAnswer
+    Relay.Store.commitUpdate(mutation, { onSuccess: ({ createReply }) => {
+      if (createReply) {
+        const { replyEdge: { node: { id } } } = createReply
         this.context.router.replace(`/knowledge/${id}`)
       }
     } })
   }
 
-  displayDeleteAnswerDialog = answer => this.setState({
-    deleteAnswerDialogOpen: true,
-    answerToDelete: answer,
+  displayDeleteReplyDialog = reply => this.setState({
+    deleteReplyDialogOpen: true,
+    replyToDelete: reply,
   })
 
-  hideDeleteAnswerDialog = () => this.setState({
-    deleteAnswerDialogOpen: false,
-    answerToDelete: null,
+  hideDeleteReplyDialog = () => this.setState({
+    deleteReplyDialogOpen: false,
+    replyToDelete: null,
   })
 
   render() {
-    let answerEdges = this.getAnswerEdges()
-    const { params: { answerId } } = this.props
-    if (answerId === 'new') {
-      answerEdges = [{ node: this.state.activeAnswer }]
-      answerEdges.push(...this.getAnswerEdges())
+    let replyEdges = this.getReplyEdges()
+    const { params: { replyId } } = this.props
+    if (replyId === 'new') {
+      replyEdges = [{ node: this.state.activeReply }]
+      replyEdges.push(...this.getReplyEdges())
     }
-    const focused = answerId === 'new'
+    const focused = replyId === 'new'
     const marginLeft = {
       marginLeft: NAV_WIDTH + MENU_WIDTH,
     }
@@ -161,30 +157,30 @@ class Knowledge extends Component {
             className={s.content}
             style={marginLeft}
           >
-            <div className={s.answerList}>
-              <AnswerList
-                onChange={this.handleChangeAnswer}
-                onNew={this.handleNewAnswer}
-                answerEdges={answerEdges}
-                answer={this.state.activeAnswer}
+            <div className={s.replyList}>
+              <ReplyList
+                onChange={this.handleChangeReply}
+                onNew={this.handleNewReply}
+                replyEdges={replyEdges}
+                reply={this.state.activeReply}
               />
             </div>
-            <div className={s.answer}>
-              <Answer
-                answer={this.state.activeAnswer}
-                onCancel={this.handleCancelAnswer}
-                onDelete={this.displayDeleteAnswerDialog}
-                onSubmit={this.handleSubmitAnswer}
+            <div className={s.reply}>
+              <Reply
                 focused={focused}
+                onCancel={this.handleCancelReply}
+                onDelete={this.displayDeleteReplyDialog}
+                onSubmit={this.handleSubmitReply}
+                reply={this.state.activeReply}
               />
             </div>
           </section>
-          {(() => !this.state.answerToDelete ? null : (
+          {(() => !this.state.replyToDelete ? null : (
             <DeleteDialog
-              open={this.state.deleteAnswerDialogOpen}
-              answer={this.state.answerToDelete}
-              onCancel={this.hideDeleteAnswerDialog}
-              onConfirm={this.handleDeleteAnswer}
+              onCancel={this.hideDeleteReplyDialog}
+              onConfirm={this.handleDeleteReply}
+              open={this.state.deleteReplyDialogOpen}
+              reply={this.state.replyToDelete}
             />
           ))()}
         </div>

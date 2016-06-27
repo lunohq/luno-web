@@ -54,7 +54,8 @@ type CreateAnswerPayload {
 input CreateReplyInput {
   title: String!
   body: String!
-  topicId: String!
+  topicId: ID!
+  botId: ID!
   clientMutationId: String!
 }
 
@@ -77,6 +78,8 @@ type DeleteAnswerPayload {
 
 input DeleteReplyInput {
   id: ID!
+  topicId: ID!
+  botId: ID!
   clientMutationId: String!
 }
 
@@ -243,7 +246,8 @@ input UpdateReplyInput {
   id: ID!
   title: String!
   body: String!
-  topicId: String
+  topicId: ID!
+  botId: ID!
   clientMutationId: String!
 }
 

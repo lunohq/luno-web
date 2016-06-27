@@ -14,24 +14,24 @@ import moment from 'u/moment'
 
 import SelectableList from 'c/SelectableList'
 
-import s from 'c/Answer/style.scss'
+import s from 'c/Reply/style.scss'
 
-class AnswerList extends Component {
+class ReplyList extends Component {
 
   componentDidUpdate() {
-    const { answer } = this.props
-    // Scroll to the top for new answers
-    if (!answer.id) {
+    const { reply } = this.props
+    // Scroll to the top for new replies
+    if (!reply.id) {
       const c = ReactDOM.findDOMNode(this.refs.container)
       scroll(0, undefined, undefined, c)
     }
   }
 
   render() {
-    const { answerEdges, answer } = this.props
-    const answerRows = []
-    for (const index in answerEdges) {
-      const { node } = answerEdges[index]
+    const { replyEdges, reply } = this.props
+    const replyRows = []
+    for (const index in replyEdges) {
+      const { node } = replyEdges[index]
       let title = node.title
       if (!node.id) {
         title = 'New Reply'
@@ -42,7 +42,7 @@ class AnswerList extends Component {
         changed = moment(node.changed).format('MMM Do, YYYY')
         changed = t(`Last updated on ${changed}`)
       }
-      answerRows.push(
+      replyRows.push(
         <ListItem
           key={index}
           onTouchTap={() => this.props.onChange(node)}
@@ -52,16 +52,16 @@ class AnswerList extends Component {
           value={node.id || 'new'}
         />
       )
-      answerRows.push(<Divider key={`${index}-divider`} />)
+      replyRows.push(<Divider key={`${index}-divider`} />)
     }
 
     return (
       <Paper className={s.root}>
         <Subheader className={s.header}>
-          Lunobot
+          {t('Lunobot')}
           <div>
             <FlatButton
-              disabled={!!!answer.id}
+              disabled={!!!reply.id}
               label={t('Add Reply')}
               onTouchTap={this.props.onNew}
               primary
@@ -69,8 +69,8 @@ class AnswerList extends Component {
           </div>
         </Subheader>
         <div className={s.content} ref='container'>
-          <SelectableList defaultValue={answer.id || 'new'}>
-              {answerRows}
+          <SelectableList defaultValue={reply.id || 'new'}>
+              {replyRows}
           </SelectableList>
         </div>
       </Paper>
@@ -78,19 +78,19 @@ class AnswerList extends Component {
   }
 }
 
-AnswerList.propTypes = {
-  answer: PropTypes.shape({
+ReplyList.propTypes = {
+  onChange: PropTypes.func.isRequired,
+  onNew: PropTypes.func.isRequired,
+  reply: PropTypes.shape({
     id: PropTypes.string,
   }).isRequired,
-  answerEdges: PropTypes.arrayOf(PropTypes.shape({
+  replyEdges: PropTypes.arrayOf(PropTypes.shape({
     node: PropTypes.shape({
       id: PropTypes.string,
       title: PropTypes.string,
       changed: PropTypes.string,
     }).isRequired,
   })).isRequired,
-  onChange: PropTypes.func.isRequired,
-  onNew: PropTypes.func.isRequired,
 }
 
-export default withStyles(s)(AnswerList)
+export default withStyles(s)(ReplyList)

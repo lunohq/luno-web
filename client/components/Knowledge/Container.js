@@ -1,9 +1,9 @@
 import Relay from 'react-relay'
 import Component from './Component'
 
-import CreateAnswerMutation from 'm/CreateAnswerMutation'
-import DeleteAnswerMutation from 'm/DeleteAnswerMutation'
-import UpdateAnswerMutation from 'm/UpdateAnswerMutation'
+import CreateReply from 'm/CreateReply'
+import DeleteReply from 'm/DeleteReply'
+import UpdateReply from 'm/UpdateReply'
 
 export default Relay.createContainer(Component, {
   initialVariables: {
@@ -16,23 +16,16 @@ export default Relay.createContainer(Component, {
         topics(first: 1) {
           edges {
             node {
-              ${CreateAnswerMutation.getFragment('topic')}
-              ${UpdateAnswerMutation.getFragment('topic')}
+              ${CreateReply.getFragment('topic')}
+              ${DeleteReply.getFragment('topic')}
+              ${UpdateReply.getFragment('topic')}
               id
               isDefault
-            }
-          }
-        }
-
-        bots(first: 1) {
-          edges {
-            node {
-              ${CreateAnswerMutation.getFragment('bot')}
-              answers(first: $limit) {
+              replies(first: $limit) {
                 edges {
                   node {
-                    ${DeleteAnswerMutation.getFragment('answer')}
-                    ${UpdateAnswerMutation.getFragment('answer')}
+                    ${DeleteReply.getFragment('reply')}
+                    ${UpdateReply.getFragment('reply')}
                     id
                     title
                     body
@@ -40,6 +33,16 @@ export default Relay.createContainer(Component, {
                   }
                 }
               }
+            }
+          }
+        }
+
+        bots(first: 1) {
+          edges {
+            node {
+              ${CreateReply.getFragment('bot')}
+              ${DeleteReply.getFragment('bot')}
+              ${UpdateReply.getFragment('bot')}
             }
           }
         }

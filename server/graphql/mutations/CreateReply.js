@@ -1,4 +1,4 @@
-import { GraphQLNonNull, GraphQLString } from 'graphql'
+import { GraphQLID, GraphQLNonNull, GraphQLString } from 'graphql'
 import { fromGlobalId, mutationWithClientMutationId } from 'graphql-relay'
 import { db } from 'luno-core'
 
@@ -22,7 +22,11 @@ export default mutationWithClientMutationId({
     },
     topicId: {
       description: 'ID of the Topic the Reply is assigned to.',
-      type: new GraphQLNonNull(GraphQLString),
+      type: new GraphQLNonNull(GraphQLID),
+    },
+    botId: {
+      description: 'ID of the Bot to support copying to answer.',
+      type: new GraphQLNonNull(GraphQLID),
     },
   },
   outputFields: {
