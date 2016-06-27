@@ -4,6 +4,9 @@ import { db } from 'luno-core'
 import CreateAnswer from '../mutations/CreateAnswer'
 import DeleteAnswer from '../mutations/DeleteAnswer'
 import UpdateAnswer from '../mutations/UpdateAnswer'
+import CreateReply from '../mutations/CreateReply'
+import DeleteReply from '../mutations/DeleteReply'
+import UpdateReply from '../mutations/UpdateReply'
 import Logout from '../mutations/Logout'
 import UpdateBotPurpose from '../mutations/UpdateBotPurpose'
 import UpdateBotPointsOfContact from '../mutations/UpdateBotPointsOfContact'
@@ -51,6 +54,9 @@ const GraphQLMutation = new GraphQLObjectType({
     updateBotPointsOfContact: adminMutation(UpdateBotPointsOfContact),
     updateUser: adminMutation(UpdateUser),
     inviteUser: adminMutation(InviteUser),
+    createReply: staffMutation(CreateReply),
+    deleteReply: staffMutation(DeleteReply),
+    updateReply: staffMutation(UpdateReply),
   }),
 })
 

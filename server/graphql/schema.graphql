@@ -51,6 +51,19 @@ type CreateAnswerPayload {
   clientMutationId: String!
 }
 
+input CreateReplyInput {
+  title: String!
+  body: String!
+  topicId: String!
+  clientMutationId: String!
+}
+
+type CreateReplyPayload {
+  topic: Topic
+  replyEdge: ReplyEdge
+  clientMutationId: String!
+}
+
 input DeleteAnswerInput {
   id: ID!
   clientMutationId: String!
@@ -58,6 +71,17 @@ input DeleteAnswerInput {
 
 type DeleteAnswerPayload {
   bot: Bot
+  deletedId: ID
+  clientMutationId: String!
+}
+
+input DeleteReplyInput {
+  id: ID!
+  clientMutationId: String!
+}
+
+type DeleteReplyPayload {
+  topic: Topic
   deletedId: ID
   clientMutationId: String!
 }
@@ -94,6 +118,9 @@ type Mutation {
   updateBotPointsOfContact(input: UpdateBotPointsOfContactInput!): UpdateBotPointsOfContactPayload
   updateUser(input: UpdateUserInput!): UpdateUserPayload
   inviteUser(input: InviteUserInput!): InviteUserPayload
+  createReply(input: CreateReplyInput!): CreateReplyPayload
+  deleteReply(input: DeleteReplyInput!): DeleteReplyPayload
+  updateReply(input: UpdateReplyInput!): UpdateReplyPayload
 }
 
 interface Node {
@@ -209,6 +236,19 @@ input UpdateBotPurposeInput {
 
 type UpdateBotPurposePayload {
   bot: Bot
+  clientMutationId: String!
+}
+
+input UpdateReplyInput {
+  id: ID!
+  title: String!
+  body: String!
+  topicId: String
+  clientMutationId: String!
+}
+
+type UpdateReplyPayload {
+  reply: Reply
   clientMutationId: String!
 }
 
