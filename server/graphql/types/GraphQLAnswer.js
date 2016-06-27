@@ -28,8 +28,8 @@ const GraphQLAnswer = new GraphQLObjectType({
 export default registerType({
   type: GraphQLAnswer,
   model: db.answer.Answer,
-  resolve: id => {
-    const [partitionKey, sortKey] = db.client.deconstructId(id)
+  resolve: compositeId => {
+    const [partitionKey, sortKey] = db.client.deconstructId(compositeId)
     return db.answer.getAnswer(partitionKey, sortKey)
   },
 })

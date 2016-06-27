@@ -112,6 +112,23 @@ type Query {
   viewer: User
 }
 
+type Reply implements Node {
+  id: ID!
+  title: String
+  body: String
+  changed: String
+}
+
+type ReplyConnection {
+  pageInfo: PageInfo!
+  edges: [ReplyEdge]
+}
+
+type ReplyEdge {
+  node: Reply
+  cursor: String!
+}
+
 type SlackMember implements Node {
   id: ID!
   userId: ID!
@@ -147,6 +164,7 @@ type Team implements Node {
 type Topic implements Node {
   id: ID!
   isDefault: Boolean
+  replies(after: String, first: Int, before: String, last: Int): ReplyConnection
 }
 
 type TopicConnection {

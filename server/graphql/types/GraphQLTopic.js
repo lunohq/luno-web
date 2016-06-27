@@ -1,7 +1,8 @@
 import { GraphQLObjectType, GraphQLBoolean } from 'graphql'
-import { globalIdField } from 'graphql-relay'
+import { globalIdField, connectionArgs, connectionFromArray } from 'graphql-relay'
 import { db } from 'luno-core'
 
+import Replies from '../connections/Replies'
 import { registerType, nodeInterface } from './registry'
 
 const GraphQLTopic = new GraphQLObjectType({
@@ -12,6 +13,15 @@ const GraphQLTopic = new GraphQLObjectType({
     isDefault: {
       type: GraphQLBoolean,
       description: 'Boolean indicating this is the default topic',
+    },
+    replies: {
+      type: Replies.connectionType,
+      description: 'Replies within the topic',
+      args: connectionArgs,
+      resolve: async ({ teamId, id: topicId }, args) => {
+        const replies = await db.reply.getRepliesForTopic({ teamId, topicId })
+        return connectionFromArray(replies, args)
+      },
     },
   }),
   interfaces: [nodeInterface],
