@@ -20,7 +20,6 @@ export default Relay.createContainer(Component, {
               ${DeleteReply.getFragment('topic')}
               ${UpdateReply.getFragment('topic')}
               id
-              isDefault
               replies(first: $limit) {
                 edges {
                   node {
