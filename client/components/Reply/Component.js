@@ -234,6 +234,7 @@ class Reply extends Component {
 }
 
 Reply.propTypes = {
+  error: PropTypes.object,
   focused: PropTypes.bool,
   handleSubmit: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
