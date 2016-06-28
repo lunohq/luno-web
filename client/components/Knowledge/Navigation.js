@@ -3,6 +3,7 @@ import Drawer from 'material-ui/Drawer'
 import { ListItem } from 'material-ui/List'
 import AvLibraryAdd from 'material-ui/svg-icons/av/library-add'
 import AvLibraryBooks from 'material-ui/svg-icons/av/library-books'
+import IconButton from 'material-ui/IconButton'
 
 import t from 'u/gettext'
 import withStyles from 'u/withStyles'
@@ -19,7 +20,7 @@ const Navigation = ({ defaultId, onNewTopic, topics }) => {
     <ListItem
       key={'default'}
       primaryText={t('Lunobot')}
-      rightIcon={<AvLibraryAdd onTouchTap={onNewTopic} />}
+      rightIconButton={<IconButton onTouchTap={onNewTopic}><AvLibraryAdd /></IconButton>}
       value={defaultId}
     />
   ]
