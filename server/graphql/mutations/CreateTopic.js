@@ -22,7 +22,7 @@ export default mutationWithClientMutationId({
   outputFields: {
     viewer: {
       type: GraphQLUser,
-      resolve: (output, { auth }) => db.user.getUser(auth.uid),
+      resolve: ({ auth }) => db.user.getUser(auth.uid),
     },
     topicEdge: {
       type: Topics.edgeType,
@@ -41,6 +41,6 @@ export default mutationWithClientMutationId({
       pointsOfContact,
     })
     tracker.trackCreateTopic({ id: topic.id, auth })
-    return { topic, teamId }
+    return { topic, teamId, auth }
   },
 })

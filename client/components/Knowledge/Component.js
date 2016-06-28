@@ -57,6 +57,15 @@ class Knowledge extends Component {
     return edges
   }
 
+  getTopicEdges() {
+    let edges = []
+    const { viewer } = this.props
+    if (viewer.topics && viewer.topics.edges) {
+      edges = viewer.topics.edges
+    }
+    return edges
+  }
+
   initialize(props) {
     const { params: { replyId } } = props
     const replyEdges = this.getReplyEdges(props)
@@ -178,6 +187,11 @@ class Knowledge extends Component {
       replyEdges = [{ node: this.state.activeReply }]
       replyEdges.push(...this.getReplyEdges())
     }
+    let topics = []
+    const topicEdges = this.getTopicEdges()
+    if (topicEdges) {
+      topics = topicEdges.map(({ node }) => node)
+    }
     const focused = replyId === 'new'
     const marginLeft = {
       marginLeft: NAV_WIDTH + MENU_WIDTH,
@@ -188,6 +202,7 @@ class Knowledge extends Component {
           <Navigation
             defaultId={defaultTopic.id}
             onNewTopic={this.displayTopicForm}
+            topics={topics}
           />
           <section
             className={s.content}

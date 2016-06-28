@@ -2,6 +2,14 @@ import Relay from 'react-relay'
 
 export default class CreateTopic extends Relay.Mutation {
 
+  static fragments = {
+    viewer: () => Relay.QL`
+      fragment on User {
+        id
+      }
+    `,
+  }
+
   getMutation() {
     return Relay.QL`mutation { createTopic }`
   }
@@ -16,7 +24,6 @@ export default class CreateTopic extends Relay.Mutation {
   }
 
   getConfigs() {
-    // TODO this should be alphabetized
     return [{
       type: 'RANGE_ADD',
       parentName: 'viewer',
@@ -24,7 +31,7 @@ export default class CreateTopic extends Relay.Mutation {
       connectionName: 'topics',
       edgeName: 'topicEdge',
       rangeBehaviors: {
-        '': 'prepend',
+        '': 'refetch',
       },
     }]
   }

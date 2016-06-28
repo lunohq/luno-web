@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react'
 import Drawer from 'material-ui/Drawer'
 import { ListItem } from 'material-ui/List'
 import AvLibraryAdd from 'material-ui/svg-icons/av/library-add'
+import AvLibraryBooks from 'material-ui/svg-icons/av/library-books'
 
 import t from 'u/gettext'
 import withStyles from 'u/withStyles'
@@ -13,25 +14,42 @@ import SelectableList from 'c/SelectableList'
 import s from './style.scss'
 
 // load default topic id and then all other topics below
-const Navigation = ({ defaultId, onNewTopic }) => (
-  <Drawer
-    containerClassName={s.navPaddingTop}
-    containerStyle={{ left: NAV_WIDTH }}
-    width={MENU_WIDTH}
-  >
-    <SelectableList defaultValue={defaultId}>
+const Navigation = ({ defaultId, onNewTopic, topics }) => {
+  const items = [
+    <ListItem
+      key={'default'}
+      primaryText={t('Lunobot')}
+      rightIcon={<AvLibraryAdd onTouchTap={onNewTopic} />}
+      value={defaultId}
+    />
+  ]
+  topics.forEach(topic => {
+    items.push(
       <ListItem
-        primaryText={t('Lunobot')}
-        rightIcon={<AvLibraryAdd onTouchTap={onNewTopic} />}
-        value={defaultId}
+        key={topic.id}
+        leftIcon={<AvLibraryBooks />}
+        primaryText={topic.name}
+        value={topic.id}
       />
-    </SelectableList>
-  </Drawer>
-)
+    )
+  })
+  return (
+    <Drawer
+      containerClassName={s.navPaddingTop}
+      containerStyle={{ left: NAV_WIDTH }}
+      width={MENU_WIDTH}
+    >
+      <SelectableList defaultValue={defaultId}>
+        {items}
+      </SelectableList>
+    </Drawer>
+  )
+}
 
 Navigation.propTypes = {
   defaultId: PropTypes.string.isRequired,
   onNewTopic: PropTypes.func.isRequired,
+  topics: PropTypes.array,
 }
 
 export default withStyles(s)(Navigation)

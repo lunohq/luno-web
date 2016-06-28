@@ -1,6 +1,7 @@
 import Relay from 'react-relay'
 import Component from './Component'
 
+import CreateTopic from 'm/CreateTopic'
 import CreateReply from 'm/CreateReply'
 import DeleteReply from 'm/DeleteReply'
 import UpdateReply from 'm/UpdateReply'
@@ -14,6 +15,7 @@ export default Relay.createContainer(Component, {
   fragments: {
     viewer: () => Relay.QL`
       fragment on User {
+        ${CreateTopic.getFragment('viewer')}
         defaultTopic {
           ${CreateReply.getFragment('topic')}
           ${DeleteReply.getFragment('topic')}
@@ -40,6 +42,7 @@ export default Relay.createContainer(Component, {
               ${DeleteReply.getFragment('topic')}
               ${UpdateReply.getFragment('topic')}
               id
+              name
               replies(first: $limit) {
                 edges {
                   node {
