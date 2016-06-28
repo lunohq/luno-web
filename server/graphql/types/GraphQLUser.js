@@ -10,6 +10,7 @@ import {
 } from 'graphql-relay'
 import { db } from 'luno-core'
 
+import GraphQLTopic from './GraphQLTopic'
 import Topics from '../connections/Topics'
 import Bots from '../connections/Bots'
 
@@ -47,14 +48,24 @@ const GraphQLUser = new GraphQLObjectType({
         return null
       },
     },
+    defaultTopic: {
+      type: GraphQLTopic,
+      description: 'The default Topic the User has access to',
+      resolve: (user) => {
+        if (!user.anonymous) {
+          return db.topic.getDefaultTopic(user.teamId)
+        }
+        return null
+      },
+    },
     topics: {
       type: Topics.connectionType,
       description: 'Topics the User has access to',
       args: connectionArgs,
       resolve: async (user, args) => {
         if (!user.anonymous) {
-          const defaultTopic = db.topic.getDefaultTopic(user.teamId)
-          return connectionFromArray([defaultTopic], args)
+          const topics = await db.topic.getTopics(user.teamId)
+          return connectionFromArray(topics, args)
         }
         return null
       },

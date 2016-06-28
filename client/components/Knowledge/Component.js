@@ -8,6 +8,7 @@ import withStyles from 'u/withStyles'
 import CreateReply from 'm/CreateReply'
 import DeleteReply from 'm/DeleteReply'
 import UpdateReply from 'm/UpdateReply'
+import CreateTopic from 'm/CreateTopic'
 
 import { NAV_WIDTH, MENU_WIDTH } from 'c/AuthenticatedLanding/Navigation'
 import DocumentTitle from 'c/DocumentTitle'
@@ -16,6 +17,7 @@ import Reply from 'c/Reply/Component'
 
 import DeleteDialog from './DeleteDialog'
 import Navigation from './Navigation'
+import TopicDialog from './TopicDialog'
 
 import s from './style.scss'
 
@@ -25,6 +27,7 @@ class Knowledge extends Component {
     activeReply: {},
     deleteReplyDialogOpen: false,
     replyToDelete: null,
+    topicFormOpen: false,
   }
 
   componentWillMount() {
@@ -44,13 +47,13 @@ class Knowledge extends Component {
     return bots.edges[0].node
   }
 
-  getTopic() {
-    const { viewer: { topics } } = this.props
-    return topics.edges[0].node
+  getDefaultTopic() {
+    const { viewer: { defaultTopic } } = this.props
+    return defaultTopic
   }
 
   getReplyEdges(props = this.props) {
-    const { replies: { edges } } = this.getTopic(props)
+    const { replies: { edges } } = this.getDefaultTopic(props)
     return edges
   }
 
@@ -97,7 +100,7 @@ class Knowledge extends Component {
   handleDeleteReply = () => {
     const { replyToDelete: reply } = this.state
     if (reply) {
-      const topic = this.getTopic()
+      const topic = this.getDefaultTopic()
       const bot = this.getBot()
       Relay.Store.commitUpdate(new DeleteReply({ topic, reply, bot }))
       this.routeToDefault({ ignoreId: reply.id })
@@ -113,7 +116,7 @@ class Knowledge extends Component {
 
   handleSubmitReply = ({ reply }) => {
     return new Promise((resolve, reject) => {
-      const topic = this.getTopic()
+      const topic = this.getDefaultTopic()
       let mutation
       const bot = this.getBot()
       if (!reply.id) {
@@ -148,7 +151,27 @@ class Knowledge extends Component {
     replyToDelete: null,
   })
 
+  displayTopicForm = () => this.setState({ topicFormOpen: true })
+  hideTopicForm = () => this.setState({ topicFormOpen: false })
+  handleSubmitTopic = ({ topic }) => {
+    return new Promise((resolve, reject) => {
+      const mutation = new CreateTopic({ viewer: this.props.viewer, ...topic })
+
+      const onSuccess = () => {
+        this.hideTopicForm()
+        resolve()
+      }
+
+      const onFailure = (transaction) => {
+        reject(new SubmissionError({ _error: transaction.getError() }))
+      }
+
+      Relay.Store.commitUpdate(mutation, { onSuccess, onFailure })
+    })
+  }
+
   render() {
+    const defaultTopic = this.getDefaultTopic()
     let replyEdges = this.getReplyEdges()
     const { params: { replyId } } = this.props
     if (replyId === 'new') {
@@ -162,7 +185,10 @@ class Knowledge extends Component {
     return (
       <DocumentTitle title={t('Knowledge')}>
         <div className={s.root}>
-          <Navigation />
+          <Navigation
+            defaultId={defaultTopic.id}
+            onNewTopic={this.displayTopicForm}
+          />
           <section
             className={s.content}
             style={marginLeft}
@@ -185,6 +211,11 @@ class Knowledge extends Component {
               />
             </div>
           </section>
+          <TopicDialog
+            open={this.state.topicFormOpen}
+            onSubmit={this.handleSubmitTopic}
+            onCancel={this.hideTopicForm}
+          />
           {(() => !this.state.replyToDelete ? null : (
             <DeleteDialog
               onCancel={this.hideDeleteReplyDialog}
