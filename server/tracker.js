@@ -85,6 +85,15 @@ class Tracker {
     this.track(ADMIN_ACTION, data)
   }
 
+  trackCreateTopic({ auth, id }) {
+    const data = {
+      auth,
+      Type: 'Create Topic',
+      'Topic ID': id,
+    }
+    this.track(ADMIN_ACTION, data)
+  }
+
   trackUpdateUser({ auth, id }) {
     const data = {
       auth,
@@ -124,6 +133,24 @@ class Tracker {
       auth,
       Type: 'Delete Answer',
       'Answer ID': id,
+    }
+    this.track(ADMIN_ACTION, data)
+  }
+
+  trackUpdateTopic({ auth, id }) {
+    const data = {
+      auth,
+      Type: 'Update Topic',
+      'Topic ID': id,
+    }
+    this.track(ADMIN_ACTION, data)
+  }
+
+  trackDeleteTopic({ auth, id }) {
+    const data = {
+      auth,
+      Type: 'Delete Topic',
+      'Topic ID': id,
     }
     this.track(ADMIN_ACTION, data)
   }
