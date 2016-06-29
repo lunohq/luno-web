@@ -32,7 +32,7 @@ export default mutationWithClientMutationId({
   outputFields: {
     topic: {
       type: GraphQLTopic,
-      resolve: ({ teamId }) => db.topic.getDefaultTopic(teamId),
+      resolve: ({ teamId, topicId: id }) => db.topic.getTopic({ teamId, id }),
     },
     replyEdge: {
       type: Replies.edgeType,

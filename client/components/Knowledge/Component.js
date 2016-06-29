@@ -14,6 +14,7 @@ import { NAV_WIDTH, MENU_WIDTH } from 'c/AuthenticatedLanding/Navigation'
 import DocumentTitle from 'c/DocumentTitle'
 import ReplyList from 'c/ReplyList/Component'
 import Reply from 'c/Reply/Component'
+import Loading from 'c/Loading'
 
 import DeleteDialog from './DeleteDialog'
 import Navigation from './Navigation'
@@ -24,6 +25,7 @@ import s from './style.scss'
 class Knowledge extends Component {
 
   state = {
+    activeTopic: null,
     activeReply: {},
     deleteReplyDialogOpen: false,
     replyToDelete: null,
@@ -35,31 +37,46 @@ class Knowledge extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { params: { replyId } } = this.props
-    const { params: { replyId: nextReplyId } } = nextProps
-    if (replyId !== nextReplyId || this.getReplyEdges(this.props) !== this.getReplyEdges(nextProps)) {
+    const { viewer, params: { replyId, topicId } } = this.props
+    const { viewer: nextViewer, params: { replyId: nextReplyId, topicId: nextTopicId } } = nextProps
+    const shouldInit = (
+      topicId !== nextTopicId ||
+      replyId !== nextReplyId ||
+      viewer !== nextViewer
+    )
+    if (shouldInit) {
       this.initialize(nextProps)
     }
   }
 
+  // TODO remove when we stop writing answers
   getBot(props = this.props) {
     const { viewer: { bots } } = props
     return bots.edges[0].node
   }
 
-  getDefaultTopic() {
-    const { viewer: { defaultTopic } } = this.props
+  getDefaultTopic(props = this.props) {
+    const { viewer: { defaultTopic } } = props
     return defaultTopic
   }
 
-  getReplyEdges(props = this.props) {
-    const { replies: { edges } } = this.getDefaultTopic(props)
-    return edges
+  getReplyEdges(topic) {
+    const { replies } = topic
+    return replies && replies.edges ? replies.edges : []
   }
 
-  getTopicEdges() {
+  getAllTopics(props = this.props) {
+    const { viewer } = props
+    const topics = [viewer.defaultTopic]
+    if (viewer.topics && viewer.topics.edges) {
+      topics.push(...viewer.topics.edges.map(({ node }) => node))
+    }
+    return topics
+  }
+
+  getTopicEdges(props = this.props) {
     let edges = []
-    const { viewer } = this.props
+    const { viewer } = props
     if (viewer.topics && viewer.topics.edges) {
       edges = viewer.topics.edges
     }
@@ -67,14 +84,32 @@ class Knowledge extends Component {
   }
 
   initialize(props) {
-    const { params: { replyId } } = props
-    const replyEdges = this.getReplyEdges(props)
+    const { params: { replyId, topicId } } = props
+    if (!topicId) {
+      this.routeToDefaultTopic({ props })
+      return
+    }
+
     if (!replyId) {
-      this.routeToDefault({ props })
+      this.routeToDefaultReply({ props })
+      return
+    }
+
+    let activeTopic
+    const topics = this.getAllTopics(props)
+    for (const topic of topics) {
+      if (topic.id === topicId) {
+        activeTopic = topic
+        break
+      }
+    }
+    if (!activeTopic) {
+      this.routeToDefaultTopic({ props })
       return
     }
 
     let activeReply = {}
+    const replyEdges = this.getReplyEdges(activeTopic)
     for (const { node: reply } of replyEdges) {
       if (reply.id === replyId) {
         activeReply = reply
@@ -82,51 +117,80 @@ class Knowledge extends Component {
       }
     }
     if (replyId !== 'new' && !activeReply.id) {
-      this.routeToDefault({ props })
+      this.routeToDefaultReply({ props })
       return
     }
-    this.setState({ activeReply })
+    this.setState({ activeTopic, activeReply })
   }
 
-  routeToDefault({ props = this.props, ignoreId } = {}) {
-    const replyEdges = this.getReplyEdges(props)
+  routeToDefaultTopic({ props, maybeReplyId }) {
+    let replyId = maybeReplyId
+    if (!replyId) {
+      replyId = props.params.replyId
+    }
+    const defaultTopic = this.getDefaultTopic(props)
+    let path = `/knowledge/${defaultTopic.id}`
+    if (replyId) {
+      path = `${path}/${replyId}`
+    }
+    this.context.router.replace(path)
+  }
+
+  routeToDefaultReply({ props = this.props, ignoreId } = {}) {
+    const topics = this.getAllTopics(props)
+    const { params: { topicId } } = props
+
+    let topic
+    for (const node of topics) {
+      if (node.id === topicId) {
+        topic = node
+        break
+      }
+    }
+
+    if (!topic) {
+      this.routeToDefaultTopic({ props, maybeReplyId: topicId })
+      return
+    }
+
     let replyId = 'new'
+    const replyEdges = this.getReplyEdges(topic)
     for (const { node: reply } of replyEdges) {
       if (reply.id !== ignoreId) {
         replyId = reply.id
         break
       }
     }
-    this.context.router.replace(`/knowledge/${replyId}`)
+    this.context.router.replace(`/knowledge/${topic.id}/${replyId}`)
   }
 
-  handleNewReply = () => this.context.router.push('/knowledge/new')
+  handleNewReply = () => this.context.router.push(`/knowledge/${this.state.activeTopic.id}/new`)
 
   handleChangeReply = reply => {
-    this.context.router.push(`/knowledge/${reply.id || 'new'}`)
+    this.context.router.push(`/knowledge/${this.state.activeTopic.id}/${reply.id || 'new'}`)
   }
 
   handleDeleteReply = () => {
     const { replyToDelete: reply } = this.state
     if (reply) {
-      const topic = this.getDefaultTopic()
+      const { activeTopic: topic } = this.state
       const bot = this.getBot()
       Relay.Store.commitUpdate(new DeleteReply({ topic, reply, bot }))
-      this.routeToDefault({ ignoreId: reply.id })
+      this.routeToDefaultReply({ ignoreId: reply.id })
     }
     this.hideDeleteReplyDialog()
   }
 
   handleCancelReply = () => {
     if (!this.state.activeReply.id) {
-      this.routeToDefault()
+      this.routeToDefaultReply()
     }
   }
 
   handleSubmitReply = ({ reply }) => {
     return new Promise((resolve, reject) => {
-      const topic = this.getDefaultTopic()
       let mutation
+      const { activeTopic: topic } = this.state
       const bot = this.getBot()
       if (!reply.id) {
         mutation = new CreateReply({ bot, topic, ...reply })
@@ -136,8 +200,8 @@ class Knowledge extends Component {
 
       const onSuccess = ({ createReply }) => {
         if (createReply) {
-          const { replyEdge: { node: { id } } } = createReply
-          this.context.router.replace(`/knowledge/${id}`)
+          const { replyEdge: { node: { id } }, topic: { id: topicId } } = createReply
+          this.context.router.replace(`/knowledge/${topicId}/${id}`)
         }
         resolve()
       }
@@ -179,14 +243,24 @@ class Knowledge extends Component {
     })
   }
 
+  handleSelectTopic = (topicId) => {
+    this.context.router.push(`/knowledge/${topicId}`)
+  }
+
   render() {
+    if (!this.state.activeTopic) {
+      return <Loading />
+    }
+
+    const { activeTopic } = this.state
     const defaultTopic = this.getDefaultTopic()
-    let replyEdges = this.getReplyEdges()
+    let replyEdges = this.getReplyEdges(activeTopic)
     const { params: { replyId } } = this.props
     if (replyId === 'new') {
       replyEdges = [{ node: this.state.activeReply }]
-      replyEdges.push(...this.getReplyEdges())
+      replyEdges.push(...this.getReplyEdges(activeTopic))
     }
+
     let topics = []
     const topicEdges = this.getTopicEdges()
     if (topicEdges) {
@@ -202,6 +276,8 @@ class Knowledge extends Component {
           <Navigation
             defaultId={defaultTopic.id}
             onNewTopic={this.displayTopicForm}
+            onSelect={this.handleSelectTopic}
+            topicId={this.state.activeTopic.id}
             topics={topics}
           />
           <section

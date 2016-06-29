@@ -15,10 +15,11 @@ import SelectableList from 'c/SelectableList'
 import s from './style.scss'
 
 // load default topic id and then all other topics below
-const Navigation = ({ defaultId, onNewTopic, topics }) => {
+const Navigation = ({ defaultId, onNewTopic, topics, topicId, onSelect }) => {
   const items = [
     <ListItem
       key={'default'}
+      onTouchTap={() => onSelect(defaultId)}
       primaryText={t('Lunobot')}
       rightIconButton={<IconButton onTouchTap={onNewTopic}><AvLibraryAdd /></IconButton>}
       value={defaultId}
@@ -29,6 +30,7 @@ const Navigation = ({ defaultId, onNewTopic, topics }) => {
       <ListItem
         key={topic.id}
         leftIcon={<AvLibraryBooks />}
+        onTouchTap={() => onSelect(topic.id)}
         primaryText={topic.name}
         value={topic.id}
       />
@@ -40,7 +42,7 @@ const Navigation = ({ defaultId, onNewTopic, topics }) => {
       containerStyle={{ left: NAV_WIDTH }}
       width={MENU_WIDTH}
     >
-      <SelectableList defaultValue={defaultId}>
+      <SelectableList defaultValue={topicId || defaultId}>
         {items}
       </SelectableList>
     </Drawer>
@@ -50,6 +52,8 @@ const Navigation = ({ defaultId, onNewTopic, topics }) => {
 Navigation.propTypes = {
   defaultId: PropTypes.string.isRequired,
   onNewTopic: PropTypes.func.isRequired,
+  onSelect: PropTypes.func.isRequired,
+  topicId: PropTypes.string,
   topics: PropTypes.array,
 }
 
