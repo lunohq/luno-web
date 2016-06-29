@@ -11,7 +11,7 @@ import s from './nav-style.scss'
 export const NAV_WIDTH = 60
 export const MENU_WIDTH = 200
 
-const Navigation = ({ isAdmin, onLogout }) => {
+const Navigation = ({ isAdmin, isAssumed, onLogout }) => {
   const isSelected = (path, fuzzy) => {
     if (fuzzy) {
       return window.location.pathname.startsWith(path) ? s.selectedButton : s.button
@@ -19,9 +19,16 @@ const Navigation = ({ isAdmin, onLogout }) => {
     return window.location.pathname === path ? s.selectedButton : s.button
   }
 
+  let drawerContainerStyle
+  if (isAssumed) {
+    drawerContainerStyle = { background: '#ff0000', boxShadow: 'none' }
+  } else {
+    drawerContainerStyle = { background: '#393F44', boxShadow: 'none' }
+  }
+
   return (
     <Drawer
-      containerStyle={{ background: '#393F44', boxShadow: 'none' }}
+      containerStyle={drawerContainerStyle}
       width={NAV_WIDTH}
     >
       <div className={s.container}>
@@ -44,6 +51,7 @@ const Navigation = ({ isAdmin, onLogout }) => {
 
 Navigation.propTypes = {
   isAdmin: PropTypes.bool.isRequired,
+  isAssumed: PropTypes.bool.isRequired,
   onLogout: PropTypes.func.isRequired,
 }
 

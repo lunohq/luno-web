@@ -25,6 +25,7 @@ const AuthenticatedLanding = ({ children, onLogout, viewer }) => {
     <div className={s.root}>
       <Navigation
         isAdmin={viewer.isAdmin}
+        isAssumed={viewer.assumed}
         onLogout={onLogout}
         team={viewer.team}
       />
