@@ -1,5 +1,6 @@
 import logger from '../logger'
 import { formatError as graphQLFormatError } from 'graphql'
+import { LunoError } from 'luno-core'
 
 /**
  * Custom formatError func for GraphQL.
@@ -9,7 +10,7 @@ import { formatError as graphQLFormatError } from 'graphql'
  *
  */
 export default function formatError(err) {
-  if (err.originalError && err.originalError.code) {
+  if (err.originalError && err.originalError instanceof LunoError) {
     err.message = err.originalError.code
   } else {
     logger.error('GraphQL Error', { err })
