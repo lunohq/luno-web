@@ -24,6 +24,7 @@ const AutoCompleteMembers = (props) => (
   <AutoComplete
     hintText={t('@username')}
     filter={filter}
+    floatingLabelFixed
     floatingLabelText={t('Slack Username')}
     {...props}
   />

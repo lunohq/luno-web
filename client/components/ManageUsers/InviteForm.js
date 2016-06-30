@@ -2,9 +2,12 @@ import React, { Component, PropTypes } from 'react'
 import { Field, reduxForm } from 'redux-form'
 
 import t from 'u/gettext'
+import withStyles from 'u/withStyles'
 import AutoCompleteMembers, { createDataSource } from 'c/AutoCompleteMembers'
 
 import RoleField from './RoleField'
+
+import s from './invite-form-style.scss'
 
 export const FORM_NAME = 'form/users/invite'
 
@@ -53,6 +56,7 @@ class InviteForm extends Component {
     return (
       <div>
         <Field
+          className={s.field}
           component={Username}
           members={members}
           name='member'
@@ -71,10 +75,10 @@ InviteForm.propTypes = {
   members: PropTypes.array.isRequired,
 }
 
-export default reduxForm({
+export default withStyles(s)(reduxForm({
   form: FORM_NAME,
   initialValues: {
     role: 'TRAINER',
   },
   validate,
-})(InviteForm)
+})(InviteForm))
