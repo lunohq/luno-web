@@ -276,7 +276,8 @@ class Knowledge extends Component {
     }
     const focused = replyId === 'new'
     const marginLeft = {
-      marginLeft: NAV_WIDTH + MENU_WIDTH,
+      // Add a 5px bumper
+      marginLeft: NAV_WIDTH + MENU_WIDTH + 5,
     }
     return (
       <DocumentTitle title={t('Knowledge')}>
@@ -288,29 +289,28 @@ class Knowledge extends Component {
             topicId={this.state.activeTopic.id}
             topics={topics}
           />
-          <section
-            className={s.content}
-            style={marginLeft}
-          >
-            <div className={s.replyList}>
-              <ReplyList
-                onChange={this.handleChangeReply}
-                onNew={this.handleNewReply}
-                replyEdges={replyEdges}
-                reply={this.state.activeReply}
-                topic={this.state.activeTopic}
-              />
-            </div>
-            <div className={s.reply}>
-              <Reply
-                focused={focused}
-                onCancel={this.handleCancelReply}
-                onDelete={this.displayDeleteReplyDialog}
-                onSubmit={this.handleSubmitReply}
-                reply={this.state.activeReply}
-              />
-            </div>
-          </section>
+          <div className={s.contentContainer} style={marginLeft}>
+            <section className={s.content}>
+              <div className={s.replyList}>
+                <ReplyList
+                  onChange={this.handleChangeReply}
+                  onNew={this.handleNewReply}
+                  replyEdges={replyEdges}
+                  reply={this.state.activeReply}
+                  topic={this.state.activeTopic}
+                />
+              </div>
+              <div className={s.reply}>
+                <Reply
+                  focused={focused}
+                  onCancel={this.handleCancelReply}
+                  onDelete={this.displayDeleteReplyDialog}
+                  onSubmit={this.handleSubmitReply}
+                  reply={this.state.activeReply}
+                />
+              </div>
+            </section>
+          </div>
           <TopicDialog
             open={this.state.topicFormOpen}
             onSubmit={this.handleSubmitTopic}
