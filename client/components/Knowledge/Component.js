@@ -91,7 +91,7 @@ class Knowledge extends Component {
     const { params: { replyId, topicId } } = props
     if (this.state.routing && props.location.pathname !== this.state.routing) {
       return
-    } else {
+    } else if (this.state.routing) {
       this.setState({ routing: null })
     }
     if (!topicId) {
