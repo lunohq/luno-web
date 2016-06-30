@@ -28,7 +28,7 @@ class ReplyList extends Component {
   }
 
   render() {
-    const { replyEdges, reply } = this.props
+    const { replyEdges, reply, topic } = this.props
     const replyRows = []
     for (const index in replyEdges) {
       const { node } = replyEdges[index]
@@ -58,7 +58,7 @@ class ReplyList extends Component {
     return (
       <Paper className={s.root}>
         <Subheader className={s.header}>
-          {t('Lunobot')}
+          {topic.name || t('Lunobot')}
           <div>
             <FlatButton
               disabled={!!!reply.id}
@@ -91,6 +91,7 @@ ReplyList.propTypes = {
       changed: PropTypes.string,
     }).isRequired,
   })).isRequired,
+  topic: PropTypes.object.isRequired,
 }
 
 export default withStyles(s)(ReplyList)

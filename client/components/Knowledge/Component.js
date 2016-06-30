@@ -298,6 +298,7 @@ class Knowledge extends Component {
                 onNew={this.handleNewReply}
                 replyEdges={replyEdges}
                 reply={this.state.activeReply}
+                topic={this.state.activeTopic}
               />
             </div>
             <div className={s.reply}>
