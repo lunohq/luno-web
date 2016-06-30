@@ -337,10 +337,7 @@ class Knowledge extends Component {
             topics={topics}
           />
           <div className={s.contentContainer} style={marginLeft}>
-            <section
-              className={s.content}
-              style={marginLeft}
-            >
+            <section className={s.content}>
               <div className={s.replyList}>
                 <ReplyList
                   onChange={this.handleChangeReply}
