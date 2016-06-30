@@ -10,7 +10,7 @@ import { LunoError } from 'luno-core'
  *
  */
 export default function formatError(err) {
-  if (err.originalError && err.originalError instanceof LunoError) {
+  if (err.originalError && err.originalError.name === 'LunoError') {
     err.message = err.originalError.code
   } else {
     logger.error('GraphQL Error', { err })
