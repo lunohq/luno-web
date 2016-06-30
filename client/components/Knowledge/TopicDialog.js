@@ -12,10 +12,10 @@ const TopicDialog = ({ topic, ...other }) => (
       name: FORM_NAME,
     }}
     dialogProps={{
-      title: t('New Topic'),
+      title: topic ? t('Edit Topic') : t('New Topic'),
       modal: true,
     }}
-    primaryActionLabel={t('Create')}
+    primaryActionLabel={topic ? t('Update') : t('Create')}
     {...other}
   />
 )

@@ -7,10 +7,13 @@ import { ListItem } from 'material-ui/List'
 import Subheader from 'material-ui/Subheader'
 import Divider from 'material-ui/Divider'
 import FlatButton from 'material-ui/FlatButton'
+import FontIcon from 'material-ui/FontIcon'
+import IconButton from 'material-ui/IconButton'
 
 import t from 'u/gettext'
 import withStyles from 'u/withStyles'
 import moment from 'u/moment'
+import colors from 's/colors'
 
 import SelectableList from 'c/SelectableList'
 
@@ -28,7 +31,7 @@ class ReplyList extends Component {
   }
 
   render() {
-    const { replyEdges, reply, topic } = this.props
+    const { onEditTopic, onNew, replyEdges, reply, topic } = this.props
     const replyRows = []
     for (const index in replyEdges) {
       const { node } = replyEdges[index]
@@ -58,12 +61,17 @@ class ReplyList extends Component {
     return (
       <Paper className={s.root}>
         <Subheader className={s.header}>
-          {topic.name || t('Lunobot')}
+          <section>
+            {topic.name || t('Lunobot')}
+            <IconButton onTouchTap={onEditTopic}>
+              <FontIcon className='material-icons' color={colors.darkGrey}>edit</FontIcon>
+            </IconButton>
+          </section>
           <div>
             <FlatButton
               disabled={!!!reply.id}
               label={t('Add Reply')}
-              onTouchTap={this.props.onNew}
+              onTouchTap={onNew}
               primary
             />
           </div>
@@ -80,6 +88,7 @@ class ReplyList extends Component {
 
 ReplyList.propTypes = {
   onChange: PropTypes.func.isRequired,
+  onEditTopic: PropTypes.func.isRequired,
   onNew: PropTypes.func.isRequired,
   reply: PropTypes.shape({
     id: PropTypes.string,

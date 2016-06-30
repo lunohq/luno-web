@@ -2,6 +2,7 @@ import Relay from 'react-relay'
 import Component from './Component'
 
 import CreateTopic from 'm/CreateTopic'
+import UpdateTopic from 'm/UpdateTopic'
 import CreateReply from 'm/CreateReply'
 import DeleteReply from 'm/DeleteReply'
 import UpdateReply from 'm/UpdateReply'
@@ -38,6 +39,7 @@ export default Relay.createContainer(Component, {
         topics(first: $limit) {
           edges {
             node {
+              ${UpdateTopic.getFragment('topic')}
               ${CreateReply.getFragment('topic')}
               ${DeleteReply.getFragment('topic')}
               ${UpdateReply.getFragment('topic')}

@@ -9,6 +9,7 @@ import CreateReply from 'm/CreateReply'
 import DeleteReply from 'm/DeleteReply'
 import UpdateReply from 'm/UpdateReply'
 import CreateTopic from 'm/CreateTopic'
+import UpdateTopic from 'm/UpdateTopic'
 
 import { NAV_WIDTH, MENU_WIDTH } from 'c/AuthenticatedLanding/Navigation'
 import DocumentTitle from 'c/DocumentTitle'
@@ -30,6 +31,7 @@ class Knowledge extends Component {
     deleteReplyDialogOpen: false,
     replyToDelete: null,
     topicFormOpen: false,
+    topicToEdit: null,
   }
 
   componentWillMount() {
@@ -228,11 +230,23 @@ class Knowledge extends Component {
   hideTopicForm = () => this.setState({ topicFormOpen: false })
   handleSubmitTopic = ({ topic }) => {
     return new Promise((resolve, reject) => {
-      const mutation = new CreateTopic({ viewer: this.props.viewer, ...topic })
+      let mutation
+      if (topic.id) {
+        mutation = new UpdateTopic({ topic, ...topic })
+      } else {
+        mutation = new CreateTopic({ viewer: this.props.viewer, ...topic })
+      }
 
-      const onSuccess = ({ createTopic: { topic: { id } } }) => {
+      const onSuccess = ({ createTopic, updateTopic }) => {
+        let topicId
+        if (createTopic) {
+          topicId = createTopic.topic.id
+        } else {
+          topicId = updateTopic.topic.id
+        }
+
         this.hideTopicForm()
-        this.context.router.push(`/knowledge/${id}`)
+        this.context.router.push(`/knowledge/${topicId}`)
         resolve()
       }
 
@@ -253,6 +267,10 @@ class Knowledge extends Component {
 
   handleSelectTopic = (topicId) => {
     this.context.router.push(`/knowledge/${topicId}`)
+  }
+
+  handleEditTopic = () => {
+    this.setState({ topicToEdit: this.state.activeTopic, topicFormOpen: true })
   }
 
   render() {
@@ -296,6 +314,7 @@ class Knowledge extends Component {
               <ReplyList
                 onChange={this.handleChangeReply}
                 onNew={this.handleNewReply}
+                onEditTopic={this.handleEditTopic}
                 replyEdges={replyEdges}
                 reply={this.state.activeReply}
                 topic={this.state.activeTopic}
@@ -315,6 +334,7 @@ class Knowledge extends Component {
             open={this.state.topicFormOpen}
             onSubmit={this.handleSubmitTopic}
             onCancel={this.hideTopicForm}
+            topic={this.state.topicToEdit}
           />
           {(() => !this.state.replyToDelete ? null : (
             <DeleteDialog

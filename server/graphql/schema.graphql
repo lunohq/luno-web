@@ -287,7 +287,6 @@ type UpdateReplyPayload {
 input UpdateTopicInput {
   id: ID!
   name: String!
-  pointsOfContact: [String]!
   clientMutationId: String!
 }
 

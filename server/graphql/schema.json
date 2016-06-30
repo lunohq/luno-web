@@ -3566,24 +3566,6 @@
               "defaultValue": null
             },
             {
-              "name": "pointsOfContact",
-              "description": "Updated points of contact for the Topic",
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "LIST",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                }
-              },
-              "defaultValue": null
-            },
-            {
               "name": "clientMutationId",
               "description": null,
               "type": {
