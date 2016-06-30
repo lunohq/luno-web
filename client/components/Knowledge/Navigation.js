@@ -35,11 +35,13 @@ const Navigation = ({ defaultId, onNewTopic, topics, topicId, onSelect }) => {
         leftIcon={<AvLibraryBooks />}
         onTouchTap={() => onSelect(topic.id)}
         primaryText={
-          <div style={{
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-          }}>
+          <div
+            style={{
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}
+          >
             {topic.name}
           </div>
         }
