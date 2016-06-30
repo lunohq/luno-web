@@ -7,6 +7,7 @@ import IconButton from 'material-ui/IconButton'
 
 import t from 'u/gettext'
 import withStyles from 'u/withStyles'
+import colors from 's/colors'
 
 import { NAV_WIDTH } from 'c/AuthenticatedLanding/Navigation'
 import { MENU_WIDTH } from 'c/AuthenticatedLanding/Navigation'
@@ -21,7 +22,10 @@ const Navigation = ({ defaultId, onNewTopic, topics, topicId, onSelect }) => {
       key={'default'}
       onTouchTap={() => onSelect(defaultId)}
       primaryText={t('Lunobot')}
-      rightIconButton={<IconButton onTouchTap={onNewTopic}><AvLibraryAdd /></IconButton>}
+      rightIconButton={
+        <IconButton onTouchTap={onNewTopic}>
+          <AvLibraryAdd color={colors.darkGrey} />
+        </IconButton>}
       value={defaultId}
     />
   ]
@@ -31,7 +35,18 @@ const Navigation = ({ defaultId, onNewTopic, topics, topicId, onSelect }) => {
         key={topic.id}
         leftIcon={<AvLibraryBooks />}
         onTouchTap={() => onSelect(topic.id)}
-        primaryText={topic.name}
+        primaryText={
+          <div
+            style={{
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {topic.name}
+          </div>
+        }
+        innerDivStyle={{ paddingLeft: '52px' }}
         value={topic.id}
       />
     )
