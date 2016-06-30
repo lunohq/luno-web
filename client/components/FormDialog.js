@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react'
-import { destroy } from 'redux-form'
 
 import FlatButton from 'material-ui/FlatButton'
 
@@ -10,13 +9,11 @@ import Dialog from 'c/Dialog'
 class FormDialog extends Component {
 
   handleSubmit = (values) => {
-    this.context.store.dispatch(destroy(this.props.form.name))
-    this.props.onSubmit(values)
+    return this.props.onSubmit(values)
   }
 
   handleCancel = () => {
     this.props.onCancel()
-    this.context.store.dispatch(destroy(this.props.form.name))
   }
 
   handlePrimaryAction = () => this.refs.form.submit()
