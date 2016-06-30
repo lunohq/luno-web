@@ -21,7 +21,14 @@ class TopicDialog extends Component {
   }
 
   handleSubmit = (values) => {
-    return this.props.onSubmit(values)
+    const { topic, onSubmit, onCancel } = this.props
+    // Only trigger submission if the topic has been updated, this prevents us
+    // having to deal with duplicate updates to the topic name unneccesarily
+    const changed = topic && topic.name !== values.topic.name
+    if (!topic || changed) {
+      return onSubmit(values)
+    }
+    onCancel()
   }
 
   handleCancel = () => {
