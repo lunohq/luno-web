@@ -230,8 +230,9 @@ class Knowledge extends Component {
     return new Promise((resolve, reject) => {
       const mutation = new CreateTopic({ viewer: this.props.viewer, ...topic })
 
-      const onSuccess = () => {
+      const onSuccess = ({ createTopic: { topic: { id } } }) => {
         this.hideTopicForm()
+        this.context.router.push(`/knowledge/${id}`)
         resolve()
       }
 

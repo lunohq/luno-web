@@ -3396,6 +3396,18 @@
               "deprecationReason": null
             },
             {
+              "name": "topic",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "OBJECT",
+                "name": "Topic",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "topicEdge",
               "description": null,
               "args": [],

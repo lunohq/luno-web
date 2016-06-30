@@ -18,7 +18,6 @@ export default class CreateTopic extends Relay.Mutation {
     return Relay.QL`
       fragment on CreateTopicPayload {
         viewer { topics }
-        topicEdge
       }
     `
   }
@@ -33,6 +32,15 @@ export default class CreateTopic extends Relay.Mutation {
       rangeBehaviors: {
         '': 'refetch',
       },
+    }, {
+      type: 'REQUIRED_CHILDREN',
+      children: [
+        Relay.QL`
+          fragment on CreateTopicPayload {
+            topic
+          }
+        `,
+      ],
     }]
   }
 

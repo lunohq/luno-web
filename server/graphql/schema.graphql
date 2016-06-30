@@ -73,6 +73,7 @@ input CreateTopicInput {
 
 type CreateTopicPayload {
   viewer: User
+  topic: Topic
   topicEdge: TopicEdge
   clientMutationId: String!
 }

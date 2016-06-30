@@ -3,6 +3,7 @@ import { mutationWithClientMutationId } from 'graphql-relay'
 import { db } from 'luno-core'
 
 import tracker from '../../tracker'
+import GraphQLTopic from '../types/GraphQLTopic'
 import GraphQLUser from '../types/GraphQLUser'
 import Topics from '../connections/Topics'
 import { cursorForInstanceInCollection } from '../utils'
@@ -23,6 +24,10 @@ export default mutationWithClientMutationId({
     viewer: {
       type: GraphQLUser,
       resolve: ({ auth }) => db.user.getUser(auth.uid),
+    },
+    topic: {
+      type: GraphQLTopic,
+      resolve: ({ topic }) => topic,
     },
     topicEdge: {
       type: Topics.edgeType,
