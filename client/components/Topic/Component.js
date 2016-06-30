@@ -1,10 +1,9 @@
 import React, { Component, PropTypes } from 'react'
 import { Field, reduxForm, initialize } from 'redux-form'
+import { TextField } from 'redux-form-material-ui'
 
 import t from 'u/gettext'
 import withStyles from 'u/withStyles'
-
-import TextField from 'c/ReduxForm/TextField'
 
 import s from './style.scss'
 
@@ -40,7 +39,10 @@ class Topic extends Component {
   }
 
   focus() {
-    this.refs.name.getRenderedComponent().focus()
+    this.refs.name
+      .getRenderedComponent()
+      .getRenderedComponent()
+      .focus()
   }
 
   render() {

@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import ReactDOM from 'react-dom'
 import { reduxForm, Field, initialize } from 'redux-form'
 import keycode from 'keycode'
+import { TextField } from 'redux-form-material-ui'
 
 import IconButton from 'material-ui/IconButton'
 import FlatButton from 'material-ui/FlatButton'
@@ -13,8 +14,6 @@ import t from 'u/gettext'
 import withStyles from 'u/withStyles'
 import moment from 'u/moment'
 import colors from 's/colors'
-
-import TextField from 'c/ReduxForm/TextField'
 
 import s from './style.scss'
 
@@ -95,7 +94,10 @@ class Reply extends Component {
   }
 
   focus() {
-    this.refs.title.getRenderedComponent().focus()
+    this.refs.title
+      .getRenderedComponent()
+      .getRenderedComponent()
+      .focus()
   }
 
   resetScroll() {
@@ -103,7 +105,10 @@ class Reply extends Component {
   }
 
   handleEdit = () => {
-    this.refs.title.getRenderedComponent().focus()
+    this.refs.title
+      .getRenderedComponent()
+      .getRenderedComponent()
+      .focus()
     this.setState({ editing: true })
   }
 
