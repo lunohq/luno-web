@@ -32,6 +32,7 @@ const Navigation = ({ defaultId, onNewTopic, topics, topicId, onSelect }) => {
         leftIcon={<AvLibraryBooks />}
         onTouchTap={() => onSelect(topic.id)}
         primaryText={topic.name}
+        innerDivStyle={{ paddingLeft: '52px' }}
         value={topic.id}
       />
     )
