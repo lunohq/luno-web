@@ -227,7 +227,7 @@ class Knowledge extends Component {
   })
 
   displayTopicForm = () => this.setState({ topicFormOpen: true })
-  hideTopicForm = () => this.setState({ topicFormOpen: false })
+  hideTopicForm = () => this.setState({ topicFormOpen: false, topicToEdit: null })
   handleSubmitTopic = ({ topic }) => {
     return new Promise((resolve, reject) => {
       let mutation
