@@ -7,6 +7,7 @@ import IconButton from 'material-ui/IconButton'
 
 import t from 'u/gettext'
 import withStyles from 'u/withStyles'
+import colors from 's/colors'
 
 import { NAV_WIDTH } from 'c/AuthenticatedLanding/Navigation'
 import { MENU_WIDTH } from 'c/AuthenticatedLanding/Navigation'
@@ -23,7 +24,7 @@ const Navigation = ({ defaultId, onNewTopic, topics, topicId, onSelect }) => {
       primaryText={t('Lunobot')}
       rightIconButton={
         <IconButton onTouchTap={onNewTopic}>
-          <AvLibraryAdd color={'rgb(117, 117, 117)'} />
+          <AvLibraryAdd color={colors.darkGrey} />
         </IconButton>}
       value={defaultId}
     />
