@@ -9,7 +9,7 @@ import { formatError as graphQLFormatError } from 'graphql'
  *
  */
 export default function formatError(err) {
-  if (err.originalError && err.originalError.code) {
+  if (err.originalError && err.originalError.name === 'LunoError') {
     err.message = err.originalError.code
   } else {
     logger.error('GraphQL Error', { err })

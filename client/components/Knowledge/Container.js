@@ -2,6 +2,8 @@ import Relay from 'react-relay'
 import Component from './Component'
 
 import CreateTopic from 'm/CreateTopic'
+import UpdateTopic from 'm/UpdateTopic'
+import DeleteTopic from 'm/DeleteTopic'
 import CreateReply from 'm/CreateReply'
 import DeleteReply from 'm/DeleteReply'
 import UpdateReply from 'm/UpdateReply'
@@ -16,10 +18,11 @@ export default Relay.createContainer(Component, {
     viewer: () => Relay.QL`
       fragment on User {
         ${CreateTopic.getFragment('viewer')}
+        ${DeleteTopic.getFragment('viewer')}
         defaultTopic {
-          ${CreateReply.getFragment('topic')}
-          ${DeleteReply.getFragment('topic')}
           ${UpdateReply.getFragment('topic')}
+          ${UpdateReply.getFragment('previousTopic')}
+          ${DeleteReply.getFragment('topic')}
           id
           replies(first: $limit) {
             edges {
@@ -38,9 +41,11 @@ export default Relay.createContainer(Component, {
         topics(first: $limit) {
           edges {
             node {
-              ${CreateReply.getFragment('topic')}
-              ${DeleteReply.getFragment('topic')}
               ${UpdateReply.getFragment('topic')}
+              ${UpdateReply.getFragment('previousTopic')}
+              ${DeleteTopic.getFragment('topic')}
+              ${UpdateTopic.getFragment('topic')}
+              ${DeleteReply.getFragment('topic')}
               id
               name
               replies(first: $limit) {

@@ -2,10 +2,12 @@ import React, { Component, PropTypes } from 'react'
 import ReactDOM from 'react-dom'
 import { reduxForm, Field, initialize } from 'redux-form'
 import keycode from 'keycode'
+import { TextField, SelectField } from 'redux-form-material-ui'
 
 import IconButton from 'material-ui/IconButton'
 import FlatButton from 'material-ui/FlatButton'
 import FontIcon from 'material-ui/FontIcon'
+import MenuItem from 'material-ui/MenuItem'
 import Paper from 'material-ui/Paper'
 import Subheader from 'material-ui/Subheader'
 
@@ -13,8 +15,6 @@ import t from 'u/gettext'
 import withStyles from 'u/withStyles'
 import moment from 'u/moment'
 import colors from 's/colors'
-
-import TextField from 'c/ReduxForm/TextField'
 
 import s from './style.scss'
 
@@ -72,7 +72,13 @@ class Reply extends Component {
       this.setState({ focused: true })
     }
     this.setState({ newReply }, () => this.setState({ newReply: false }))
-    if (!this.props.error && nextProps.error) {
+
+    const editing = (
+      (!this.props.error && nextProps.error) ||
+      (this.props.pristine && !nextProps.pristine)
+    )
+
+    if (editing) {
       this.setState({ editing: true })
     }
   }
@@ -86,8 +92,9 @@ class Reply extends Component {
     }
   }
 
-  initialize({ reply }) {
+  initialize({ reply, topic }) {
     if (reply) {
+      reply.topicId = topic.id
       const initialValues = { reply }
       this.context.store.dispatch(initialize(FORM_NAME, initialValues))
     }
@@ -95,7 +102,10 @@ class Reply extends Component {
   }
 
   focus() {
-    this.refs.title.getRenderedComponent().focus()
+    this.refs.title
+      .getRenderedComponent()
+      .getRenderedComponent()
+      .focus()
   }
 
   resetScroll() {
@@ -103,7 +113,10 @@ class Reply extends Component {
   }
 
   handleEdit = () => {
-    this.refs.title.getRenderedComponent().focus()
+    this.refs.title
+      .getRenderedComponent()
+      .getRenderedComponent()
+      .focus()
     this.setState({ editing: true })
   }
 
@@ -133,7 +146,15 @@ class Reply extends Component {
   }
 
   render() {
-    const { error, handleSubmit, pristine, valid, reply, submitting } = this.props
+    const {
+      error,
+      handleSubmit,
+      pristine,
+      valid,
+      reply,
+      submitting,
+      topics,
+    } = this.props
     const { editing } = this.state
 
     let actionButtons
@@ -183,6 +204,19 @@ class Reply extends Component {
       message = t('Internal error saving reply.')
     }
 
+    const items = topics.map((topic, index) => {
+      const props = {
+        key: index,
+        value: topic.id,
+      }
+      if (topic.name) {
+        props.primaryText = topic.name
+      } else {
+        props.primaryText = t('None')
+      }
+      return <MenuItem {...props} />
+    })
+
     return (
       <Paper className={s.root}>
         <Subheader className={s.header}>
@@ -225,6 +259,13 @@ class Reply extends Component {
               onFocus={this.handleFocus}
               rows={2}
             />
+            <Field
+              component={SelectField}
+              name='reply.topicId'
+              style={{ width: '50%' }}
+            >
+              {items}
+            </Field>
           </section>
         </div>
       </Paper>
@@ -244,6 +285,8 @@ Reply.propTypes = {
   reply: PropTypes.object,
   reset: PropTypes.func.isRequired,
   submitting: PropTypes.bool,
+  topic: PropTypes.object.isRequired,
+  topics: PropTypes.array.isRequired,
   valid: PropTypes.bool,
 }
 

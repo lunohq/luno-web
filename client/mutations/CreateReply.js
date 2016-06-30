@@ -7,11 +7,6 @@ export default class CreateReply extends Relay.Mutation {
         id
       }
     `,
-    topic: () => Relay.QL`
-      fragment on Topic {
-        id
-      }
-    `,
   }
 
   getMutation() {
@@ -31,7 +26,7 @@ export default class CreateReply extends Relay.Mutation {
     return [{
       type: 'RANGE_ADD',
       parentName: 'topic',
-      parentID: this.props.topic.id,
+      parentID: this.props.topicId,
       connectionName: 'replies',
       edgeName: 'replyEdge',
       rangeBehaviors: {
@@ -41,7 +36,7 @@ export default class CreateReply extends Relay.Mutation {
   }
 
   getVariables() {
-    const { title, body, bot: { id: botId }, topic: { id: topicId } } = this.props
+    const { title, body, bot: { id: botId }, topicId } = this.props
     return {
       body,
       title,

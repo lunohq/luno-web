@@ -9,16 +9,18 @@ import CreateReply from 'm/CreateReply'
 import DeleteReply from 'm/DeleteReply'
 import UpdateReply from 'm/UpdateReply'
 import CreateTopic from 'm/CreateTopic'
+import UpdateTopic from 'm/UpdateTopic'
+import DeleteTopic from 'm/DeleteTopic'
 
 import { NAV_WIDTH, MENU_WIDTH } from 'c/AuthenticatedLanding/Navigation'
 import DocumentTitle from 'c/DocumentTitle'
 import ReplyList from 'c/ReplyList/Component'
 import Reply from 'c/Reply/Component'
 import Loading from 'c/Loading'
+import TopicDialog from 'c/TopicDialog/Component'
 
 import DeleteDialog from './DeleteDialog'
 import Navigation from './Navigation'
-import TopicDialog from './TopicDialog'
 
 import s from './style.scss'
 
@@ -30,6 +32,8 @@ class Knowledge extends Component {
     deleteReplyDialogOpen: false,
     replyToDelete: null,
     topicFormOpen: false,
+    routing: null,
+    topicToEdit: null,
   }
 
   componentWillMount() {
@@ -85,6 +89,11 @@ class Knowledge extends Component {
 
   initialize(props) {
     const { params: { replyId, topicId } } = props
+    if (this.state.routing && props.location.pathname !== this.state.routing) {
+      return
+    } else {
+      this.setState({ routing: null })
+    }
     if (!topicId) {
       this.routeToDefaultTopic({ props })
       return
@@ -190,18 +199,28 @@ class Knowledge extends Component {
   handleSubmitReply = ({ reply }) => {
     return new Promise((resolve, reject) => {
       let mutation
-      const { activeTopic: topic } = this.state
       const bot = this.getBot()
+      const { activeTopic } = this.state
       if (!reply.id) {
-        mutation = new CreateReply({ bot, topic, ...reply })
+        mutation = new CreateReply({ bot, ...reply })
       } else {
-        mutation = new UpdateReply({ reply, bot, topic, ...reply })
+        const topics = this.getAllTopics()
+        let topic
+        topics.forEach(t => {
+          if (t.id === reply.topicId) {
+            topic = t
+          }
+        })
+        mutation = new UpdateReply({ reply, bot, previousTopic: activeTopic, topic, ...reply })
       }
 
-      const onSuccess = ({ createReply }) => {
+      const onSuccess = ({ createReply, updateReply }) => {
         if (createReply) {
-          const { replyEdge: { node: { id } }, topic: { id: topicId } } = createReply
-          this.context.router.replace(`/knowledge/${topicId}/${id}`)
+          const { replyEdge: { node: { id } } } = createReply
+          this.context.router.replace(`/knowledge/${reply.topicId}/${id}`)
+        } else if (updateReply && activeTopic.id !== reply.topicId) {
+          const path = `/knowledge/${reply.topicId}/${reply.id}`
+          this.setState({ routing: path }, () => this.context.router.replace(path))
         }
         resolve()
       }
@@ -225,14 +244,36 @@ class Knowledge extends Component {
   })
 
   displayTopicForm = () => this.setState({ topicFormOpen: true })
-  hideTopicForm = () => this.setState({ topicFormOpen: false })
+  hideTopicForm = () => this.setState({ topicFormOpen: false, topicToEdit: null })
+
+  handleDeleteTopic = (topic) => {
+    const { viewer } = this.props
+    const mutation = new DeleteTopic({ topic, viewer })
+    // TODO display a snackbar if this fails
+    Relay.Store.commitUpdate(mutation)
+    this.hideTopicForm()
+    this.context.router.push(`/knowledge/${viewer.defaultTopic.id}`)
+  }
+
   handleSubmitTopic = ({ topic }) => {
     return new Promise((resolve, reject) => {
-      const mutation = new CreateTopic({ viewer: this.props.viewer, ...topic })
+      let mutation
+      if (topic.id) {
+        mutation = new UpdateTopic({ topic, ...topic })
+      } else {
+        mutation = new CreateTopic({ viewer: this.props.viewer, ...topic })
+      }
 
-      const onSuccess = ({ createTopic: { topic: { id } } }) => {
+      const onSuccess = ({ createTopic, updateTopic }) => {
+        let topicId
+        if (createTopic) {
+          topicId = createTopic.topic.id
+        } else {
+          topicId = updateTopic.topic.id
+        }
+
         this.hideTopicForm()
-        this.context.router.push(`/knowledge/${id}`)
+        this.context.router.push(`/knowledge/${topicId}`)
         resolve()
       }
 
@@ -255,6 +296,10 @@ class Knowledge extends Component {
     this.context.router.push(`/knowledge/${topicId}`)
   }
 
+  handleEditTopic = () => {
+    this.setState({ topicToEdit: this.state.activeTopic, topicFormOpen: true })
+  }
+
   render() {
     if (!this.state.activeTopic) {
       return <Loading />
@@ -268,6 +313,8 @@ class Knowledge extends Component {
       replyEdges = [{ node: this.state.activeReply }]
       replyEdges.push(...this.getReplyEdges(activeTopic))
     }
+
+    const topicsWithDefault = this.getAllTopics()
 
     let topics = []
     const topicEdges = this.getTopicEdges()
@@ -290,11 +337,15 @@ class Knowledge extends Component {
             topics={topics}
           />
           <div className={s.contentContainer} style={marginLeft}>
-            <section className={s.content}>
+            <section
+              className={s.content}
+              style={marginLeft}
+            >
               <div className={s.replyList}>
                 <ReplyList
                   onChange={this.handleChangeReply}
                   onNew={this.handleNewReply}
+                  onEditTopic={this.handleEditTopic}
                   replyEdges={replyEdges}
                   reply={this.state.activeReply}
                   topic={this.state.activeTopic}
@@ -307,14 +358,18 @@ class Knowledge extends Component {
                   onDelete={this.displayDeleteReplyDialog}
                   onSubmit={this.handleSubmitReply}
                   reply={this.state.activeReply}
+                  topic={this.state.activeTopic}
+                  topics={topicsWithDefault}
                 />
               </div>
             </section>
           </div>
           <TopicDialog
-            open={this.state.topicFormOpen}
-            onSubmit={this.handleSubmitTopic}
             onCancel={this.hideTopicForm}
+            onDelete={this.handleDeleteTopic}
+            onSubmit={this.handleSubmitTopic}
+            open={this.state.topicFormOpen}
+            topic={this.state.topicToEdit}
           />
           {(() => !this.state.replyToDelete ? null : (
             <DeleteDialog

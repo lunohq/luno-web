@@ -1,4 +1,4 @@
-import { GraphQLID, GraphQLNonNull, GraphQLString, GraphQLList } from 'graphql'
+import { GraphQLID, GraphQLNonNull, GraphQLString } from 'graphql'
 import { fromGlobalId, mutationWithClientMutationId } from 'graphql-relay'
 import { db } from 'luno-core'
 
@@ -16,10 +16,6 @@ export default mutationWithClientMutationId({
       description: 'Updated name of the Topic',
       type: new GraphQLNonNull(GraphQLString),
     },
-    pointsOfContact: {
-      description: 'Updated points of contact for the Topic',
-      type: new GraphQLNonNull(new GraphQLList(GraphQLString)),
-    },
   },
   outputFields: {
     topic: {
@@ -36,7 +32,7 @@ export default mutationWithClientMutationId({
       updatedBy,
       teamId,
       name,
-      pointsOfContact,
+      pointsOfContact: [],
     })
     tracker.trackUpdateTopic({ id, auth })
     return topic
