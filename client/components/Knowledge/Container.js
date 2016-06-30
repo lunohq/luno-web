@@ -20,9 +20,9 @@ export default Relay.createContainer(Component, {
         ${CreateTopic.getFragment('viewer')}
         ${DeleteTopic.getFragment('viewer')}
         defaultTopic {
-          ${CreateReply.getFragment('topic')}
-          ${DeleteReply.getFragment('topic')}
           ${UpdateReply.getFragment('topic')}
+          ${UpdateReply.getFragment('previousTopic')}
+          ${DeleteReply.getFragment('topic')}
           id
           replies(first: $limit) {
             edges {
@@ -41,11 +41,11 @@ export default Relay.createContainer(Component, {
         topics(first: $limit) {
           edges {
             node {
+              ${UpdateReply.getFragment('topic')}
+              ${UpdateReply.getFragment('previousTopic')}
               ${DeleteTopic.getFragment('topic')}
               ${UpdateTopic.getFragment('topic')}
-              ${CreateReply.getFragment('topic')}
               ${DeleteReply.getFragment('topic')}
-              ${UpdateReply.getFragment('topic')}
               id
               name
               replies(first: $limit) {

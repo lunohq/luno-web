@@ -1,6 +1,5 @@
 import logger from '../logger'
 import { formatError as graphQLFormatError } from 'graphql'
-import { LunoError } from 'luno-core'
 
 /**
  * Custom formatError func for GraphQL.

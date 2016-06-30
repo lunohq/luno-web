@@ -32,6 +32,7 @@ class Knowledge extends Component {
     deleteReplyDialogOpen: false,
     replyToDelete: null,
     topicFormOpen: false,
+    routing: null,
     topicToEdit: null,
   }
 
@@ -88,6 +89,11 @@ class Knowledge extends Component {
 
   initialize(props) {
     const { params: { replyId, topicId } } = props
+    if (this.state.routing && props.location.pathname !== this.state.routing) {
+      return
+    } else {
+      this.setState({ routing: null })
+    }
     if (!topicId) {
       this.routeToDefaultTopic({ props })
       return
@@ -193,18 +199,28 @@ class Knowledge extends Component {
   handleSubmitReply = ({ reply }) => {
     return new Promise((resolve, reject) => {
       let mutation
-      const { activeTopic: topic } = this.state
       const bot = this.getBot()
+      const { activeTopic } = this.state
       if (!reply.id) {
-        mutation = new CreateReply({ bot, topic, ...reply })
+        mutation = new CreateReply({ bot, ...reply })
       } else {
-        mutation = new UpdateReply({ reply, bot, topic, ...reply })
+        const topics = this.getAllTopics()
+        let topic
+        topics.forEach(t => {
+          if (t.id === reply.topicId) {
+            topic = t
+          }
+        })
+        mutation = new UpdateReply({ reply, bot, previousTopic: activeTopic, topic, ...reply })
       }
 
-      const onSuccess = ({ createReply }) => {
+      const onSuccess = ({ createReply, updateReply }) => {
         if (createReply) {
-          const { replyEdge: { node: { id } }, topic: { id: topicId } } = createReply
-          this.context.router.replace(`/knowledge/${topicId}/${id}`)
+          const { replyEdge: { node: { id } } } = createReply
+          this.context.router.replace(`/knowledge/${reply.topicId}/${id}`)
+        } else if (updateReply && activeTopic.id !== reply.topicId) {
+          const path = `/knowledge/${reply.topicId}/${reply.id}`
+          this.setState({ routing: path }, () => this.context.router.replace(path))
         }
         resolve()
       }
@@ -298,6 +314,8 @@ class Knowledge extends Component {
       replyEdges.push(...this.getReplyEdges(activeTopic))
     }
 
+    const topicsWithDefault = this.getAllTopics()
+
     let topics = []
     const topicEdges = this.getTopicEdges()
     if (topicEdges) {
@@ -338,6 +356,8 @@ class Knowledge extends Component {
                 onDelete={this.displayDeleteReplyDialog}
                 onSubmit={this.handleSubmitReply}
                 reply={this.state.activeReply}
+                topic={this.state.activeTopic}
+                topics={topicsWithDefault}
               />
             </div>
           </section>

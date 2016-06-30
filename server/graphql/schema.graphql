@@ -275,12 +275,17 @@ input UpdateReplyInput {
   title: String!
   body: String!
   topicId: ID!
+  previousTopicId: ID!
   botId: ID!
   clientMutationId: String!
 }
 
 type UpdateReplyPayload {
   reply: Reply
+  replyId: ID
+  replyEdge: ReplyEdge
+  previousTopic: Topic
+  topic: Topic
   clientMutationId: String!
 }
 

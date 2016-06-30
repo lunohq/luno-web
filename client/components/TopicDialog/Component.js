@@ -28,7 +28,7 @@ class TopicDialog extends Component {
     if (!topic || changed) {
       return onSubmit(values)
     }
-    onCancel()
+    return onCancel()
   }
 
   handleCancel = () => {
