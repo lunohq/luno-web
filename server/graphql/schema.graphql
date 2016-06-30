@@ -65,6 +65,19 @@ type CreateReplyPayload {
   clientMutationId: String!
 }
 
+input CreateTopicInput {
+  name: String!
+  pointsOfContact: [String]
+  clientMutationId: String!
+}
+
+type CreateTopicPayload {
+  viewer: User
+  topic: Topic
+  topicEdge: TopicEdge
+  clientMutationId: String!
+}
+
 input DeleteAnswerInput {
   id: ID!
   clientMutationId: String!
@@ -85,6 +98,17 @@ input DeleteReplyInput {
 
 type DeleteReplyPayload {
   topic: Topic
+  deletedId: ID
+  clientMutationId: String!
+}
+
+input DeleteTopicInput {
+  id: ID!
+  clientMutationId: String!
+}
+
+type DeleteTopicPayload {
+  viewer: User
   deletedId: ID
   clientMutationId: String!
 }
@@ -124,6 +148,9 @@ type Mutation {
   createReply(input: CreateReplyInput!): CreateReplyPayload
   deleteReply(input: DeleteReplyInput!): DeleteReplyPayload
   updateReply(input: UpdateReplyInput!): UpdateReplyPayload
+  createTopic(input: CreateTopicInput!): CreateTopicPayload
+  deleteTopic(input: DeleteTopicInput!): DeleteTopicPayload
+  updateTopic(input: UpdateTopicInput!): UpdateTopicPayload
 }
 
 interface Node {
@@ -194,6 +221,7 @@ type Team implements Node {
 type Topic implements Node {
   id: ID!
   isDefault: Boolean
+  name: String
   replies(after: String, first: Int, before: String, last: Int): ReplyConnection
 }
 
@@ -256,6 +284,18 @@ type UpdateReplyPayload {
   clientMutationId: String!
 }
 
+input UpdateTopicInput {
+  id: ID!
+  name: String!
+  pointsOfContact: [String]!
+  clientMutationId: String!
+}
+
+type UpdateTopicPayload {
+  topic: Topic
+  clientMutationId: String!
+}
+
 input UpdateUserInput {
   id: ID!
   role: UserRole!
@@ -273,6 +313,7 @@ type User implements Node {
   username: String
   team: Team
   bots(after: String, first: Int, before: String, last: Int): BotConnection
+  defaultTopic: Topic
   topics(after: String, first: Int, before: String, last: Int): TopicConnection
   anonymous: Boolean
   assumed: Boolean

@@ -12,6 +12,9 @@ import UpdateBotPurpose from '../mutations/UpdateBotPurpose'
 import UpdateBotPointsOfContact from '../mutations/UpdateBotPointsOfContact'
 import UpdateUser from '../mutations/UpdateUser'
 import InviteUser from '../mutations/InviteUser'
+import CreateTopic from '../mutations/CreateTopic'
+import UpdateTopic from '../mutations/UpdateTopic'
+import DeleteTopic from '../mutations/DeleteTopic'
 
 import { registerType } from './registry'
 
@@ -57,6 +60,9 @@ const GraphQLMutation = new GraphQLObjectType({
     createReply: staffMutation(CreateReply),
     deleteReply: staffMutation(DeleteReply),
     updateReply: staffMutation(UpdateReply),
+    createTopic: staffMutation(CreateTopic),
+    deleteTopic: staffMutation(DeleteTopic),
+    updateTopic: staffMutation(UpdateTopic),
   }),
 })
 

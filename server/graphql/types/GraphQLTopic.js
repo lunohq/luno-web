@@ -1,4 +1,4 @@
-import { GraphQLObjectType, GraphQLBoolean } from 'graphql'
+import { GraphQLObjectType, GraphQLBoolean, GraphQLString } from 'graphql'
 import { globalIdField, connectionArgs, connectionFromArray } from 'graphql-relay'
 import { db } from 'luno-core'
 
@@ -13,6 +13,10 @@ const GraphQLTopic = new GraphQLObjectType({
     isDefault: {
       type: GraphQLBoolean,
       description: 'Boolean indicating this is the default topic',
+    },
+    name: {
+      type: GraphQLString,
+      description: 'The name of the Topic',
     },
     replies: {
       type: Replies.connectionType,

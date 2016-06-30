@@ -22,8 +22,15 @@ export default (
       queries={ViewerQueries}
       render={({ props }) => props ? <KnowledgeContainer {...props} /> : <Loading />}
     />
+    {/* Support backwards compatability with loading from topic-less replies */}
     <Route
-      path='knowledge/:replyId'
+      path='knowledge/:topicId'
+      component={KnowledgeContainer}
+      queries={ViewerQueries}
+      render={({ props }) => props ? <KnowledgeContainer {...props} /> : <Loading /> }
+    />
+    <Route
+      path='knowledge/:topicId/:replyId'
       component={KnowledgeContainer}
       queries={ViewerQueries}
       render={({ props }) => props ? <KnowledgeContainer {...props} /> : <Loading /> }
