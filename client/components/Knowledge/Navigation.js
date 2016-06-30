@@ -21,7 +21,10 @@ const Navigation = ({ defaultId, onNewTopic, topics, topicId, onSelect }) => {
       key={'default'}
       onTouchTap={() => onSelect(defaultId)}
       primaryText={t('Lunobot')}
-      rightIconButton={<IconButton onTouchTap={onNewTopic}><AvLibraryAdd /></IconButton>}
+      rightIconButton={
+        <IconButton onTouchTap={onNewTopic}>
+          <AvLibraryAdd color={'rgb(117, 117, 117)'} />
+        </IconButton>}
       value={defaultId}
     />
   ]
