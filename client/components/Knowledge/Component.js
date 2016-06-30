@@ -10,16 +10,17 @@ import DeleteReply from 'm/DeleteReply'
 import UpdateReply from 'm/UpdateReply'
 import CreateTopic from 'm/CreateTopic'
 import UpdateTopic from 'm/UpdateTopic'
+import DeleteTopic from 'm/DeleteTopic'
 
 import { NAV_WIDTH, MENU_WIDTH } from 'c/AuthenticatedLanding/Navigation'
 import DocumentTitle from 'c/DocumentTitle'
 import ReplyList from 'c/ReplyList/Component'
 import Reply from 'c/Reply/Component'
 import Loading from 'c/Loading'
+import TopicDialog from 'c/TopicDialog/Component'
 
 import DeleteDialog from './DeleteDialog'
 import Navigation from './Navigation'
-import TopicDialog from './TopicDialog'
 
 import s from './style.scss'
 
@@ -228,6 +229,16 @@ class Knowledge extends Component {
 
   displayTopicForm = () => this.setState({ topicFormOpen: true })
   hideTopicForm = () => this.setState({ topicFormOpen: false, topicToEdit: null })
+
+  handleDeleteTopic = (topic) => {
+    const { viewer } = this.props
+    const mutation = new DeleteTopic({ topic, viewer })
+    // TODO display a snackbar if this fails
+    Relay.Store.commitUpdate(mutation)
+    this.hideTopicForm()
+    this.context.router.push(`/knowledge/${viewer.defaultTopic.id}`)
+  }
+
   handleSubmitTopic = ({ topic }) => {
     return new Promise((resolve, reject) => {
       let mutation
@@ -331,9 +342,10 @@ class Knowledge extends Component {
             </div>
           </section>
           <TopicDialog
-            open={this.state.topicFormOpen}
-            onSubmit={this.handleSubmitTopic}
             onCancel={this.hideTopicForm}
+            onDelete={this.handleDeleteTopic}
+            onSubmit={this.handleSubmitTopic}
+            open={this.state.topicFormOpen}
             topic={this.state.topicToEdit}
           />
           {(() => !this.state.replyToDelete ? null : (

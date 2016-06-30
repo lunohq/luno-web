@@ -16,7 +16,7 @@ export default mutationWithClientMutationId({
   outputFields: {
     viewer: {
       type: GraphQLUser,
-      resolve: (payload, { auth }) => db.user.getUser(auth.uid),
+      resolve: ({ auth }) => db.user.getUser(auth.uid),
     },
     deletedId: {
       type: GraphQLID,
@@ -29,6 +29,6 @@ export default mutationWithClientMutationId({
     const id = db.client.deconstructId(compositeId)[1]
     await db.topic.deleteTopic({ teamId, id })
     tracker.trackDeleteTopic({ id, auth })
-    return { globalId }
+    return { globalId, auth }
   },
 })

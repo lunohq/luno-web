@@ -63,9 +63,11 @@ class ReplyList extends Component {
         <Subheader className={s.header}>
           <section>
             {topic.name || t('Lunobot')}
-            <IconButton onTouchTap={onEditTopic}>
-              <FontIcon className='material-icons' color={colors.darkGrey}>edit</FontIcon>
-            </IconButton>
+            {(() => !topic.name ? null : (
+              <IconButton onTouchTap={onEditTopic}>
+                <FontIcon className='material-icons' color={colors.darkGrey}>edit</FontIcon>
+              </IconButton>
+            ))()}
           </section>
           <div>
             <FlatButton
