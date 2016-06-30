@@ -237,7 +237,14 @@ class Knowledge extends Component {
       }
 
       const onFailure = (transaction) => {
-        reject(new SubmissionError({ _error: transaction.getError() }))
+        const errors = {}
+        const err = transaction.getError()
+        if (err.message.includes('DuplicateTopicNameException')) {
+          errors.topic = { name: t('Topic names must be unique') }
+        } else {
+          errors._error = err
+        }
+        reject(new SubmissionError(errors))
       }
 
       Relay.Store.commitUpdate(mutation, { onSuccess, onFailure })

@@ -9,6 +9,10 @@ import { formatError as graphQLFormatError } from 'graphql'
  *
  */
 export default function formatError(err) {
-  logger.error('GraphQL Error', { err })
+  if (err.originalError && err.originalError.code) {
+    err.message = err.originalError.code
+  } else {
+    logger.error('GraphQL Error', { err })
+  }
   return graphQLFormatError(err)
 }
