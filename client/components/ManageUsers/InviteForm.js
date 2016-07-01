@@ -75,10 +75,10 @@ InviteForm.propTypes = {
   members: PropTypes.array.isRequired,
 }
 
-export default withStyles(s)(reduxForm({
+export default reduxForm({
   form: FORM_NAME,
   initialValues: {
     role: 'TRAINER',
   },
   validate,
-})(InviteForm))
+})(withStyles(s)(InviteForm))
