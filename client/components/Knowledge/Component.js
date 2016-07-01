@@ -19,7 +19,6 @@ import Reply from 'c/Reply/Component'
 import Loading from 'c/Loading'
 import TopicDialog from 'c/TopicDialog/Component'
 
-import DeleteDialog from './DeleteDialog'
 import Navigation from './Navigation'
 
 import s from './style.scss'
@@ -30,7 +29,7 @@ class Knowledge extends Component {
     activeTopic: null,
     activeReply: {},
     deleteReplyDialogOpen: false,
-    replyToDelete: null,
+    deleteErrorOpen: false,
     topicFormOpen: false,
     routing: null,
     topicToEdit: null,
@@ -179,15 +178,21 @@ class Knowledge extends Component {
     this.context.router.push(`/knowledge/${this.state.activeTopic.id}/${reply.id || 'new'}`)
   }
 
-  handleDeleteReply = () => {
-    const { replyToDelete: reply } = this.state
-    if (reply) {
+  handleDeleteReply = (reply) => {
+    return new Promise((resolve, reject) => {
       const { activeTopic: topic } = this.state
       const bot = this.getBot()
-      Relay.Store.commitUpdate(new DeleteReply({ topic, reply, bot }))
-      this.routeToDefaultReply({ ignoreId: reply.id })
-    }
-    this.hideDeleteReplyDialog()
+
+      const onSuccess = () => {
+        this.routeToDefaultReply({ ignoreId: reply.id })
+        resolve()
+      }
+      const onFailure = (transaction) => {
+        reject(new SubmissionError({ _error: transaction.getError() }))
+      }
+
+      Relay.Store.commitUpdate(new DeleteReply({ topic, reply, bot }), { onSuccess, onFailure })
+    })
   }
 
   handleCancelReply = () => {
@@ -233,26 +238,26 @@ class Knowledge extends Component {
     })
   }
 
-  displayDeleteReplyDialog = reply => this.setState({
-    deleteReplyDialogOpen: true,
-    replyToDelete: reply,
-  })
-
-  hideDeleteReplyDialog = () => this.setState({
-    deleteReplyDialogOpen: false,
-    replyToDelete: null,
-  })
-
   displayTopicForm = () => this.setState({ topicFormOpen: true })
   hideTopicForm = () => this.setState({ topicFormOpen: false, topicToEdit: null })
 
   handleDeleteTopic = (topic) => {
-    const { viewer } = this.props
-    const mutation = new DeleteTopic({ topic, viewer })
-    // TODO display a snackbar if this fails
-    Relay.Store.commitUpdate(mutation)
-    this.hideTopicForm()
-    this.context.router.push(`/knowledge/${viewer.defaultTopic.id}`)
+    return new Promise((resolve, reject) => {
+      const { viewer } = this.props
+      const mutation = new DeleteTopic({ topic, viewer })
+
+      const onSuccess = () => {
+        this.hideTopicForm()
+        this.context.router.push(`/knowledge/${viewer.defaultTopic.id}`)
+        resolve()
+      }
+
+      const onFailure = (transaction) => {
+        reject(new SubmissionError({ _error: transaction.getError() }))
+      }
+
+      Relay.Store.commitUpdate(mutation, { onSuccess, onFailure })
+    })
   }
 
   handleSubmitTopic = ({ topic }) => {
@@ -353,7 +358,7 @@ class Knowledge extends Component {
               <Reply
                 focused={focused}
                 onCancel={this.handleCancelReply}
-                onDelete={this.displayDeleteReplyDialog}
+                onDelete={this.handleDeleteReply}
                 onSubmit={this.handleSubmitReply}
                 reply={this.state.activeReply}
                 topic={this.state.activeTopic}
@@ -368,14 +373,6 @@ class Knowledge extends Component {
             open={this.state.topicFormOpen}
             topic={this.state.topicToEdit}
           />
-          {(() => !this.state.replyToDelete ? null : (
-            <DeleteDialog
-              onCancel={this.hideDeleteReplyDialog}
-              onConfirm={this.handleDeleteReply}
-              open={this.state.deleteReplyDialogOpen}
-              reply={this.state.replyToDelete}
-            />
-          ))()}
         </div>
       </DocumentTitle>
     )

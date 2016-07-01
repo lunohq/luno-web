@@ -16,6 +16,7 @@ import withStyles from 'u/withStyles'
 import moment from 'u/moment'
 import colors from 's/colors'
 
+import DeleteDialog from './DeleteDialog'
 import s from './style.scss'
 
 export const FORM_NAME = 'form/reply'
@@ -42,10 +43,12 @@ const validate = values => {
 class Reply extends Component {
 
   state = {
+    deleting: false,
     editing: false,
     focused: false,
     newReply: false,
     mightCancel: false,
+    deleteDialogOpen: false,
   }
 
   componentWillMount() {
@@ -98,7 +101,7 @@ class Reply extends Component {
       const initialValues = { reply }
       this.context.store.dispatch(initialize(FORM_NAME, initialValues))
     }
-    this.setState({ editing: false, focused: false })
+    this.setState({ deleting: false, editing: false, focused: false })
   }
 
   focus() {
@@ -122,7 +125,7 @@ class Reply extends Component {
 
   handleCancel = () => {
     const { onCancel, reset } = this.props
-    this.setState({ editing: false, mightCancel: false })
+    this.setState({ deleting: false, editing: false, mightCancel: false })
     reset()
     onCancel()
   }
@@ -135,7 +138,13 @@ class Reply extends Component {
   handleCancelOnMouseEnter = () => this.setState({ mightCancel: true })
   handleCancelOnMouseLeave = () => this.setState({ mightCancel: false })
 
-  handleDelete = () => this.props.onDelete(this.props.reply)
+  handleDelete = () => {
+    this.hideDeleteDialog()
+    this.setState({ deleting: true })
+    return this.props.onDelete(this.props.reply)
+  }
+  displayDeleteDialog = () => this.setState({ deleteDialogOpen: true })
+  hideDeleteDialog = () => this.setState({ deleteDialogOpen: false })
 
   handleFocus = () => this.setState({ editing: true })
 
@@ -155,10 +164,25 @@ class Reply extends Component {
       submitting,
       topics,
     } = this.props
-    const { editing } = this.state
+    const { editing, deleting } = this.state
 
     let actionButtons
-    if (editing) {
+    if (editing || (error && !submitting && !deleting)) {
+      let primaryLabel
+      if (error) {
+        primaryLabel = t('Try Again')
+      } else if (reply.id) {
+        primaryLabel = t('Update')
+      } else {
+        primaryLabel = t('Create')
+      }
+
+      let handler
+      if (deleting) {
+        handler = this.handleDelete
+      } else {
+        handler = this.handleSave
+      }
       actionButtons = [
         <FlatButton
           key='cancel'
@@ -171,17 +195,25 @@ class Reply extends Component {
         <FlatButton
           disabled={(!reply && pristine) || !valid}
           key='create'
-          label={reply.id ? t('Update') : t('Create')}
-          onTouchTap={handleSubmit(this.handleSave)}
+          label={primaryLabel}
+          onTouchTap={handleSubmit(handler)}
           primary
         />,
       ]
     } else if (submitting) {
+      let label
+      if (deleting) {
+        label = t('Deleting...')
+      } else if (reply.id) {
+        label = t('Updating...')
+      } else {
+        label = t('Creating...')
+      }
       actionButtons = [
         <FlatButton
           disabled
           key='submitting'
-          label={reply.id ? t('Updating...') : t('Creating...') }
+          label={label}
           primary
         />,
       ]
@@ -190,18 +222,22 @@ class Reply extends Component {
         <IconButton key='edit' onTouchTap={this.handleEdit} tooltip='Edit Reply'>
           <FontIcon className='material-icons' color={colors.darkGrey}>edit</FontIcon>
         </IconButton>,
-        <IconButton key='delete' onTouchTap={this.handleDelete} tooltip='Delete Reply'>
+        <IconButton key='delete' onTouchTap={this.displayDeleteDialog} tooltip='Delete Reply'>
           <FontIcon className='material-icons' color={colors.darkGrey}>delete</FontIcon>
         </IconButton>,
       ]
     }
 
     let message
-    if (reply.changed && !editing && !submitting) {
+    if (error) {
+      if (deleting) {
+        message = t('Internal error deleting reply.')
+      } else {
+        message = t('Internal error saving reply.')
+      }
+    } else if (reply.changed && !editing && !submitting) {
       const changed = moment(reply.changed).format('MMM Do, YYYY')
       message = t(`Last updated on ${changed}`)
-    } else if (error) {
-      message = t('Internal error saving reply.')
     }
 
     const items = topics.map((topic, index) => {
@@ -233,6 +269,7 @@ class Reply extends Component {
               autoComplete='off'
               className={s.field}
               component={TextField}
+              disabled={submitting}
               floatingLabelFixed
               floatingLabelText={t('Title')}
               fullWidth
@@ -248,6 +285,7 @@ class Reply extends Component {
             <Field
               autoComplete='off'
               component={TextField}
+              disabled={submitting}
               className={s.field}
               floatingLabelText={t('Reply')}
               floatingLabelFixed
@@ -261,6 +299,7 @@ class Reply extends Component {
             />
             <Field
               component={SelectField}
+              disabled={submitting}
               name='reply.topicId'
               style={{ width: '50%' }}
             >
@@ -268,6 +307,12 @@ class Reply extends Component {
             </Field>
           </section>
         </div>
+        <DeleteDialog
+          onCancel={this.hideDeleteDialog}
+          onConfirm={handleSubmit(this.handleDelete)}
+          open={this.state.deleteDialogOpen}
+          reply={reply}
+        />
       </Paper>
     )
   }
@@ -294,7 +339,7 @@ Reply.contextTypes = {
   store: PropTypes.object.isRequired,
 }
 
-export default withStyles(s)(reduxForm({
+export default reduxForm({
   form: FORM_NAME,
   validate,
-})(Reply))
+})(withStyles(s)(Reply))

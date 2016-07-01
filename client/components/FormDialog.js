@@ -8,14 +8,8 @@ import Dialog from 'c/Dialog'
 
 class FormDialog extends Component {
 
-  handleSubmit = (values) => {
-    return this.props.onSubmit(values)
-  }
-
-  handleCancel = () => {
-    this.props.onCancel()
-  }
-
+  handleSubmit = values => this.props.onSubmit(values)
+  handleCancel = () => this.props.onCancel()
   handlePrimaryAction = () => this.refs.form.submit()
 
   render() {
