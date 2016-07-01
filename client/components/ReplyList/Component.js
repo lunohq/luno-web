@@ -61,13 +61,17 @@ class ReplyList extends Component {
     return (
       <Paper className={s.root}>
         <Subheader className={s.header}>
-          <section>
-            {topic.name || t('Lunobot')}
-            {(() => !topic.name ? null : (
-              <IconButton onTouchTap={onEditTopic}>
-                <FontIcon className='material-icons' color={colors.darkGrey}>edit</FontIcon>
-              </IconButton>
-            ))()}
+          <section className={s.topicTitle}>
+            <div>
+              <span>{topic.name || t('Lunobot')}</span>
+            </div>
+            <div>
+              {(() => !topic.name ? null : (
+                <IconButton onTouchTap={onEditTopic}>
+                  <FontIcon className='material-icons' color={colors.darkGrey}>edit</FontIcon>
+                </IconButton>
+              ))()}
+            </div>
           </section>
           <div>
             <FlatButton
