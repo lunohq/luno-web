@@ -242,12 +242,22 @@ class Knowledge extends Component {
   hideTopicForm = () => this.setState({ topicFormOpen: false, topicToEdit: null })
 
   handleDeleteTopic = (topic) => {
-    const { viewer } = this.props
-    const mutation = new DeleteTopic({ topic, viewer })
-    // TODO display a snackbar if this fails
-    Relay.Store.commitUpdate(mutation)
-    this.hideTopicForm()
-    this.context.router.push(`/knowledge/${viewer.defaultTopic.id}`)
+    return new Promise((resolve, reject) => {
+      const { viewer } = this.props
+      const mutation = new DeleteTopic({ topic, viewer })
+
+      const onSuccess = () => {
+        this.hideTopicForm()
+        this.context.router.push(`/knowledge/${viewer.defaultTopic.id}`)
+        resolve()
+      }
+
+      const onFailure = (transaction) => {
+        reject(new SubmissionError({ _error: transaction.getError() }))
+      }
+
+      Relay.Store.commitUpdate(mutation, { onSuccess, onFailure })
+    })
   }
 
   handleSubmitTopic = ({ topic }) => {

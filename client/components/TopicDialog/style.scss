@@ -1,3 +1,4 @@
 .actions {
     composes: row between-xs from 's/vendor/flexboxgrid.css';
+    min-height: 50px;
 }

@@ -336,7 +336,7 @@ Reply.contextTypes = {
   store: PropTypes.object.isRequired,
 }
 
-export default withStyles(s)(reduxForm({
+export default reduxForm({
   form: FORM_NAME,
   validate,
-})(Reply))
+})(withStyles(s)(Reply))
