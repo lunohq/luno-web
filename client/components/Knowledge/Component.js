@@ -2,8 +2,6 @@ import React, { Component, PropTypes } from 'react'
 import Relay from 'react-relay'
 import { SubmissionError } from 'redux-form'
 
-import Snackbar from 'material-ui/Snackbar'
-
 import t from 'u/gettext'
 import withStyles from 'u/withStyles'
 
@@ -21,7 +19,6 @@ import Reply from 'c/Reply/Component'
 import Loading from 'c/Loading'
 import TopicDialog from 'c/TopicDialog/Component'
 
-import DeleteDialog from './DeleteDialog'
 import Navigation from './Navigation'
 
 import s from './style.scss'
@@ -33,7 +30,6 @@ class Knowledge extends Component {
     activeReply: {},
     deleteReplyDialogOpen: false,
     deleteErrorOpen: false,
-    replyToDelete: null,
     topicFormOpen: false,
     routing: null,
     topicToEdit: null,
@@ -43,7 +39,7 @@ class Knowledge extends Component {
     this.initialize(this.props)
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps, nextState) {
     const { viewer, params: { replyId, topicId } } = this.props
     const { viewer: nextViewer, params: { replyId: nextReplyId, topicId: nextTopicId } } = nextProps
     const shouldInit = (
@@ -182,16 +178,21 @@ class Knowledge extends Component {
     this.context.router.push(`/knowledge/${this.state.activeTopic.id}/${reply.id || 'new'}`)
   }
 
-  handleDeleteReply = () => {
-    const { replyToDelete: reply } = this.state
-    if (reply) {
+  handleDeleteReply = (reply) => {
+    return new Promise((resolve, reject) => {
       const { activeTopic: topic } = this.state
       const bot = this.getBot()
-      const onFailure = () => this.setState({ deleteErrorOpen: true })
-      Relay.Store.commitUpdate(new DeleteReply({ topic, reply, bot }), { onFailure })
-      this.routeToDefaultReply({ ignoreId: reply.id })
-    }
-    this.hideDeleteReplyDialog()
+
+      const onSuccess = () => {
+        this.routeToDefaultReply({ ignoreId: reply.id })
+        resolve()
+      }
+      const onFailure = (transaction) => {
+        reject(new SubmissionError({ _error: transaction.getError() }))
+      }
+
+      Relay.Store.commitUpdate(new DeleteReply({ topic, reply, bot }), { onSuccess, onFailure })
+    })
   }
 
   handleCancelReply = () => {
@@ -236,16 +237,6 @@ class Knowledge extends Component {
       Relay.Store.commitUpdate(mutation, { onSuccess, onFailure })
     })
   }
-
-  displayDeleteReplyDialog = reply => this.setState({
-    deleteReplyDialogOpen: true,
-    replyToDelete: reply,
-  })
-
-  hideDeleteReplyDialog = () => this.setState({
-    deleteReplyDialogOpen: false,
-    replyToDelete: null,
-  })
 
   displayTopicForm = () => this.setState({ topicFormOpen: true })
   hideTopicForm = () => this.setState({ topicFormOpen: false, topicToEdit: null })
@@ -304,8 +295,6 @@ class Knowledge extends Component {
     this.setState({ topicToEdit: this.state.activeTopic, topicFormOpen: true })
   }
 
-  handleCloseDeleteError = () => this.setState({ deleteErrorOpen: false })
-
   render() {
     if (!this.state.activeTopic) {
       return <Loading />
@@ -358,7 +347,7 @@ class Knowledge extends Component {
                 <Reply
                   focused={focused}
                   onCancel={this.handleCancelReply}
-                  onDelete={this.displayDeleteReplyDialog}
+                  onDelete={this.handleDeleteReply}
                   onSubmit={this.handleSubmitReply}
                   reply={this.state.activeReply}
                   topic={this.state.activeTopic}
@@ -373,20 +362,6 @@ class Knowledge extends Component {
             onSubmit={this.handleSubmitTopic}
             open={this.state.topicFormOpen}
             topic={this.state.topicToEdit}
-          />
-          {(() => !this.state.replyToDelete ? null : (
-            <DeleteDialog
-              onCancel={this.hideDeleteReplyDialog}
-              onConfirm={this.handleDeleteReply}
-              open={this.state.deleteReplyDialogOpen}
-              reply={this.state.replyToDelete}
-            />
-          ))()}
-          <Snackbar
-            autoHideDuration={3000}
-            onRequestClose={this.handleCloseDeleteError}
-            open={this.state.deleteErrorOpen}
-            message={t('Error deleting reply. Please try again.')}
           />
         </div>
       </DocumentTitle>

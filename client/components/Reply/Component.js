@@ -16,6 +16,7 @@ import withStyles from 'u/withStyles'
 import moment from 'u/moment'
 import colors from 's/colors'
 
+import DeleteDialog from './DeleteDialog'
 import s from './style.scss'
 
 export const FORM_NAME = 'form/reply'
@@ -42,10 +43,12 @@ const validate = values => {
 class Reply extends Component {
 
   state = {
+    deleting: false,
     editing: false,
     focused: false,
     newReply: false,
     mightCancel: false,
+    deleteDialogOpen: false,
   }
 
   componentWillMount() {
@@ -98,7 +101,7 @@ class Reply extends Component {
       const initialValues = { reply }
       this.context.store.dispatch(initialize(FORM_NAME, initialValues))
     }
-    this.setState({ editing: false, focused: false })
+    this.setState({ deleting: false, editing: false, focused: false })
   }
 
   focus() {
@@ -122,7 +125,7 @@ class Reply extends Component {
 
   handleCancel = () => {
     const { onCancel, reset } = this.props
-    this.setState({ editing: false, mightCancel: false })
+    this.setState({ deleting: false, editing: false, mightCancel: false })
     reset()
     onCancel()
   }
@@ -135,7 +138,13 @@ class Reply extends Component {
   handleCancelOnMouseEnter = () => this.setState({ mightCancel: true })
   handleCancelOnMouseLeave = () => this.setState({ mightCancel: false })
 
-  handleDelete = () => this.props.onDelete(this.props.reply)
+  handleDelete = () => {
+    this.hideDeleteDialog()
+    this.setState({ deleting: true })
+    return this.props.onDelete(this.props.reply)
+  }
+  displayDeleteDialog = () => this.setState({ deleteDialogOpen: true })
+  hideDeleteDialog = () => this.setState({ deleteDialogOpen: false })
 
   handleFocus = () => this.setState({ editing: true })
 
@@ -155,10 +164,10 @@ class Reply extends Component {
       submitting,
       topics,
     } = this.props
-    const { editing } = this.state
+    const { editing, deleting } = this.state
 
     let actionButtons
-    if (editing || (error && !submitting)) {
+    if (editing || (error && !submitting && !deleting)) {
       let primaryLabel
       if (error) {
         primaryLabel = t('Try Again')
@@ -166,6 +175,13 @@ class Reply extends Component {
         primaryLabel = t('Update')
       } else {
         primaryLabel = t('Create')
+      }
+
+      let handler
+      if (deleting) {
+        handler = this.handleDelete
+      } else {
+        handler = this.handleSave
       }
       actionButtons = [
         <FlatButton
@@ -180,16 +196,24 @@ class Reply extends Component {
           disabled={(!reply && pristine) || !valid}
           key='create'
           label={primaryLabel}
-          onTouchTap={handleSubmit(this.handleSave)}
+          onTouchTap={handleSubmit(handler)}
           primary
         />,
       ]
     } else if (submitting) {
+      let label
+      if (deleting) {
+        label = t('Deleting...')
+      } else if (reply.id) {
+        label = t('Updating...')
+      } else {
+        label = t('Creating...')
+      }
       actionButtons = [
         <FlatButton
           disabled
           key='submitting'
-          label={reply.id ? t('Updating...') : t('Creating...') }
+          label={label}
           primary
         />,
       ]
@@ -198,7 +222,7 @@ class Reply extends Component {
         <IconButton key='edit' onTouchTap={this.handleEdit}>
           <FontIcon className='material-icons' color={colors.darkGrey}>edit</FontIcon>
         </IconButton>,
-        <IconButton key='delete' onTouchTap={this.handleDelete}>
+        <IconButton key='delete' onTouchTap={this.displayDeleteDialog}>
           <FontIcon className='material-icons' color={colors.darkGrey}>delete</FontIcon>
         </IconButton>,
       ]
@@ -206,7 +230,11 @@ class Reply extends Component {
 
     let message
     if (error) {
-      message = t('Internal error saving reply.')
+      if (deleting) {
+        message = t('Internal error deleting reply.')
+      } else {
+        message = t('Internal error saving reply.')
+      }
     } else if (reply.changed && !editing && !submitting) {
       const changed = moment(reply.changed).format('MMM Do, YYYY')
       message = t(`Last updated on ${changed}`)
@@ -276,6 +304,12 @@ class Reply extends Component {
             </Field>
           </section>
         </div>
+        <DeleteDialog
+          onCancel={this.hideDeleteDialog}
+          onConfirm={handleSubmit(this.handleDelete)}
+          open={this.state.deleteDialogOpen}
+          reply={reply}
+        />
       </Paper>
     )
   }
