@@ -63,7 +63,11 @@ class TopicDialog extends Component {
     ]
 
     const leftActions = [
-      <IconButton key='left-1' onTouchTap={this.showDeleteDialog}>
+      <IconButton
+        key='left-1'
+        onTouchTap={this.showDeleteDialog}
+        style={{ padding: '6px', height: '36px', width: '36px' }}
+      >
         <FontIcon className='material-icons' color={colors.darkGrey}>delete</FontIcon>
       </IconButton>
     ]
