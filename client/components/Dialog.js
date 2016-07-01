@@ -15,6 +15,7 @@ const dialogHeightFix = {
     transform: 'none',
   },
   bodyStyle: {
+    lineHeight: '24px',
     paddingBottom: 0,
   },
   repositionOnUpdate: false,

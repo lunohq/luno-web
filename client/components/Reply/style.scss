@@ -11,6 +11,11 @@
     height: 48px;
 }
 
+.topicTitle {
+  composes: row middle-xs from 's/vendor/flexboxgrid.css';
+  margin-left: 0;
+}
+
 .content {
     height: calc(100% - 48px - 80px); //less header height and padding bottom
     overflow: scroll;

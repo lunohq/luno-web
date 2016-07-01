@@ -328,8 +328,7 @@ class Knowledge extends Component {
     }
     const focused = replyId === 'new'
     const marginLeft = {
-      // Add a 5px bumper
-      marginLeft: NAV_WIDTH + MENU_WIDTH + 5,
+      marginLeft: NAV_WIDTH + MENU_WIDTH,
     }
     return (
       <DocumentTitle title={t('Knowledge')}>
@@ -341,31 +340,32 @@ class Knowledge extends Component {
             topicId={this.state.activeTopic.id}
             topics={topics}
           />
-          <div className={s.contentContainer} style={marginLeft}>
-            <section className={s.content}>
-              <div className={s.replyList}>
-                <ReplyList
-                  onChange={this.handleChangeReply}
-                  onNew={this.handleNewReply}
-                  onEditTopic={this.handleEditTopic}
-                  replyEdges={replyEdges}
-                  reply={this.state.activeReply}
-                  topic={this.state.activeTopic}
-                />
-              </div>
-              <div className={s.reply}>
-                <Reply
-                  focused={focused}
-                  onCancel={this.handleCancelReply}
-                  onDelete={this.handleDeleteReply}
-                  onSubmit={this.handleSubmitReply}
-                  reply={this.state.activeReply}
-                  topic={this.state.activeTopic}
-                  topics={topicsWithDefault}
-                />
-              </div>
-            </section>
-          </div>
+          <section
+            className={s.content}
+            style={marginLeft}
+          >
+            <div className={s.replyList}>
+              <ReplyList
+                onChange={this.handleChangeReply}
+                onNew={this.handleNewReply}
+                onEditTopic={this.handleEditTopic}
+                replyEdges={replyEdges}
+                reply={this.state.activeReply}
+                topic={this.state.activeTopic}
+              />
+            </div>
+            <div className={s.reply}>
+              <Reply
+                focused={focused}
+                onCancel={this.handleCancelReply}
+                onDelete={this.handleDeleteReply}
+                onSubmit={this.handleSubmitReply}
+                reply={this.state.activeReply}
+                topic={this.state.activeTopic}
+                topics={topicsWithDefault}
+              />
+            </div>
+          </section>
           <TopicDialog
             onCancel={this.hideTopicForm}
             onDelete={this.handleDeleteTopic}

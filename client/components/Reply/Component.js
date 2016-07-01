@@ -219,10 +219,10 @@ class Reply extends Component {
       ]
     } else {
       actionButtons = [
-        <IconButton key='edit' onTouchTap={this.handleEdit}>
+        <IconButton key='edit' onTouchTap={this.handleEdit} tooltip='Edit Reply'>
           <FontIcon className='material-icons' color={colors.darkGrey}>edit</FontIcon>
         </IconButton>,
-        <IconButton key='delete' onTouchTap={this.displayDeleteDialog}>
+        <IconButton key='delete' onTouchTap={this.displayDeleteDialog} tooltip='Delete Reply'>
           <FontIcon className='material-icons' color={colors.darkGrey}>delete</FontIcon>
         </IconButton>,
       ]
@@ -300,6 +300,8 @@ class Reply extends Component {
             <Field
               component={SelectField}
               disabled={submitting}
+              floatingLabelText={t('Topic')}
+              floatingLabelFixed
               name='reply.topicId'
               style={{ width: '50%' }}
             >
