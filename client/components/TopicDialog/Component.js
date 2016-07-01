@@ -31,7 +31,11 @@ class TopicDialog extends Component {
   componentWillReceiveProps(nextProps) {
     const { topic } = this.props
     const { topic: nextTopic } = nextProps
-    if (topic !== nextTopic) {
+    const shouldInit = (
+      (!this.props.open && nextProps.open) ||
+      topic !== nextTopic
+    )
+    if (shouldInit) {
       this.initialize(nextProps)
     }
   }
