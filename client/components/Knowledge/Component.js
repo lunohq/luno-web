@@ -39,7 +39,7 @@ class Knowledge extends Component {
     this.initialize(this.props)
   }
 
-  componentWillReceiveProps(nextProps, nextState) {
+  componentWillReceiveProps(nextProps) {
     const { viewer, params: { replyId, topicId } } = this.props
     const { viewer: nextViewer, params: { replyId: nextReplyId, topicId: nextTopicId } } = nextProps
     const shouldInit = (
