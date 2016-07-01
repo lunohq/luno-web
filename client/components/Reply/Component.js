@@ -190,7 +190,7 @@ class Reply extends Component {
         <IconButton key='edit' onTouchTap={this.handleEdit} tooltip='Edit Reply'>
           <FontIcon className='material-icons' color={colors.darkGrey}>edit</FontIcon>
         </IconButton>,
-        <IconButton key='delete' onTouchTap={this.handleDelete} tooltip="Delete Reply">
+        <IconButton key='delete' onTouchTap={this.handleDelete} tooltip='Delete Reply'>
           <FontIcon className='material-icons' color={colors.darkGrey}>delete</FontIcon>
         </IconButton>,
       ]
