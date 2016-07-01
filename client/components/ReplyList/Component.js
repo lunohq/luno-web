@@ -67,7 +67,7 @@ class ReplyList extends Component {
             </div>
             <div>
               {(() => !topic.name ? null : (
-                <IconButton onTouchTap={onEditTopic}>
+                <IconButton onTouchTap={onEditTopic} tooltip='Edit Topic'>
                   <FontIcon className='material-icons' color={colors.darkGrey}>edit</FontIcon>
                 </IconButton>
               ))()}

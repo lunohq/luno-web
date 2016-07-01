@@ -16,10 +16,10 @@ const UserRow = ({ user, onDelete, onEdit }, { viewer: { id: userId } }) => {
   let actions = []
   if (userId !== user.id) {
     actions = [
-      <IconButton key='edit' onTouchTap={() => onEdit(user)}>
+      <IconButton key='edit' onTouchTap={() => onEdit(user)} tooltip='Edit User'>
         <FontIcon className='material-icons' color={colors.darkGrey}>edit</FontIcon>
       </IconButton>,
-      <IconButton key='delete' onTouchTap={() => onDelete(user)}>
+      <IconButton key='delete' onTouchTap={() => onDelete(user)} tooltip='Delete User'>
         <FontIcon className='material-icons' color={colors.darkGrey}>delete</FontIcon>
       </IconButton>
     ]
