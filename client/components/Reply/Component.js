@@ -158,7 +158,15 @@ class Reply extends Component {
     const { editing } = this.state
 
     let actionButtons
-    if (editing) {
+    if (editing || (error && !submitting)) {
+      let primaryLabel
+      if (error) {
+        primaryLabel = t('Try Again')
+      } else if (reply.id) {
+        primaryLabel = t('Update')
+      } else {
+        primaryLabel = t('Create')
+      }
       actionButtons = [
         <FlatButton
           key='cancel'
@@ -171,7 +179,7 @@ class Reply extends Component {
         <FlatButton
           disabled={(!reply && pristine) || !valid}
           key='create'
-          label={reply.id ? t('Update') : t('Create')}
+          label={primaryLabel}
           onTouchTap={handleSubmit(this.handleSave)}
           primary
         />,
