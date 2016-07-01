@@ -300,6 +300,8 @@ class Reply extends Component {
             <Field
               component={SelectField}
               disabled={submitting}
+              floatingLabelText={t('Topic')}
+              floatingLabelFixed
               name='reply.topicId'
               style={{ width: '50%' }}
             >
