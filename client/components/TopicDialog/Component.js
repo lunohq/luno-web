@@ -148,6 +148,7 @@ class TopicDialog extends Component {
               autoComplete='off'
               className={s.field}
               component={TextField}
+              disabled={submitting}
               floatingLabelFixed
               floatingLabelText={t('Topic Name')}
               fullWidth

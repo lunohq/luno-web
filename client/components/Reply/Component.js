@@ -269,6 +269,7 @@ class Reply extends Component {
               autoComplete='off'
               className={s.field}
               component={TextField}
+              disabled={submitting}
               floatingLabelFixed
               floatingLabelText={t('Title')}
               fullWidth
@@ -284,6 +285,7 @@ class Reply extends Component {
             <Field
               autoComplete='off'
               component={TextField}
+              disabled={submitting}
               className={s.field}
               floatingLabelText={t('Reply')}
               floatingLabelFixed
@@ -297,6 +299,7 @@ class Reply extends Component {
             />
             <Field
               component={SelectField}
+              disabled={submitting}
               name='reply.topicId'
               style={{ width: '50%' }}
             >
