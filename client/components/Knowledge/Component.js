@@ -2,6 +2,8 @@ import React, { Component, PropTypes } from 'react'
 import Relay from 'react-relay'
 import { SubmissionError } from 'redux-form'
 
+import Snackbar from 'material-ui/Snackbar'
+
 import t from 'u/gettext'
 import withStyles from 'u/withStyles'
 
@@ -30,6 +32,7 @@ class Knowledge extends Component {
     activeTopic: null,
     activeReply: {},
     deleteReplyDialogOpen: false,
+    deleteErrorOpen: false,
     replyToDelete: null,
     topicFormOpen: false,
     routing: null,
@@ -184,7 +187,8 @@ class Knowledge extends Component {
     if (reply) {
       const { activeTopic: topic } = this.state
       const bot = this.getBot()
-      Relay.Store.commitUpdate(new DeleteReply({ topic, reply, bot }))
+      const onFailure = () => this.setState({ deleteErrorOpen: true })
+      Relay.Store.commitUpdate(new DeleteReply({ topic, reply, bot }), { onFailure })
       this.routeToDefaultReply({ ignoreId: reply.id })
     }
     this.hideDeleteReplyDialog()
@@ -300,6 +304,8 @@ class Knowledge extends Component {
     this.setState({ topicToEdit: this.state.activeTopic, topicFormOpen: true })
   }
 
+  handleCloseDeleteError = () => this.setState({ deleteErrorOpen: false })
+
   render() {
     if (!this.state.activeTopic) {
       return <Loading />
@@ -376,6 +382,12 @@ class Knowledge extends Component {
               reply={this.state.replyToDelete}
             />
           ))()}
+          <Snackbar
+            autoHideDuration={3000}
+            onRequestClose={this.handleCloseDeleteError}
+            open={this.state.deleteErrorOpen}
+            message={t('Error deleting reply. Please try again.')}
+          />
         </div>
       </DocumentTitle>
     )
