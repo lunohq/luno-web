@@ -236,8 +236,8 @@ class Reply extends Component {
         message = t('Internal error saving reply.')
       }
     } else if (reply.changed && !editing && !submitting) {
-      const changed = moment(reply.changed).format('MMM Do, YYYY')
-      message = t(`MAKE THIS LONGERRRRRR Last updated on ${changed}`)
+      const changed = moment(reply.changed).format('MMM D, YYYY')
+      message = t(`Last updated on ${changed}`)
     }
 
     const items = topics.map((topic, index) => {
