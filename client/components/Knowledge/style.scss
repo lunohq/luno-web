@@ -8,6 +8,7 @@
     composes: row from 's/vendor/flexboxgrid.css';
     padding: 0px 15px;
     height: 100%;
+    flex-wrap: nowrap;
 }
 
 .replyList {

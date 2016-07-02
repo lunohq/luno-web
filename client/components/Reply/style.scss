@@ -4,16 +4,24 @@
 }
 
 .header {
-    composes: row between-xs middle-xs from 's/vendor/flexboxgrid.css';
+    composes: row col-xs-12 between-xs middle-xs from 's/vendor/flexboxgrid.css';
     margin-left: 0;
     margin-right: 0;
     padding-right: 6px;
     height: 48px;
 }
 
-.topicTitle {
-  composes: row middle-xs from 's/vendor/flexboxgrid.css';
-  margin-left: 0;
+.headerLeftContainer{
+  composes: col-xs from 's/vendor/flexboxgrid.css';
+  overflow: hidden;
+  padding: 0;
+}
+
+.headerText {
+  flex-shrink: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .content {
