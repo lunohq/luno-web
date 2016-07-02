@@ -63,6 +63,22 @@ class Knowledge extends Component {
     return defaultTopic
   }
 
+  getAllReplyEdges(props) {
+    const topics = this.getAllTopics(props)
+    const replies = []
+    for (const topic of topics) {
+      if (topic.replies && topic.replies.edges) {
+        for (const { node } of topic.replies.edges) {
+          // TODO clean this up
+          node.topicId = topic.id
+          node.topic = topic
+          replies.push({ node })
+        }
+      }
+    }
+    return replies
+  }
+
   getReplyEdges(topic) {
     const { replies } = topic
     return replies && replies.edges ? replies.edges : []
@@ -117,7 +133,7 @@ class Knowledge extends Component {
     }
 
     let activeReply = {}
-    const replyEdges = this.getReplyEdges(activeTopic)
+    const replyEdges = this.getAllReplyEdges(props)
     for (const { node: reply } of replyEdges) {
       if (reply.id === replyId) {
         activeReply = reply
@@ -180,7 +196,6 @@ class Knowledge extends Component {
 
   handleDeleteReply = (reply) => {
     return new Promise((resolve, reject) => {
-      const { activeTopic: topic } = this.state
       const bot = this.getBot()
 
       const onSuccess = () => {
@@ -191,6 +206,7 @@ class Knowledge extends Component {
         reject(new SubmissionError({ _error: transaction.getError() }))
       }
 
+      const { topic } = reply
       Relay.Store.commitUpdate(new DeleteReply({ topic, reply, bot }), { onSuccess, onFailure })
     })
   }
@@ -216,16 +232,14 @@ class Knowledge extends Component {
             topic = t
           }
         })
-        mutation = new UpdateReply({ reply, bot, previousTopic: activeTopic, topic, ...reply })
+        // TODO clean this up, "reply" has a topic scratched on to it
+        mutation = new UpdateReply({ ...reply, reply, bot, previousTopic: activeTopic, topic })
       }
 
-      const onSuccess = ({ createReply, updateReply }) => {
+      const onSuccess = ({ createReply }) => {
         if (createReply) {
           const { replyEdge: { node: { id } } } = createReply
-          this.context.router.replace(`/knowledge/${reply.topicId}/${id}`)
-        } else if (updateReply && activeTopic.id !== reply.topicId) {
-          const path = `/knowledge/${reply.topicId}/${reply.id}`
-          this.setState({ routing: path }, () => this.context.router.replace(path))
+          this.context.router.replace(`/knowledge/${activeTopic.id}/${id}`)
         }
         resolve()
       }

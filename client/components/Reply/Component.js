@@ -95,9 +95,8 @@ class Reply extends Component {
     }
   }
 
-  initialize({ reply, topic }) {
+  initialize({ reply }) {
     if (reply) {
-      reply.topicId = topic.id
       const initialValues = { reply }
       this.context.store.dispatch(initialize(FORM_NAME, initialValues))
     }
@@ -337,7 +336,6 @@ Reply.propTypes = {
   reply: PropTypes.object,
   reset: PropTypes.func.isRequired,
   submitting: PropTypes.bool,
-  topic: PropTypes.object.isRequired,
   topics: PropTypes.array.isRequired,
   valid: PropTypes.bool,
 }

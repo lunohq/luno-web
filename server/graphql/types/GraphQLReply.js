@@ -2,7 +2,7 @@ import { GraphQLString, GraphQLObjectType } from 'graphql'
 import { globalIdField } from 'graphql-relay'
 import { db } from 'luno-core'
 
-import { registerType, nodeInterface } from './registry'
+import registry, { registerType, nodeInterface } from './registry'
 
 const GraphQLReply = new GraphQLObjectType({
   name: 'Reply',
@@ -20,6 +20,14 @@ const GraphQLReply = new GraphQLObjectType({
     changed: {
       type: GraphQLString,
       description: 'Date the Reply was changed',
+    },
+    topic: {
+      type: registry.getType('Topic'),
+      description: 'The Topic the reply belongs to',
+      resolve: async ({ teamId, id }) => {
+        const topics = await db.reply.getTopicsForReply({ teamId, id })
+        return topics[0]
+      },
     },
   }),
   interfaces: [nodeInterface],

@@ -1,16 +1,20 @@
 import {
   GraphQLBoolean,
   GraphQLObjectType,
-  GraphQLString
+  GraphQLString,
+  GraphQLNonNull,
+  GraphQLID,
 } from 'graphql'
 import {
   connectionArgs,
   connectionFromArray,
   globalIdField,
+  fromGlobalId,
 } from 'graphql-relay'
 import { db } from 'luno-core'
 
 import GraphQLTopic from './GraphQLTopic'
+import GraphQLReply from './GraphQLReply'
 import Topics from '../connections/Topics'
 import Bots from '../connections/Bots'
 
@@ -46,6 +50,38 @@ const GraphQLUser = new GraphQLObjectType({
           return connectionFromArray(bots, args)
         }
         return null
+      },
+    },
+    reply: {
+      type: GraphQLReply,
+      description: 'A specific Reply to display',
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLID) },
+      },
+      resolve: async ({ anonymous, teamId }, { id: globalId }) => {
+        let reply
+        if (!anonymous) {
+          const { id: compositeId } = fromGlobalId(globalId)
+          const id = db.client.deconstructId(compositeId)[1]
+          reply = await db.reply.getReply({ teamId, id })
+        }
+        return reply
+      },
+    },
+    topic: {
+      type: GraphQLTopic,
+      description: 'A specific Topic to display',
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLID) },
+      },
+      resolve: async ({ anonymous, teamId }, { id: globalId }) => {
+        let topic
+        if (!anonymous) {
+          const { id: compositeId } = fromGlobalId(globalId)
+          const id = db.client.deconstructId(compositeId)[1]
+          topic = await db.topic.getTopic({ teamId, id })
+        }
+        return topic
       },
     },
     defaultTopic: {
