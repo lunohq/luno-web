@@ -4,11 +4,10 @@
 }
 
 .header {
-    composes: row col-xs-12 between-xs middle-xs from 's/vendor/flexboxgrid.css';
+    composes: row col-xs-12 between-xs from 's/vendor/flexboxgrid.css';
     margin-left: 0;
     margin-right: 0;
     padding-right: 6px;
-    height: 48px;
 }
 
 .headerLeftContainer{
@@ -18,10 +17,12 @@
 }
 
 .headerText {
-  flex-shrink: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  line-height: 20px;
+  padding-top: 15px;
+}
+
+.headerActionButtons {
+  height: 48px;
 }
 
 .content {
