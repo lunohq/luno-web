@@ -237,7 +237,7 @@ class Reply extends Component {
       }
     } else if (reply.changed && !editing && !submitting) {
       const changed = moment(reply.changed).format('MMM D, YYYY')
-      message = t(`MAKE THIS LONGERRRRRR Last updated on ${changed}`)
+      message = t(`MAKE THIS LONGERRRRRR MAKE THIS LONGERRRRRR Last updated on ${changed}`)
     }
 
     const items = topics.map((topic, index) => {
@@ -259,7 +259,7 @@ class Reply extends Component {
           <div className={s.headerLeftContainer}>
             <div className={error ? `${s.error} ${s.headerText}` : s.headerText } style={{ flexShrink: 0 }}>{message}</div>
           </div>
-          <div>
+          <div className={s.headerActionButtons}>
             {actionButtons}
           </div>
         </Subheader>
