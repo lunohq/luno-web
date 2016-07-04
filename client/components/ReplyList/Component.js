@@ -68,7 +68,7 @@ class ReplyList extends Component {
                 <IconButton
                   iconStyle={{ fontSize: '18px' }}
                   onTouchTap={onEditTopic}
-                  style={{ padding: '4px', height: '28px', width: '28px' }}
+                  style={{ padding: '4px', margin: '-5px 1px 0', height: '28px', width: '28px', verticalAlign: 'middle' }}
                 >
                   <FontIcon className='material-icons' color={colors.darkGrey}>edit</FontIcon>
                 </IconButton>
