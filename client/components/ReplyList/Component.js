@@ -42,7 +42,7 @@ class ReplyList extends Component {
       // include space so empty changed still gets 2 lines
       let changed = ' '
       if (node.changed) {
-        changed = moment(node.changed).format('MMM Do, YYYY')
+        changed = moment(node.changed).format('MMM D, YYYY')
         changed = t(`Last updated on ${changed}`)
       }
       replyRows.push(
