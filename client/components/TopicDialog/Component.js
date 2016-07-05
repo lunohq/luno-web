@@ -58,8 +58,10 @@ class TopicDialog extends Component {
   }
 
   initialize({ topic }) {
-    const initialValues = { topic }
-    this.context.store.dispatch(initialize(FORM_NAME, initialValues))
+    if (topic) {
+      const initialValues = { topic }
+      this.context.store.dispatch(initialize(FORM_NAME, initialValues))
+    }
     this.setState({ deleting: false })
   }
 
