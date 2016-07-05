@@ -42,11 +42,4 @@ export default class DeleteTopic extends Relay.Mutation {
     return { id }
   }
 
-  getOptimisticResponse() {
-    const { topic: { id } } = this.props
-    return {
-      deletedId: id,
-    }
-  }
-
 }
