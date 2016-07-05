@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react'
-import { Field, reduxForm, initialize } from 'redux-form'
+import { Field, reduxForm, initialize, SubmissionError } from 'redux-form'
 import { TextField } from 'redux-form-material-ui'
 
 import IconButton from 'material-ui/IconButton'
@@ -19,14 +19,6 @@ export const FORM_NAME = 'form/topic'
 
 const validate = values => {
   const errors = {}
-  const requiredFields = ['name']
-  requiredFields.forEach(field => {
-    if (values.topic && !values.topic[field]) {
-      if (!errors.topic) errors.topic = {}
-      errors.topic[field] = t('Required')
-    }
-  })
-
   if (values.topic && values.topic.name && values.topic.name.length > 20) {
     if (!errors.topic) errors.topic = {}
     errors.topic.name = t('Topic name cannot be more than 20 characters')
@@ -58,22 +50,42 @@ class TopicDialog extends Component {
   }
 
   initialize({ topic }) {
-    if (topic) {
-      const initialValues = { topic }
-      this.context.store.dispatch(initialize(FORM_NAME, initialValues))
-    }
+    const initialValues = { topic }
+    this.context.store.dispatch(initialize(FORM_NAME, initialValues))
     this.setState({ deleting: false })
   }
 
-  handleSubmit = (values) => {
-    const { topic, onSubmit, onCancel } = this.props
-    // Only trigger submission if the topic has been updated, this prevents us
-    // having to deal with duplicate updates to the topic name unneccesarily
-    const changed = topic && topic.name !== values.topic.name
-    if (!topic || changed) {
-      return onSubmit(values)
+  validate(values) {
+    const errors = {}
+    const requiredFields = ['name']
+    requiredFields.forEach(field => {
+      if (values.topic && !values.topic[field]) {
+        if (!errors.topic) errors.topic = {}
+        errors.topic[field] = t('Required')
+      }
+    })
+    if (Object.keys(errors).length) {
+      return new SubmissionError(errors)
     }
-    return onCancel()
+  }
+
+  handleSubmit = (values) => {
+    return new Promise((resolve, reject) => {
+      const { topic, onSubmit, onCancel } = this.props
+      // Only trigger submission if the topic has been updated, this prevents us
+      // having to deal with duplicate updates to the topic name unneccesarily
+      const changed = topic && topic.name !== values.topic.name
+      if (!topic || changed) {
+        const error = this.validate(values)
+        if (error) {
+          reject(error)
+        } else {
+          resolve(onSubmit(values))
+        }
+        return
+      }
+      return onCancel()
+    })
   }
 
   handleCancel = () => this.props.onCancel()
