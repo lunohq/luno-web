@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import ReactDOM from 'react-dom'
-import { reduxForm, Field, initialize } from 'redux-form'
+import { reduxForm, Field, initialize, SubmissionError } from 'redux-form'
 import keycode from 'keycode'
 import { TextField, SelectField } from 'redux-form-material-ui'
 
@@ -20,25 +20,6 @@ import DeleteDialog from './DeleteDialog'
 import s from './style.scss'
 
 export const FORM_NAME = 'form/reply'
-
-const validate = values => {
-  const errors = {}
-  const requiredFields = ['title', 'body']
-  requiredFields.forEach(field => {
-    if (values.reply && !values.reply[field]) {
-      if (!errors.reply) errors.reply = {}
-      errors.reply[field] = t('Required')
-      errors._error = true
-    }
-  })
-
-  if (values.reply && values.reply.title && values.reply.title.split(' ').length > 15) {
-    if (!errors.reply) errors.reply = {}
-    errors.reply.title = t('Title cannot be more than 15 words')
-  }
-
-  return errors
-}
 
 class Reply extends Component {
 
@@ -120,6 +101,27 @@ class Reply extends Component {
     ReactDOM.findDOMNode(this.refs.container).scrollTop = 0
   }
 
+  validate(values) {
+    let error
+    const errors = {}
+    const requiredFields = ['title', 'body']
+    requiredFields.forEach(field => {
+      if (values.reply && !values.reply[field]) {
+        if (!errors.reply) errors.reply = {}
+        errors.reply[field] = t('Required')
+      }
+    })
+
+    if (values.reply && values.reply.title && values.reply.title.split(' ').length > 15) {
+      if (!errors.reply) errors.reply = {}
+      errors.reply.title = t('Title cannot be more than 15 words')
+    }
+    if (Object.keys(errors).length) {
+      error = new SubmissionError(errors)
+    }
+    return error
+  }
+
   handleEdit = () => {
     this.refs.title
       .getRenderedComponent()
@@ -136,8 +138,15 @@ class Reply extends Component {
   }
 
   handleSave = (values) => {
-    this.setState({ editing: false })
-    return this.props.onSubmit(values)
+    return new Promise((resolve, reject) => {
+      const error = this.validate(values)
+      if (error) {
+        reject(error)
+      } else {
+        this.setState({ editing: false })
+        resolve(this.props.onSubmit(values))
+      }
+    })
   }
 
   handleCancelOnMouseEnter = () => this.setState({ mightCancel: true })
@@ -165,7 +174,6 @@ class Reply extends Component {
       error,
       handleSubmit,
       pristine,
-      valid,
       reply,
       submitting,
       topics,
@@ -200,7 +208,7 @@ class Reply extends Component {
           secondary
         />,
         <FlatButton
-          disabled={(!reply && pristine) || !valid}
+          disabled={(!reply && pristine)}
           key='create'
           label={primaryLabel}
           onTouchTap={handleSubmit(handler)}
@@ -356,5 +364,4 @@ Reply.contextTypes = {
 
 export default reduxForm({
   form: FORM_NAME,
-  validate,
 })(withStyles(s)(Reply))
