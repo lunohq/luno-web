@@ -67,6 +67,7 @@ class TopicDialog extends Component {
     if (Object.keys(errors).length) {
       return new SubmissionError(errors)
     }
+    return null
   }
 
   handleSubmit = (values) => {
