@@ -30,6 +30,14 @@ class AccountMenu extends Component {
     this.context.router.push('/admin/bot')
   }
 
+  handleEmailSupportTouchTap = () => {
+    const userID = (atob(this.context.viewer.id)).replace('User:', '')
+    window.open(
+      `mailto:hotline@lunohq.com?subject=Luno%20Admin%20Help%20%28${this.context.viewer.team.name}%20${userID}%29`,
+      '_blank' // <- Makes it open in a new tab / window
+    )
+  }
+
   handleLogoutTouchTap = () => {
     this.close()
     this.props.onLogout()
@@ -57,6 +65,7 @@ class AccountMenu extends Component {
             {(() => !isAdmin ? null : (
               <MenuItem onTouchTap={this.handleSettingsTouchTap} primaryText={t('Admin Settings')} />
             ))()}
+            <MenuItem onTouchTap={this.handleEmailSupportTouchTap} primaryText={t('Email Luno Support')} />
             <MenuItem onTouchTap={onLogout} primaryText={t(`Sign Out (${team.name})`)} />
           </Menu>
         </Popover>
