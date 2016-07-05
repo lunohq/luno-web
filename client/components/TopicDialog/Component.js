@@ -17,6 +17,23 @@ import s from './style.scss'
 
 export const FORM_NAME = 'form/topic'
 
+const validate = values => {
+  const errors = {}
+  const requiredFields = ['name']
+  requiredFields.forEach(field => {
+    if (values.topic && !values.topic[field]) {
+      if (!errors.topic) errors.topic = {}
+      errors.topic[field] = t('Required')
+    }
+  })
+
+  if (values.topic && values.topic.name && values.topic.name.length > 20) {
+    if (!errors.topic) errors.topic = {}
+    errors.topic.name = t('Topic name cannot be more than 20 characters')
+  }
+  return errors
+}
+
 class TopicDialog extends Component {
 
   state = {
@@ -204,4 +221,5 @@ TopicDialog.contextTypes = {
 
 export default reduxForm({
   form: FORM_NAME,
+  validate,
 })(withStyles(s)(TopicDialog))

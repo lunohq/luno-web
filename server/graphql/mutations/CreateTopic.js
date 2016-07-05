@@ -38,6 +38,15 @@ export default mutationWithClientMutationId({
     },
   },
   mutateAndGetPayload: async ({ name, pointsOfContact }, { auth }) => {
+    // TODO clean up
+    if (!name) {
+      throw new Error('name is required')
+    }
+
+    if (name.length >= 20) {
+      throw new Error('name must be less than 20 characters')
+    }
+
     const { uid: createdBy, tid: teamId } = auth
     const topic = await db.topic.createTopic({
       name,
