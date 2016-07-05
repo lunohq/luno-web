@@ -302,6 +302,11 @@ class Reply extends Component {
               disabled={submitting}
               floatingLabelText={t('Topic')}
               floatingLabelFixed
+              labelStyle={{
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}
               name='reply.topicId'
               style={{ width: '50%' }}
             >
