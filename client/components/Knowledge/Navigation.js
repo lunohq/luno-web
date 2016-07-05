@@ -53,7 +53,7 @@ const Navigation = ({ defaultId, onNewTopic, topics, topicId, onSelect }) => {
   })
   return (
     <Drawer
-      containerClassName={s.navPaddingTop}
+      containerClassName={s.navPadding}
       containerStyle={{ left: NAV_WIDTH }}
       width={MENU_WIDTH}
     >

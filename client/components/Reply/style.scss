@@ -1,6 +1,7 @@
 .root {
     margin-top: 10px;
     height: calc(100vh - 10px); //less the top margin
+    overflow: hidden;
 }
 
 .header {
