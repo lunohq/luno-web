@@ -257,7 +257,7 @@ class Reply extends Component {
       <Paper className={s.root}>
         <Subheader className={s.header}>
           <div className={s.headerLeftContainer}>
-            <div className={error ? `${s.error} ${s.headerText}` : s.headerText } style={{ flexShrink: 0 }}>{message}</div>
+            <div className={error ? `${s.error} ${s.headerText}` : s.headerText }>{message}</div>
           </div>
           <div className={s.headerActionButtons}>
             {actionButtons}

@@ -62,7 +62,7 @@ class ReplyList extends Component {
       <Paper className={s.root}>
         <Subheader className={s.header}>
           <div className={s.headerLeftContainer}>
-            <div className={s.headerText} style={{ flexShrink: 0 }}>
+            <div className={s.headerText}>
               {topic.name || t('Lunobot')}
               {(() => !topic.name ? null : (
                 <IconButton
