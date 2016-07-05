@@ -1,6 +1,7 @@
+import { isEqual } from 'lodash'
 import React, { Component, PropTypes } from 'react'
 import ReactDOM from 'react-dom'
-import { reduxForm, Field, initialize, SubmissionError } from 'redux-form'
+import { reduxForm, Field, initialize, SubmissionError, change } from 'redux-form'
 import keycode from 'keycode'
 import { TextField, SelectField } from 'redux-form-material-ui'
 
@@ -43,10 +44,10 @@ class Reply extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { reply } = this.props
-    const { reply: nextReply } = nextProps
+    const { reply, createdTopic } = this.props
+    const { reply: nextReply, createdTopic: nextCreatedTopic } = nextProps
     const newReply = (
-      (reply && nextReply && reply !== nextReply) ||
+      (reply && nextReply && !isEqual(reply, nextReply)) ||
       (!reply && nextReply)
     )
     if (newReply) {
@@ -56,6 +57,11 @@ class Reply extends Component {
       this.setState({ focused: true })
     }
     this.setState({ newReply }, () => this.setState({ newReply: false }))
+
+    const newTopic = nextCreatedTopic && (!createdTopic && nextCreatedTopic || createdTopic !== nextCreatedTopic)
+    if (newTopic) {
+      this.context.store.dispatch(change(FORM_NAME, 'reply.topic.id', nextCreatedTopic.id))
+    }
 
     const editing = (
       (!this.props.error && nextProps.error) ||
@@ -76,14 +82,8 @@ class Reply extends Component {
     }
   }
 
-  initialize({ reply, topic }) {
+  initialize({ reply }) {
     if (reply) {
-      if (!reply.topic) {
-        // TODO clean this up
-        reply.topic = topic
-        reply.topicId = topic.id
-      }
-
       const initialValues = { reply }
       this.context.store.dispatch(initialize(FORM_NAME, initialValues))
     }
@@ -177,6 +177,7 @@ class Reply extends Component {
       reply,
       submitting,
       topics,
+      onNewTopic,
     } = this.props
     const { editing, deleting } = this.state
 
@@ -267,6 +268,14 @@ class Reply extends Component {
       }
       return <MenuItem {...props} />
     })
+    items.unshift(
+      <MenuItem
+        key='create'
+        value='create'
+        primaryText={<span style={{ fontWeight: 'bold' }}>{t('Create Topic')}</span>}
+        onTouchTap={onNewTopic}
+      />
+    )
 
     return (
       <Paper className={s.root}>
@@ -322,7 +331,7 @@ class Reply extends Component {
                 textOverflow: 'ellipsis',
                 whiteSpace: 'nowrap',
               }}
-              name='reply.topicId'
+              name='reply.topic.id'
               style={{ width: '50%' }}
             >
               {items}
@@ -343,11 +352,13 @@ class Reply extends Component {
 
 Reply.propTypes = {
   canCancel: PropTypes.bool,
+  createdTopic: PropTypes.object,
   error: PropTypes.object,
   focused: PropTypes.bool,
   handleSubmit: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
+  onNewTopic: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   pristine: PropTypes.bool,
   reply: PropTypes.object,

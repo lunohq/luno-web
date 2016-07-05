@@ -37,7 +37,9 @@ export default class CreateTopic extends Relay.Mutation {
       children: [
         Relay.QL`
           fragment on CreateTopicPayload {
-            topic
+            topic {
+              name
+            }
           }
         `,
       ],

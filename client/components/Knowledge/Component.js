@@ -31,7 +31,8 @@ class Knowledge extends Component {
     deleteReplyDialogOpen: false,
     deleteErrorOpen: false,
     topicFormOpen: false,
-    routing: null,
+    topicFormRedirect: true,
+    createdTopic: null,
     topicToEdit: null,
   }
 
@@ -49,6 +50,9 @@ class Knowledge extends Component {
     )
     if (shouldInit) {
       this.initialize(nextProps)
+    }
+    if (topicId !== nextTopicId || replyId !== nextReplyId) {
+      this.setState({ createdTopic: null })
     }
   }
 
@@ -70,7 +74,6 @@ class Knowledge extends Component {
       if (topic.replies && topic.replies.edges) {
         for (const { node } of topic.replies.edges) {
           // TODO clean this up
-          node.topicId = topic.id
           node.topic = topic
           replies.push({ node })
         }
@@ -104,11 +107,6 @@ class Knowledge extends Component {
 
   initialize(props) {
     const { params: { replyId, topicId } } = props
-    if (this.state.routing && props.location.pathname !== this.state.routing) {
-      return
-    } else if (this.state.routing) {
-      this.setState({ routing: null })
-    }
     if (!topicId) {
       this.routeToDefaultTopic({ props })
       return
@@ -132,7 +130,7 @@ class Knowledge extends Component {
       return
     }
 
-    let activeReply = {}
+    let activeReply = { topic: activeTopic }
     const replyEdges = this.getAllReplyEdges(props)
     for (const { node: reply } of replyEdges) {
       if (reply.id === replyId) {
@@ -228,7 +226,7 @@ class Knowledge extends Component {
         const topics = this.getAllTopics()
         let topic
         topics.forEach(t => {
-          if (t.id === reply.topicId) {
+          if (t.id === reply.topic.id) {
             topic = t
           }
         })
@@ -252,7 +250,8 @@ class Knowledge extends Component {
     })
   }
 
-  displayTopicForm = () => this.setState({ topicFormOpen: true })
+  displayTopicForm = () => this.setState({ topicFormOpen: true, topicFormRedirect: true })
+  displayTopicFormNoRedirect = () => this.setState({ topicFormOpen: true, topicFormRedirect: false })
   hideTopicForm = () => this.setState({ topicFormOpen: false, topicToEdit: null })
 
   handleDeleteTopic = (topic) => {
@@ -292,7 +291,12 @@ class Knowledge extends Component {
         }
 
         this.hideTopicForm()
-        this.context.router.push(`/knowledge/${topicId}`)
+        const { topicFormRedirect } = this.state
+        if (topicFormRedirect) {
+          this.context.router.push(`/knowledge/${topicId}`)
+        } else {
+          this.setState({ createdTopic: createTopic.topic })
+        }
         resolve()
       }
 
@@ -372,9 +376,11 @@ class Knowledge extends Component {
             <div className={s.reply}>
               <Reply
                 canCancel={canCancel}
+                createdTopic={this.state.createdTopic}
                 focused={focused}
                 onCancel={this.handleCancelReply}
                 onDelete={this.handleDeleteReply}
+                onNewTopic={this.displayTopicFormNoRedirect}
                 onSubmit={this.handleSubmitReply}
                 reply={this.state.activeReply}
                 topic={this.state.activeTopic}
