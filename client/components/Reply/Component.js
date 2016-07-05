@@ -191,7 +191,7 @@ class Reply extends Component {
     const { editing, deleting } = this.state
 
     let actionButtons
-    if (editing || (error && !submitting && !deleting) || !canCancel) {
+    if (editing || (error && !submitting && !deleting) || (!canCancel && !submitting)) {
       let primaryLabel
       if (error) {
         primaryLabel = t('Try Again')
