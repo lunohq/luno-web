@@ -58,6 +58,15 @@ class Reply extends Component {
     }
     this.setState({ newReply }, () => this.setState({ newReply: false }))
 
+    // TODO cleanup. we do this because we need to handle the user canceling
+    // the creation of a new topic. as soon as you hit create topic, we default
+    // you back to the original topic. if you successfully create a topic, that
+    // will be used, but if you cancel, you'll go back to the original.
+    const values = this.context.store.getState().form[FORM_NAME].values
+    if (values && values.reply && values.reply.topic && values.reply.topic.id === 'create') {
+      this.context.store.dispatch(change(FORM_NAME, 'reply.topic.id', this.props.topic.id))
+    }
+
     const newTopic = nextCreatedTopic && (!createdTopic && nextCreatedTopic || createdTopic !== nextCreatedTopic)
     if (newTopic) {
       this.context.store.dispatch(change(FORM_NAME, 'reply.topic.id', nextCreatedTopic.id))
