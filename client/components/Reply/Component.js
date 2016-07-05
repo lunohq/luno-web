@@ -161,6 +161,7 @@ class Reply extends Component {
 
   render() {
     const {
+      canCancel,
       error,
       handleSubmit,
       pristine,
@@ -172,7 +173,7 @@ class Reply extends Component {
     const { editing, deleting } = this.state
 
     let actionButtons
-    if (editing || (error && !submitting && !deleting)) {
+    if (editing || (error && !submitting && !deleting) || !canCancel) {
       let primaryLabel
       if (error) {
         primaryLabel = t('Try Again')
@@ -190,6 +191,7 @@ class Reply extends Component {
       }
       actionButtons = [
         <FlatButton
+          disabled={!canCancel}
           key='cancel'
           label={t('Cancel')}
           onMouseEnter={this.handleCancelOnMouseEnter}
@@ -332,6 +334,7 @@ class Reply extends Component {
 }
 
 Reply.propTypes = {
+  canCancel: PropTypes.bool,
   error: PropTypes.object,
   focused: PropTypes.bool,
   handleSubmit: PropTypes.func.isRequired,

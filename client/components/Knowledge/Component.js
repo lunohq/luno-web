@@ -333,6 +333,7 @@ class Knowledge extends Component {
       replyEdges.push(...this.getReplyEdges(activeTopic))
     }
 
+    const canCancel = replyId !== 'new' || replyEdges.length > 1
     const topicsWithDefault = this.getAllTopics()
 
     let topics = []
@@ -370,6 +371,7 @@ class Knowledge extends Component {
             </div>
             <div className={s.reply}>
               <Reply
+                canCancel={canCancel}
                 focused={focused}
                 onCancel={this.handleCancelReply}
                 onDelete={this.handleDeleteReply}
