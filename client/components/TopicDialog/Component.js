@@ -85,7 +85,7 @@ class TopicDialog extends Component {
         }
         return
       }
-      return onCancel()
+      resolve(onCancel())
     })
   }
 
