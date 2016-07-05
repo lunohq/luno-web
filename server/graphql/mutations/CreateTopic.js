@@ -43,8 +43,8 @@ export default mutationWithClientMutationId({
       throw new Error('name is required')
     }
 
-    if (name.length >= 20) {
-      throw new Error('name must be less than 20 characters')
+    if (name.length >= 30) {
+      throw new Error('name must be less than 30 characters')
     }
 
     const { uid: createdBy, tid: teamId } = auth

@@ -19,9 +19,9 @@ export const FORM_NAME = 'form/topic'
 
 const validate = values => {
   const errors = {}
-  if (values.topic && values.topic.name && values.topic.name.length > 20) {
+  if (values.topic && values.topic.name && values.topic.name.length > 30) {
     if (!errors.topic) errors.topic = {}
-    errors.topic.name = t('Topic name cannot be more than 20 characters')
+    errors.topic.name = t('Topic name cannot be more than 30 characters')
   }
   return errors
 }
