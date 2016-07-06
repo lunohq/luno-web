@@ -25,9 +25,11 @@ export default async function() {
 
   stringifier.on('readable', () => {
     let row
-    while(row = stringifier.read()) {
+    /* eslint-disable no-cond-assign */
+    while (row = stringifier.read()) {
       fileStream.write(row)
     }
+    /* elsint-enable no-cond-assign */
   })
   stringifier.on('finish', () => {
     fileStream.end()
