@@ -231,7 +231,7 @@ class Knowledge extends Component {
           }
         })
         // TODO clean this up, "reply" has a topic scratched on to it
-        mutation = new UpdateReply({ ...reply, reply, bot, previousTopic: activeTopic, topic })
+        mutation = new UpdateReply({ ...reply, reply, bot, previousTopic: reply.topic, topic })
       }
 
       const onSuccess = ({ createReply }) => {
