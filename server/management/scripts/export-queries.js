@@ -66,7 +66,7 @@ export default async function () {
     count += 1
     let nextParams = params
     if (last) {
-      nextParams = Object.assign({}, params, { LastEvaluatedKey: last })
+      nextParams = Object.assign({}, params, { ExclusiveStartKey: last })
     }
     logger.info('Fetching thread events', nextParams)
     const data = await client.scan(nextParams).promise()
