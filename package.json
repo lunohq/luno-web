@@ -84,6 +84,7 @@
     "connect-history-api-fallback": "^1.2.0",
     "converse": "git+https://1d0cdee693b540fb3b9cd603b01834ec45976ce9:x-oauth-basic@github.com/lunohq/converse.git#v0.0.2-27",
     "cookie-parser": "^1.4.1",
+    "csv-stringify": "^1.0.4",
     "debug": "^2.2.0",
     "dotenv": "^2.0.0",
     "express": "^4.13.4",
