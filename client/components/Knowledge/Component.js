@@ -294,7 +294,7 @@ class Knowledge extends Component {
         const { topicFormRedirect } = this.state
         if (topicFormRedirect) {
           this.context.router.push(`/knowledge/${topicId}`)
-        } else {
+        } else if (createTopic) {
           this.setState({ createdTopic: createTopic.topic })
         }
         resolve()
@@ -320,7 +320,7 @@ class Knowledge extends Component {
   }
 
   handleEditTopic = () => {
-    this.setState({ topicToEdit: this.state.activeTopic, topicFormOpen: true })
+    this.setState({ topicToEdit: this.state.activeTopic, topicFormOpen: true, topicFormRedirect: true })
   }
 
   render() {
