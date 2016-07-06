@@ -43,7 +43,7 @@ export default mutationWithClientMutationId({
       throw new Error('name is required')
     }
 
-    if (name.length >= 30) {
+    if (name.length > 30) {
       throw new Error('name must be less than 30 characters')
     }
 
