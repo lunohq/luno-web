@@ -34,7 +34,7 @@ export default class InviteUserMutation extends Relay.Mutation {
         connectionName: 'staff',
         edgeName: 'userEdge',
         rangeBehaviors: {
-          '': 'append',
+          '': 'refetch',
         },
       },
       {
