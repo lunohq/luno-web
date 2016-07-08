@@ -15,6 +15,7 @@ import { db } from 'luno-core'
 
 import GraphQLTopic from './GraphQLTopic'
 import GraphQLReply from './GraphQLReply'
+import GraphQLThreadLog, { resolve } from './GraphQLThreadLog'
 import Topics from '../connections/Topics'
 import Bots from '../connections/Bots'
 import ThreadLogs from '../connections/ThreadLogs'
@@ -83,6 +84,21 @@ const GraphQLUser = new GraphQLObjectType({
           topic = await db.topic.getTopic({ teamId, id })
         }
         return topic
+      },
+    },
+    threadLog: {
+      type: GraphQLThreadLog,
+      description: 'A specific ThreadLog to display',
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLID) },
+      },
+      resolve: async ({ anonymous }, { id: globalId }) => {
+        let log
+        if (!anonymous) {
+          const { id: compositeId } = fromGlobalId(globalId)
+          log = await resolve(compositeId)
+        }
+        return log
       },
     },
     defaultTopic: {

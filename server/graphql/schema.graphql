@@ -219,6 +219,45 @@ type Team implements Node {
   admins(after: String, first: Int, before: String, last: Int): UserConnection
 }
 
+type ThreadEvent {
+  created: String
+  message: ThreadEventMessage
+  type: ThreadEventType
+  meta: String
+}
+
+type ThreadEventMessage {
+  event: String
+  type: String
+  user: String
+  ts: String
+  text: String
+}
+
+type ThreadEventsConnection {
+  pageInfo: PageInfo!
+  edges: [ThreadEventsEdge]
+}
+
+type ThreadEventsEdge {
+  node: ThreadEvent
+  cursor: String!
+}
+
+enum ThreadEventType {
+  MESSAGE_RECEIVED
+  MESSAGE_SENT
+  GREETING_FLOW
+  HELP_FLOW
+  ANSWER_FLOW
+  FEEDBACK
+  SMART_REPLY
+  MULTIPLE_RESULTS
+  NO_RESULTS
+  CLARIFICATION
+  ESCALATION_FLOW
+}
+
 type ThreadLog implements Node {
   id: ID!
   channelName: String
@@ -227,6 +266,7 @@ type ThreadLog implements Node {
   username: String
   length: Int
   status: Int
+  events(after: String, first: Int, before: String, last: Int): ThreadEventsConnection
 }
 
 type ThreadLogConnection {
@@ -340,6 +380,7 @@ type User implements Node {
   bots(after: String, first: Int, before: String, last: Int): BotConnection
   reply(id: ID!): Reply
   topic(id: ID!): Topic
+  threadLog(id: ID!): ThreadLog
   defaultTopic: Topic
   topics(after: String, first: Int, before: String, last: Int): TopicConnection
   threadLogs(after: String, first: Int, before: String, last: Int): ThreadLogConnection

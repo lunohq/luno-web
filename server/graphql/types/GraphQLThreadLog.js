@@ -1,8 +1,9 @@
 import { GraphQLObjectType, GraphQLString, GraphQLInt } from 'graphql'
-import { globalIdField } from 'graphql-relay'
+import { connectionArgs, connectionFromArray, globalIdField } from 'graphql-relay'
 import { db } from 'luno-core'
 
 import { registerType, nodeInterface } from './registry'
+import ThreadEvents from '../connections/ThreadEvents'
 
 const GraphQLThreadLog = new GraphQLObjectType({
   name: 'ThreadLog',
@@ -36,15 +37,26 @@ const GraphQLThreadLog = new GraphQLObjectType({
       type: GraphQLInt,
       description: 'The status of the thread',
     },
+    events: {
+      type: ThreadEvents.connectionType,
+      description: 'Events within the ThreadLog',
+      args: connectionArgs,
+      resolve: async (log, args) => {
+        const events = await db.thread.getThreadEvents(log.threadId)
+        return connectionFromArray(events, args)
+      },
+    },
   }),
   interfaces: [nodeInterface],
 })
 
+export function resolve(compositeId) {
+  const [teamId, threadId] = db.client.deconstructId(compositeId)
+  return db.thread.getThreadLog({ teamId, threadId })
+}
+
 export default registerType({
   type: GraphQLThreadLog,
   model: db.thread.ThreadLog,
-  resolve: compositeId => {
-    const [teamId, threadId] = db.client.deconstructId(compositeId)
-    return db.thread.getThreadLog({ teamId, threadId })
-  },
+  resolve,
 })
