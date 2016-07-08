@@ -219,6 +219,26 @@ type Team implements Node {
   admins(after: String, first: Int, before: String, last: Int): UserConnection
 }
 
+type ThreadLog implements Node {
+  id: ID!
+  channelName: String
+  created: String
+  message: String
+  username: String
+  length: Int
+  status: Int
+}
+
+type ThreadLogConnection {
+  pageInfo: PageInfo!
+  edges: [ThreadLogEdge]
+}
+
+type ThreadLogEdge {
+  node: ThreadLog
+  cursor: String!
+}
+
 type Topic implements Node {
   id: ID!
   isDefault: Boolean
@@ -322,6 +342,7 @@ type User implements Node {
   topic(id: ID!): Topic
   defaultTopic: Topic
   topics(after: String, first: Int, before: String, last: Int): TopicConnection
+  threadLogs(after: String, first: Int, before: String, last: Int): ThreadLogConnection
   anonymous: Boolean
   assumed: Boolean
   role: UserRole

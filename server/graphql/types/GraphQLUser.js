@@ -17,6 +17,7 @@ import GraphQLTopic from './GraphQLTopic'
 import GraphQLReply from './GraphQLReply'
 import Topics from '../connections/Topics'
 import Bots from '../connections/Bots'
+import ThreadLogs from '../connections/ThreadLogs'
 
 import registry, { registerType, nodeInterface } from './registry'
 
@@ -102,6 +103,18 @@ const GraphQLUser = new GraphQLObjectType({
         if (!user.anonymous) {
           const topics = await db.topic.getTopics(user.teamId)
           return connectionFromArray(topics, args)
+        }
+        return null
+      },
+    },
+    threadLogs: {
+      type: ThreadLogs.connectionType,
+      description: 'ThreadLogs the User has access to',
+      args: connectionArgs,
+      resolve: async (user, args) => {
+        if (!user.anonymous) {
+          const logs = await db.thread.getThreadLogs(user.teamId)
+          return connectionFromArray(logs, args)
         }
         return null
       },
