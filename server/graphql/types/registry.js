@@ -28,13 +28,17 @@ export function registerType({ type, model, resolve }) {
   return type
 }
 
-function resolveGlobalId(globalId) {
+function resolveGlobalId(globalId, context) {
+  if (!context.auth) {
+    return null
+  }
+
   const { type, id } = fromGlobalId(globalId)
   const registration = registry.getRegistration(type)
   if (!registration) throw new Error(`Unregistered type: ${type}`)
   const { resolve } = registration
   if (typeof resolve !== 'function') throw new Error(`Resolve must be function: ${type}`)
-  return resolve(id)
+  return resolve(id, context)
 }
 
 function resolveInstance(instance) {
