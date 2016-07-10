@@ -1,9 +1,11 @@
 import React, { PropTypes } from 'react'
 import { Link } from 'react-router'
 import Drawer from 'material-ui/Drawer'
+import QuestionAnswerIcon from 'material-ui/svg-icons/action/question-answer'
+import ViewListIcon from 'material-ui/svg-icons/action/view-list'
 
+import colors from 's/colors'
 import withStyles from 'u/withStyles'
-import QuestionAnswerIcon from 'c/QuestionAnswerIcon'
 import AccountMenu from './AccountMenu'
 
 import s from './nav-style.scss'
@@ -26,6 +28,8 @@ const Navigation = ({ isAdmin, isAssumed, onLogout }) => {
     drawerContainerStyle = { background: '#393F44', boxShadow: 'none' }
   }
 
+  const icon = { color: colors.white, style: { height: 26, width: 26 } }
+
   return (
     <Drawer
       containerStyle={drawerContainerStyle}
@@ -34,7 +38,10 @@ const Navigation = ({ isAdmin, isAssumed, onLogout }) => {
       <div className={s.container}>
         <div className={s.topButtons}>
           <Link className={isSelected('/knowledge', true)} to='/knowledge'>
-            <QuestionAnswerIcon />
+            <QuestionAnswerIcon {...icon} />
+          </Link>
+          <Link className={isSelected('/logs')} to='/logs'>
+            <ViewListIcon {...icon} />
           </Link>
         </div>
         <div className={s.buttons}>

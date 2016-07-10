@@ -1,3 +1,4 @@
 export default {
-  darkGrey: '#757575'
+  darkGrey: '#757575',
+  white: '#FFFFFF',
 }

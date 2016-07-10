@@ -6,6 +6,7 @@ import ViewerQueries from './queries/Viewer'
 import AppContainer from 'c/App/Container'
 import KnowledgeContainer from 'c/Knowledge/Container'
 import AdminContainer from 'c/Admin/Container'
+import ThreadLogsContainer from 'c/ThreadLogs/Container'
 import Loading from 'c/Loading'
 
 /* eslint-disable react/prop-types */
@@ -40,6 +41,12 @@ export default (
       component={AdminContainer}
       queries={ViewerQueries}
       render={({ props }) => props ? <AdminContainer {...props} /> : <Loading />}
+    />
+    <Route
+      path='logs'
+      component={ThreadLogsContainer}
+      queries={ViewerQueries}
+      render={({ props }) => props ? <ThreadLogsContainer {...props} /> : <Loading />}
     />
   </Route>
 )
