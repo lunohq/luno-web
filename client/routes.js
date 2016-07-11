@@ -1,5 +1,5 @@
 import React from 'react'
-import { IndexRedirect, Route } from 'react-router'
+import { IndexRedirect, Route, IndexRoute } from 'react-router'
 
 import ViewerQueries from './queries/Viewer'
 
@@ -42,12 +42,21 @@ export default (
       queries={ViewerQueries}
       render={({ props }) => props ? <AdminContainer {...props} /> : <Loading />}
     />
-    <Route
-      path='logs'
-      component={ThreadLogsContainer}
-      queries={ViewerQueries}
-      render={({ props }) => props ? <ThreadLogsContainer {...props} /> : <Loading />}
-    />
+    <Route path='logs'>
+      <IndexRoute
+        component={ThreadLogsContainer}
+        queries={ViewerQueries}
+        render={({ props }) => props ? <ThreadLogsContainer {...props} /> : <Loading />}
+        prepareParams={params => ({ ...params, hasThread: false })}
+      />
+      <Route
+        path=':threadId'
+        component={ThreadLogsContainer}
+        queries={ViewerQueries}
+        prepareParams={params => ({ ...params, hasThread: true })}
+        render={({ props }) => props ? <ThreadLogsContainer {...props} /> : <Loading />}
+      />
+    </Route>
   </Route>
 )
 /* eslint-enable react/prop-types */

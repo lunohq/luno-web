@@ -40,7 +40,7 @@ const Navigation = ({ isAdmin, isAssumed, onLogout }) => {
           <Link className={isSelected('/knowledge', true)} to='/knowledge'>
             <QuestionAnswerIcon {...icon} />
           </Link>
-          <Link className={isSelected('/logs')} to='/logs'>
+          <Link className={isSelected('/logs', true)} to='/logs'>
             <ViewListIcon {...icon} />
           </Link>
         </div>
