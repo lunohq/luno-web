@@ -54,7 +54,6 @@ export default (
         component={ThreadLogsContainer}
         queries={ViewerQueries}
         prepareParams={params => ({ ...params, hasThread: true })}
-        render={({ props }) => props ? <ThreadLogsContainer {...props} /> : <Loading />}
       />
     </Route>
   </Route>

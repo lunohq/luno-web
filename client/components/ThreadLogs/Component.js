@@ -8,6 +8,7 @@ import withStyles from 'u/withStyles'
 import AuthenticatedContent from 'c/AuthenticatedContent/Component'
 import Dialog from 'c/Dialog'
 import Thread from 'c/Thread/Component'
+import Loading from 'c/Loading'
 
 import ThreadTable from './ThreadTable'
 
@@ -19,7 +20,7 @@ const EmptyState = () => (
   </div>
 )
 
-const ThreadDialog = ({ onClose, viewer }) => {
+const ThreadDialog = ({ onClose, open, viewer }) => {
   const actions = [
     <FlatButton
       label={t('Close')}
@@ -27,31 +28,51 @@ const ThreadDialog = ({ onClose, viewer }) => {
       onTouchTap={onClose}
     />
   ]
+
+  let content
+  if (viewer.threadLog) {
+    content = <Thread viewer={viewer} />
+  } else {
+    content = (
+      <div style={{ padding: 24 }}>
+        <Loading size={0.75} />
+      </div>
+    )
+  }
   return (
     <Dialog
       actions={actions}
       autoScrollBodyContent
-      open={!!viewer.threadLog}
+      open={open}
       onRequestClose={onClose}
       title={t('Conversation Details')}
     >
-      <Thread viewer={viewer} />
+      {content}
     </Dialog>
   )
 }
 
 ThreadDialog.propTypes = {
   onClose: PropTypes.func.isRequired,
+  open: PropTypes.bool,
   viewer: PropTypes.object.isRequired,
 }
 
 class ThreadLogs extends Component {
 
+  state = {
+    displayThreadDialog: false,
+  }
+
   handleViewMore = (thread) => {
+    this.setState({ displayThreadDialog: true })
     this.context.router.push(`/logs/${thread.id}`)
   }
 
-  handleCloseThread = () => this.context.router.push('/logs')
+  handleCloseThread = () => {
+    this.setState({ displayThreadDialog: false })
+    this.context.router.push('/logs')
+  }
 
   render() {
     const { viewer } = this.props
@@ -66,6 +87,7 @@ class ThreadLogs extends Component {
         {content}
         <ThreadDialog
           onClose={this.handleCloseThread}
+          open={this.state.displayThreadDialog}
           viewer={viewer}
         />
       </AuthenticatedContent>
