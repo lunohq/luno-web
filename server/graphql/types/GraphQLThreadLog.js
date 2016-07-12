@@ -45,7 +45,7 @@ const GraphQLThreadLog = new GraphQLObjectType({
         const dataStore = getDataStore()
         const user = await dataStore.getUserById(obj.userId)
         if (user) {
-          username = `@${user.name}`
+          username = user.name
         }
         return username
       },
