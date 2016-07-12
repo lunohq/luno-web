@@ -2,8 +2,9 @@ import { GraphQLObjectType, GraphQLString, GraphQLInt } from 'graphql'
 import { connectionArgs, connectionFromArray, globalIdField } from 'graphql-relay'
 import { db } from 'luno-core'
 
-import { registerType, nodeInterface } from './registry'
+import getDataStore from '../../utils/getDataStore'
 import ThreadEvents from '../connections/ThreadEvents'
+import { registerType, nodeInterface } from './registry'
 
 const GraphQLThreadLog = new GraphQLObjectType({
   name: 'ThreadLog',
@@ -13,7 +14,19 @@ const GraphQLThreadLog = new GraphQLObjectType({
     channelName: {
       type: GraphQLString,
       description: 'The name of the channel the thread occurred in',
-      resolve: obj => obj.channelId.startsWith('D') ? 'Direct Message' : obj.channelId,
+      resolve: async obj => {
+        let name = obj.channelId
+        if (obj.channelId.startsWith('D')) {
+          name = 'Direct Message'
+        } else {
+          const dataStore = getDataStore()
+          const channel = await dataStore.getChannelGroupOrDMById(obj.channelId)
+          if (channel) {
+            name = `#${channel.name}`
+          }
+        }
+        return name
+      },
     },
     created: {
       type: GraphQLString,
@@ -27,7 +40,15 @@ const GraphQLThreadLog = new GraphQLObjectType({
     username: {
       type: GraphQLString,
       description: 'The slack username of the user the thread refers to',
-      resolve: obj => `@${obj.userId}`,
+      resolve: async obj => {
+        let username = obj.userId
+        const dataStore = getDataStore()
+        const user = await dataStore.getUserById(obj.userId)
+        if (user) {
+          username = `@${user.name}`
+        }
+        return username
+      },
     },
     length: {
       type: GraphQLInt,
