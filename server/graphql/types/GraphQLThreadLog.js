@@ -63,7 +63,8 @@ const GraphQLThreadLog = new GraphQLObjectType({
       description: 'Events within the ThreadLog',
       args: connectionArgs,
       resolve: async (log, args) => {
-        const events = await db.thread.getThreadEvents(log.threadId)
+        let events = await db.thread.getThreadEvents(log.threadId)
+        events = events.filter(event => [db.thread.EVENT_MESSAGE_RECEIVED, db.thread.EVENT_MESSAGE_SENT].includes(event.type))
         return connectionFromArray(events, args)
       },
     },
