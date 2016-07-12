@@ -11,7 +11,7 @@ import ActionsRowColumn from 'c/ActionsRowColumn'
 
 const ThreadRow = ({ thread, onViewMore }) => (
   <TableRow>
-    <TableRowColumn>{moment(thread.created).format('MMMM Do YYYY, h:mm:ss a')}</TableRowColumn>
+    <TableRowColumn>{moment(thread.created).format('MMMM Do YYYY, h:mm a')}</TableRowColumn>
     <TableRowColumn>{`@${thread.username}`}</TableRowColumn>
     <TableRowColumn>{thread.channelName}</TableRowColumn>
     <TableRowColumn>{thread.message}</TableRowColumn>
