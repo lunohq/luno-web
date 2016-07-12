@@ -230,7 +230,7 @@ type ThreadEventMessage {
   event: String
   type: String
   user: String
-  ts: String
+  ts: Float
   text: String
 }
 

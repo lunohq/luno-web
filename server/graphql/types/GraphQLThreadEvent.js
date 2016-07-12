@@ -1,4 +1,4 @@
-import { GraphQLObjectType, GraphQLString } from 'graphql'
+import { GraphQLObjectType, GraphQLString, GraphQLFloat } from 'graphql'
 
 import getDataStore from '../../utils/getDataStore'
 import { registerType } from './registry'
@@ -30,8 +30,9 @@ const GraphQLThreadEventMessage = new GraphQLObjectType({
       },
     },
     ts: {
-      type: GraphQLString,
+      type: GraphQLFloat,
       description: 'Timestamp when the message was sent',
+      resolve: obj => parseInt(obj.ts.replace('.', ''), 10) / 1000,
     },
     text: {
       type: GraphQLString,

@@ -103,7 +103,7 @@
     "raven": "^0.10.0",
     "raven-winston": "0.0.1",
     "react": "^15.1.0",
-    "winston": "^2.2.0",
-    "slack-redis-data-store": "git+https://git@github.com/lunohq/slack-redis-data-store.git#c430a31e7145608624284b663713d836c1ad25d8"
+    "slack-redis-data-store": "git+https://git@github.com/lunohq/slack-redis-data-store.git#c430a31e7145608624284b663713d836c1ad25d8",
+    "winston": "^2.2.0"
   }
 }
