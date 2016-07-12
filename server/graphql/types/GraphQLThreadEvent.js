@@ -1,5 +1,6 @@
 import { GraphQLObjectType, GraphQLString } from 'graphql'
 
+import getDataStore from '../../utils/getDataStore'
 import { registerType } from './registry'
 import GraphQLThreadEventType from './GraphQLThreadEventType'
 
@@ -18,6 +19,15 @@ const GraphQLThreadEventMessage = new GraphQLObjectType({
     user: {
       type: GraphQLString,
       description: 'User who sent the message',
+      resolve: async obj => {
+        let name = obj.user
+        const dataStore = getDataStore()
+        const user = await dataStore.getUserById(obj.user)
+        if (user) {
+          name = user.name
+        }
+        return name
+      },
     },
     ts: {
       type: GraphQLString,
