@@ -21,6 +21,8 @@ export default Relay.createContainer(Component, {
                 meta
                 message {
                   text
+                  ts
+                  user
                 }
               }
             }

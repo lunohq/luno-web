@@ -1,28 +1,18 @@
 import React, { PropTypes } from 'react'
-import { List, ListItem } from 'material-ui/List'
+
+import withStyles from 'u/withStyles'
+
+import SlackMessage from 'c/SlackMessage/Component'
+
+import s from './style.scss'
 
 const Thread = ({ viewer }) => {
-  const events = viewer.threadLog.events.edges.map(({ node }, index) => {
-    const secondaryText = (
-      <div>
-        <p>{`meta: ${node.meta}`}</p>
-        <p>{`message: ${node.message ? node.message.text : ''}`}</p>
-      </div>
-    )
-    return (
-        <ListItem
-          key={index}
-          primaryText={node.type}
-          secondaryText={secondaryText}
-          secondaryTextLines={2}
-        />
-    )
-  })
+  const messages = viewer.threadLog.events.edges.map(({ node: { message } }, index) => (
+    <SlackMessage key={index} message={message} />
+  ))
   return (
-    <div>
-      <List>
-        {events}
-      </List>
+    <div className={s.container}>
+      {messages}
     </div>
   )
 }
@@ -31,4 +21,4 @@ Thread.propTypes = {
   viewer: PropTypes.object.isRequired,
 }
 
-export default Thread
+export default withStyles(s)(Thread)
