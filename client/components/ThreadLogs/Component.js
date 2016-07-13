@@ -74,11 +74,23 @@ class ThreadLogs extends Component {
     this.context.router.push('/logs')
   }
 
+  handleNextPage = () => {
+    const { relay: { setVariables, variables: { threadLogs, pageSize } } } = this.props
+    setVariables({ threadLogs: threadLogs + pageSize })
+  }
+
   render() {
     const { viewer } = this.props
     let content
     if (viewer.threadLogs) {
-      content = <ThreadTable onViewMore={this.handleViewMore} threadEdges={viewer.threadLogs.edges} />
+      content = (
+        <ThreadTable
+          onNextPage={this.handleNextPage}
+          onPreviousPage={this.handleNextPage}
+          onViewMore={this.handleViewMore}
+          threadLogs={viewer.threadLogs}
+        />
+      )
     } else {
       content = <EmptyState />
     }

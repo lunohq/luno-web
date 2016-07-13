@@ -5,8 +5,10 @@ import Component from './Component'
 export default Relay.createContainer(Component, {
   initialVariables: {
     limit: -1 >>> 1,
+    pageSize: 20,
     threadId: null,
     hasThread: false,
+    threadLogs: 20,
   },
 
   fragments: {
@@ -29,7 +31,7 @@ export default Relay.createContainer(Component, {
           }
         }
 
-        threadLogs(first: $limit) {
+        threadLogs(first: $threadLogs) {
           edges {
             node {
               id
@@ -38,6 +40,9 @@ export default Relay.createContainer(Component, {
               username
               message
             }
+          }
+          pageInfo {
+            hasNextPage
           }
         }
       }

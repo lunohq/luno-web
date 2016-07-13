@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
 import { Table as MaterialTable } from 'material-ui/Table'
 
 import withStyles from 'u/withStyles'
