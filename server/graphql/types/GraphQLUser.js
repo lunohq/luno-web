@@ -19,6 +19,7 @@ import GraphQLThreadLog, { resolve } from './GraphQLThreadLog'
 import Topics from '../connections/Topics'
 import Bots from '../connections/Bots'
 import ThreadLogs from '../connections/ThreadLogs'
+import { connectionFromDynamodb, idFromCursor } from '../utils'
 
 import registry, { registerType, nodeInterface } from './registry'
 
@@ -127,10 +128,22 @@ const GraphQLUser = new GraphQLObjectType({
       type: ThreadLogs.connectionType,
       description: 'ThreadLogs the User has access to',
       args: connectionArgs,
-      resolve: async (user, args) => {
-        if (!user.anonymous) {
-          const logs = await db.thread.getThreadLogs(user.teamId)
-          return connectionFromArray(logs, args)
+      resolve: async ({ anonymous, teamId }, args) => {
+        if (!anonymous) {
+          let startKey
+          if (args.after) {
+            const compositeId = idFromCursor(args.after)
+            const [created, threadId] = db.client.deconstructId(compositeId)
+            startKey = { teamId, created, threadId }
+          }
+          const promises = [
+            db.thread.getThreadLogs({ teamId, startKey, limit: args.first }),
+            db.thread.getThreadLogPaginationBounds(teamId),
+          ]
+          const [logs, bounds] = await Promise.all(promises)
+          const getId = item => db.client.compositeId(item.created, item.threadId)
+          const res = connectionFromDynamodb({ bounds, getId, data: logs })
+          return res
         }
         return null
       },
