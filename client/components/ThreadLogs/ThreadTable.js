@@ -66,12 +66,14 @@ class ThreadTable extends Component {
         </TableBody>
         <TableFooter adjustForCheckbox={false}>
           <TableRow>
-            <TableRowColumn colSpan='4' className={s.footer}>
-              <FlatButton
-                disabled={this.state.loading || !hasNextPage}
-                label={this.state.loading ? t('Loading...') : t('View More')}
-                onTouchTap={this.handleNextPage}
-              />
+            <TableRowColumn colSpan='4'>
+              <div className={s.footer}>
+                <FlatButton
+                  disabled={this.state.loading || !hasNextPage}
+                  label={this.state.loading ? t('Loading...') : t('View More')}
+                  onTouchTap={this.handleNextPage}
+                />
+              </div>
             </TableRowColumn>
           </TableRow>
         </TableFooter>
