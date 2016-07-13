@@ -49,3 +49,28 @@ export function connectionFromDynamodb({ data, bounds, getId = item => item.id }
     },
   }
 }
+
+export async function resolveMentions({ text, dataStore }) {
+  let resolvedText = text
+  const mention = new RegExp('\<\@[^\>]*\>', 'gi')
+  const matches = text.match(mention)
+  if (matches) {
+    const userIds = []
+    const promises = []
+    for (let match of matches) {
+      match = match.replace(/[<>@]/g, '')
+      if (!userIds.includes(match)) {
+        userIds.push(match)
+        promises.push(dataStore.getUserById(match))
+      }
+    }
+    const users = await Promise.all(promises)
+    for (const user of users) {
+      if (user) {
+        const userMention = new RegExp(`\<\@${user.id}[^\>]*\>`, 'gi')
+        resolvedText = resolvedText.replace(userMention, `@${user.name}`)
+      }
+    }
+  }
+  return resolvedText
+}

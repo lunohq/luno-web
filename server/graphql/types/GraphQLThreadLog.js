@@ -3,6 +3,7 @@ import { connectionArgs, connectionFromArray, globalIdField } from 'graphql-rela
 import { db } from 'luno-core'
 
 import getDataStore from '../../utils/getDataStore'
+import { resolveMentions } from '../utils'
 import ThreadEvents from '../connections/ThreadEvents'
 import { registerType, nodeInterface } from './registry'
 
@@ -35,7 +36,12 @@ const GraphQLThreadLog = new GraphQLObjectType({
     message: {
       type: GraphQLString,
       description: 'The message that started the thread',
-      resolve: obj => obj.message.message.text
+      resolve: (obj, args, { auth }) => {
+        const dataStore = getDataStore(auth.tid)
+        const { message: { message } } = obj
+        const text = message.raw || message.text
+        return resolveMentions({ text, dataStore })
+      },
     },
     username: {
       type: GraphQLString,

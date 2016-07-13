@@ -1,6 +1,7 @@
 import { GraphQLObjectType, GraphQLString, GraphQLFloat } from 'graphql'
 
 import getDataStore from '../../utils/getDataStore'
+import { resolveMentions } from '../utils'
 import { registerType } from './registry'
 import GraphQLThreadEventType from './GraphQLThreadEventType'
 
@@ -37,6 +38,16 @@ const GraphQLThreadEventMessage = new GraphQLObjectType({
     text: {
       type: GraphQLString,
       description: 'Text of the message',
+      resolve: (obj, args, { auth }) => {
+        let text = obj.text
+        if (obj.reaction) {
+          text = `:${obj.reaction}:`
+        } else if (obj.raw) {
+          text = obj.raw
+        }
+        const dataStore = getDataStore(auth.tid)
+        return resolveMentions({ text, dataStore })
+      },
     },
   },
 })
