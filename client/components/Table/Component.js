@@ -11,8 +11,4 @@ const Table = (props) => (
   </div>
 )
 
-Table.propTypes = {
-  children: PropTypes.node,
-}
-
 export default withStyles(s)(Table)
