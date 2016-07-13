@@ -14,12 +14,12 @@ const GraphQLThreadLog = new GraphQLObjectType({
     channelName: {
       type: GraphQLString,
       description: 'The name of the channel the thread occurred in',
-      resolve: async obj => {
+      resolve: async (obj, args, { auth }) => {
         let name = obj.channelId
         if (obj.channelId.startsWith('D')) {
           name = 'Direct Message'
         } else {
-          const dataStore = getDataStore()
+          const dataStore = getDataStore(auth.tid)
           const channel = await dataStore.getChannelGroupOrDMById(obj.channelId)
           if (channel) {
             name = `#${channel.name}`
@@ -40,9 +40,9 @@ const GraphQLThreadLog = new GraphQLObjectType({
     username: {
       type: GraphQLString,
       description: 'The slack username of the user the thread refers to',
-      resolve: async obj => {
+      resolve: async (obj, args, { auth }) => {
         let username = obj.userId
-        const dataStore = getDataStore()
+        const dataStore = getDataStore(auth.tid)
         const user = await dataStore.getUserById(obj.userId)
         if (user) {
           username = user.name

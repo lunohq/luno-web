@@ -2,9 +2,12 @@ import RedisDataStore from 'slack-redis-data-store'
 
 let dataStore
 
-export default function getDataStore() {
+export default function getDataStore(teamId) {
   if (!dataStore) {
-    dataStore = new RedisDataStore({ redisOpts: { host: process.env.REDIS_HOST } })
+    dataStore = new RedisDataStore({
+      keyPrefix: `s.cache.${teamId}.`,
+      redisOpts: { host: process.env.REDIS_HOST },
+    })
   }
   return dataStore
 }

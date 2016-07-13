@@ -19,9 +19,9 @@ const GraphQLThreadEventMessage = new GraphQLObjectType({
     user: {
       type: GraphQLString,
       description: 'User who sent the message',
-      resolve: async obj => {
+      resolve: async (obj, args, { auth }) => {
         let name = obj.user
-        const dataStore = getDataStore()
+        const dataStore = getDataStore(auth.tid)
         const user = await dataStore.getUserById(obj.user)
         if (user) {
           name = user.name
