@@ -64,6 +64,12 @@ class ThreadLogs extends Component {
     displayThreadDialog: false,
   }
 
+  componentWillMount() {
+    if (this.props.threadId) {
+      this.setState({ displayThreadDialog: true })
+    }
+  }
+
   handleViewMore = (thread) => {
     this.setState({ displayThreadDialog: true })
     this.context.router.push(`/logs/${thread.id}`)
@@ -111,6 +117,7 @@ class ThreadLogs extends Component {
 ThreadLogs.propTypes = {
   relay: PropTypes.object.isRequired,
   viewer: PropTypes.object.isRequired,
+  threadId: PropTypes.string,
 }
 
 ThreadLogs.contextTypes = {
