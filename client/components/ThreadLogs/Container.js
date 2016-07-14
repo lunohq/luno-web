@@ -14,6 +14,7 @@ export default Relay.createContainer(Component, {
   fragments: {
     viewer: () => Relay.QL`
       fragment on User {
+        assumed
         threadLog(id: $threadId) @include(if: $hasThread) {
           events(first: $limit) {
             edges {
