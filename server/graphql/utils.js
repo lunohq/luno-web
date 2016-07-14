@@ -1,6 +1,6 @@
 import { offsetToCursor } from 'graphql-relay'
 
-import d from '../../utils/debug'
+import d from '../utils/debug'
 const debug = d(__filename)
 
 export function cursorForInstanceInCollection(instance, connection) {
