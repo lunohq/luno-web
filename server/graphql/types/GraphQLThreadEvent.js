@@ -41,7 +41,13 @@ const GraphQLThreadEventMessage = new GraphQLObjectType({
       resolve: (obj, args, { auth }) => {
         let text = obj.text
         if (obj.reaction) {
-          text = `:${obj.reaction}:`
+          let { reaction } = obj
+          if (reaction === '-1') {
+            reaction = 'thumbsdown'
+          } else if (reaction === '+1') {
+            reaction = 'thumbsup'
+          }
+          text = `:${reaction}:`
         } else if (obj.raw) {
           text = obj.raw
         }
