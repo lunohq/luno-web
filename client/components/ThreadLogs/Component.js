@@ -70,6 +70,14 @@ class ThreadLogs extends Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.threadId && !this.props.threadId) {
+      this.setState({ displayThreadDialog: true })
+    } else if (this.props.threadId && !nextProps.threadId) {
+      this.setState({ displayThreadDialog: false })
+    }
+  }
+
   handleViewMore = (thread) => {
     this.setState({ displayThreadDialog: true })
     this.context.router.push(`/logs/${thread.id}`)
