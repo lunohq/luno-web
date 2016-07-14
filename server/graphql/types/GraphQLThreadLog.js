@@ -51,7 +51,12 @@ const GraphQLThreadLog = new GraphQLObjectType({
         let username = obj.userId
         const dataStore = getDataStore(auth.tid)
         const user = await dataStore.getUserById(obj.userId)
-        debug('Resolving user', { userId: obj.userId, teamId: auth.tid, user })
+        debug('Resolving user', {
+          userId: obj.userId,
+          teamId: auth.tid,
+          userKey: dataStore.userKeyName,
+          user,
+        })
         if (user) {
           username = user.name
         }
