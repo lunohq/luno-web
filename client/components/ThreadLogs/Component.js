@@ -15,8 +15,10 @@ import ThreadTable from './ThreadTable'
 import s from './style.scss'
 
 const EmptyState = () => (
-  <div>
-    {t('No conversation logs yet')}
+  <div className={s.emptyContainer}>
+    <div>
+      <span className={s.empty}>{t('No conversation logs yet')}</span>
+    </div>
   </div>
 )
 

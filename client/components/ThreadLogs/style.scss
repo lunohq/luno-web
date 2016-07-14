@@ -1,0 +1,8 @@
+.emptyContainer {
+    composes: row center-xs from 's/vendor/flexboxgrid.css';
+    padding: 25px;
+}
+
+.empty {
+    font-size: 1.8rem;
+}

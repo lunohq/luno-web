@@ -23,6 +23,10 @@ import { connectionFromDynamodb, idFromCursor } from '../utils'
 
 import registry, { registerType, nodeInterface } from './registry'
 
+function getThreadLogId(item) {
+  return db.client.compositeId(item.created, item.threadId)
+}
+
 const GraphQLUser = new GraphQLObjectType({
   name: 'User',
   description: 'User within our system',
@@ -141,9 +145,9 @@ const GraphQLUser = new GraphQLObjectType({
             db.thread.getThreadLogPaginationBounds(teamId),
           ]
           const [logs, bounds] = await Promise.all(promises)
-          const getId = item => db.client.compositeId(item.created, item.threadId)
-          const res = connectionFromDynamodb({ bounds, getId, data: logs })
-          return res
+          if (logs && logs.length) {
+            return connectionFromDynamodb({ bounds, getId: getThreadLogId, data: logs })
+          }
         }
         return null
       },
