@@ -3,7 +3,6 @@ import { connectionArgs, connectionFromArray, globalIdField } from 'graphql-rela
 import { db } from 'luno-core'
 
 import getDataStore from '../../utils/getDataStore'
-import { resolveMentions } from '../utils'
 import ThreadEvents from '../connections/ThreadEvents'
 import { registerType, nodeInterface } from './registry'
 
