@@ -6,6 +6,9 @@ import getDataStore from '../../utils/getDataStore'
 import ThreadEvents from '../connections/ThreadEvents'
 import { registerType, nodeInterface } from './registry'
 
+import d from '../../utils/debug'
+const debug = d(__filename)
+
 const GraphQLThreadLog = new GraphQLObjectType({
   name: 'ThreadLog',
   description: 'ThreadLog within our system',
@@ -21,6 +24,7 @@ const GraphQLThreadLog = new GraphQLObjectType({
         } else {
           const dataStore = getDataStore(auth.tid)
           const channel = await dataStore.getChannelGroupOrDMById(obj.channelId)
+          debug('Resolving channel', { channelId: obj.channelId, teamId: auth.tid, channel })
           if (channel) {
             name = `#${channel.name}`
           }
@@ -47,6 +51,7 @@ const GraphQLThreadLog = new GraphQLObjectType({
         let username = obj.userId
         const dataStore = getDataStore(auth.tid)
         const user = await dataStore.getUserById(obj.userId)
+        debug('Resolving user', { userId: obj.userId, teamId: auth.tid, user })
         if (user) {
           username = user.name
         }
