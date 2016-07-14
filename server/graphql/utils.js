@@ -21,6 +21,16 @@ export function idFromCursor(cursor) {
 }
 
 export function connectionFromDynamodb({ data, bounds, getId = item => item.id }) {
+  if (!data.length) {
+    return {
+      edges: [],
+      pageInfo: {
+        hasPreviousPage: false,
+        hasNextPage: false,
+      },
+    }
+  }
+
   const { first, last } = bounds
   const start = getId(data[0])
   const end = getId(data[data.length - 1])
@@ -34,7 +44,8 @@ export function connectionFromDynamodb({ data, bounds, getId = item => item.id }
     const itemId = getId(item)
     if (itemId === firstId) {
       hasPreviousPage = false
-    } else if (itemId === lastId) {
+    }
+    if (itemId === lastId) {
       hasNextPage = false
     }
   }

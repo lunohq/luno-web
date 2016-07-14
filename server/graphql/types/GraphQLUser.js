@@ -145,9 +145,7 @@ const GraphQLUser = new GraphQLObjectType({
             db.thread.getThreadLogPaginationBounds(teamId),
           ]
           const [logs, bounds] = await Promise.all(promises)
-          if (logs && logs.length) {
-            return connectionFromDynamodb({ bounds, getId: getThreadLogId, data: logs })
-          }
+          return connectionFromDynamodb({ bounds, getId: getThreadLogId, data: logs })
         }
         return null
       },
