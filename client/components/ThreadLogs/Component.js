@@ -67,10 +67,6 @@ class ThreadLogs extends Component {
   }
 
   componentWillMount() {
-    if (!this.props.viewer.assumed) {
-      this.context.router.replace('/')
-    }
-
     if (this.props.threadId) {
       this.setState({ displayThreadDialog: true })
     }
