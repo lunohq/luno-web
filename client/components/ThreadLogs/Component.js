@@ -116,8 +116,8 @@ class ThreadLogs extends Component {
 
 ThreadLogs.propTypes = {
   relay: PropTypes.object.isRequired,
-  viewer: PropTypes.object.isRequired,
   threadId: PropTypes.string,
+  viewer: PropTypes.object.isRequired,
 }
 
 ThreadLogs.contextTypes = {
