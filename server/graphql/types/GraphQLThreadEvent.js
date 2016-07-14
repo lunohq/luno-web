@@ -1,6 +1,5 @@
 import { GraphQLObjectType, GraphQLString, GraphQLFloat } from 'graphql'
 
-import getDataStore from '../../utils/getDataStore'
 import { resolveMentions } from '../utils'
 import { registerType } from './registry'
 import GraphQLThreadEventType from './GraphQLThreadEventType'
@@ -20,9 +19,8 @@ const GraphQLThreadEventMessage = new GraphQLObjectType({
     user: {
       type: GraphQLString,
       description: 'User who sent the message',
-      resolve: async (obj, args, { auth }) => {
+      resolve: async (obj, args, { dataStore }) => {
         let name = obj.user
-        const dataStore = getDataStore(auth.tid)
         const user = await dataStore.getUserById(obj.user)
         if (user) {
           name = user.name
@@ -38,7 +36,7 @@ const GraphQLThreadEventMessage = new GraphQLObjectType({
     text: {
       type: GraphQLString,
       description: 'Text of the message',
-      resolve: (obj, args, { auth }) => {
+      resolve: (obj, args, { dataStore }) => {
         let text = obj.text
         if (obj.reaction) {
           let { reaction } = obj
@@ -51,7 +49,6 @@ const GraphQLThreadEventMessage = new GraphQLObjectType({
         } else if (obj.raw) {
           text = obj.raw
         }
-        const dataStore = getDataStore(auth.tid)
         return resolveMentions({ text, dataStore })
       },
     },

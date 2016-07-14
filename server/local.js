@@ -17,6 +17,7 @@ import updateSchema from './utils/updateSchema'
 import auth from './middleware/auth'
 import slashCommands from './middleware/slashCommands'
 import admin from './middleware/admin'
+import getDataStore from './utils/getDataStore'
 
 import converse from './converse'
 
@@ -30,7 +31,7 @@ function startGraphQLServer(schema) {
     return {
       graphiql: true,
       pretty: true,
-      context: { auth: request.auth },
+      context: { auth: request.auth, dataStore: getDataStore(request.auth) },
       schema,
       formatError,
     }

@@ -2,7 +2,6 @@ import { GraphQLObjectType, GraphQLString, GraphQLInt } from 'graphql'
 import { connectionArgs, connectionFromArray, globalIdField } from 'graphql-relay'
 import { db } from 'luno-core'
 
-import getDataStore from '../../utils/getDataStore'
 import ThreadEvents from '../connections/ThreadEvents'
 import { registerType, nodeInterface } from './registry'
 
@@ -17,14 +16,12 @@ const GraphQLThreadLog = new GraphQLObjectType({
     channelName: {
       type: GraphQLString,
       description: 'The name of the channel the thread occurred in',
-      resolve: async (obj, args, { auth }) => {
+      resolve: async (obj, args, { dataStore }) => {
         let name = obj.channelId
         if (obj.channelId.startsWith('D')) {
           name = 'Direct Message'
         } else {
-          const dataStore = getDataStore(auth.tid)
           const channel = await dataStore.getChannelGroupOrDMById(obj.channelId)
-          debug('Resolving channel', { channelId: obj.channelId, teamId: auth.tid, channel })
           if (channel) {
             name = `#${channel.name}`
           }
@@ -47,13 +44,11 @@ const GraphQLThreadLog = new GraphQLObjectType({
     username: {
       type: GraphQLString,
       description: 'The slack username of the user the thread refers to',
-      resolve: async (obj, args, { auth }) => {
+      resolve: async (obj, args, { dataStore }) => {
         let username = obj.userId
-        const dataStore = getDataStore(auth.tid)
         const user = await dataStore.getUserById(obj.userId)
         debug('Resolving user', {
           userId: obj.userId,
-          teamId: auth.tid,
           userKey: dataStore.userKeyName,
           user,
         })

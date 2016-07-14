@@ -14,6 +14,7 @@ import auth from './middleware/auth'
 import slashCommands from './middleware/slashCommands'
 import admin from './middleware/admin'
 import formatError from './utils/formatError'
+import getDataStore from './utils/getDataStore'
 
 import converse from './converse'
 
@@ -35,7 +36,7 @@ relayServer.use('/', express.static(path.join(__dirname, '../output', process.en
 relayServer.use('/graphql', graphQLHTTP(request => ({
   schema,
   formatError,
-  context: { auth: request.auth },
+  context: { auth: request.auth, dataStore: getDataStore(request.auth) },
 })))
 relayServer.use(raven.middleware.express.errorHandler(config.sentry.dsn))
 relayServer.listen(config.port, () => console.log(chalk.green(`Relay is listening on port ${config.port}`)))
