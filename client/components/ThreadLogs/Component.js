@@ -98,7 +98,7 @@ class ThreadLogs extends Component {
   render() {
     const { viewer } = this.props
     let content
-    if (viewer.threadLogs && viewer.threadLogs.length) {
+    if (viewer.threadLogs && viewer.threadLogs.edges && viewer.threadLogs.edges.length) {
       content = (
         <ThreadTable
           onNextPage={this.handleNextPage}
