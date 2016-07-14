@@ -5,7 +5,6 @@ import client from 'luno-core/lib/db/client'
 import { db } from 'luno-core'
 
 import logger from '../../logger'
-import { sleep } from './helpers'
 
 export default async function() {
   let params = {
