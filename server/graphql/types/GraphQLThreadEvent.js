@@ -4,6 +4,9 @@ import { resolveMentions } from '../utils'
 import { registerType } from './registry'
 import GraphQLThreadEventType from './GraphQLThreadEventType'
 
+import d from '../../utils/debug'
+const debug = d(__filename)
+
 const GraphQLThreadEventMessage = new GraphQLObjectType({
   name: 'ThreadEventMessage',
   description: 'Message within a thread event',
@@ -31,7 +34,15 @@ const GraphQLThreadEventMessage = new GraphQLObjectType({
     ts: {
       type: GraphQLFloat,
       description: 'Timestamp when the message was sent',
-      resolve: obj => parseInt(obj.ts.replace('.', ''), 10) / 1000,
+      resolve: obj => {
+        let { ts } = obj
+        if (ts) {
+          ts = parseInt(ts.replace('.', ''), 10) / 1000
+        } else {
+          debug('No TS found', obj)
+        }
+        return ts
+      },
     },
     text: {
       type: GraphQLString,
