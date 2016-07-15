@@ -82,17 +82,21 @@ class ThreadLogs extends Component {
 
   handleViewMore = (thread) => {
     this.setState({ displayThreadDialog: true })
-    this.context.router.push(`/logs/${thread.id}`)
+    this.push(`/logs/${thread.id}`)
   }
 
   handleCloseThread = () => {
     this.setState({ displayThreadDialog: false })
-    this.context.router.push('/logs')
+    this.push('/logs')
   }
 
   handleNextPage = () => {
     const { relay: { setVariables, variables: { threadLogs, pageSize } } } = this.props
     setVariables({ threadLogs: threadLogs + pageSize })
+  }
+
+  push = (pathname) => {
+    this.context.router.push({ pathname, state: { threadLogs: this.props.relay.variables.threadLogs } })
   }
 
   render() {

@@ -9,6 +9,14 @@ import AdminContainer from 'c/Admin/Container'
 import ThreadLogsContainer from 'c/ThreadLogs/Container'
 import Loading from 'c/Loading'
 
+function prepareThreadLogsParams(pre, { location: { state } }) {
+  const params = pre
+  if (state && state.threadLogs) {
+    params.threadLogs = state.threadLogs
+  }
+  return params
+}
+
 /* eslint-disable react/prop-types */
 export default (
   <Route
@@ -47,13 +55,13 @@ export default (
         component={ThreadLogsContainer}
         queries={ViewerQueries}
         render={({ props }) => props ? <ThreadLogsContainer {...props} /> : <Loading />}
-        prepareParams={params => ({ ...params, hasThread: false })}
+        prepareParams={(params, props) => prepareThreadLogsParams({ ...params, hasThread: false }, props)}
       />
       <Route
         path=':threadId'
         component={ThreadLogsContainer}
         queries={ViewerQueries}
-        prepareParams={params => ({ ...params, hasThread: true })}
+        prepareParams={(params, props) => prepareThreadLogsParams({ ...params, hasThread: true }, props)}
       />
     </Route>
   </Route>
