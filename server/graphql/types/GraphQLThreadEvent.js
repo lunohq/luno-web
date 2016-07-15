@@ -4,9 +4,6 @@ import { resolveMentions } from '../utils'
 import { registerType } from './registry'
 import GraphQLThreadEventType from './GraphQLThreadEventType'
 
-import d from '../../utils/debug'
-const debug = d(__filename)
-
 const GraphQLThreadEventMessage = new GraphQLObjectType({
   name: 'ThreadEventMessage',
   description: 'Message within a thread event',
