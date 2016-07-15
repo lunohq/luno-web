@@ -36,10 +36,13 @@ const GraphQLThreadEventMessage = new GraphQLObjectType({
       description: 'Timestamp when the message was sent',
       resolve: obj => {
         let { ts } = obj
+        // event_ts is populated if this is a reaction
+        if (!ts && obj.event_ts) {
+          ts = event_ts
+        }
+
         if (ts) {
           ts = parseInt(ts.replace('.', ''), 10) / 1000
-        } else {
-          debug('No TS found', obj)
         }
         return ts
       },
