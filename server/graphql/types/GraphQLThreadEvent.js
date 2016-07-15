@@ -38,7 +38,7 @@ const GraphQLThreadEventMessage = new GraphQLObjectType({
         let { ts } = obj
         // event_ts is populated if this is a reaction
         if (!ts && obj.event_ts) {
-          ts = event_ts
+          ts = obj.event_ts
         }
 
         if (ts) {
