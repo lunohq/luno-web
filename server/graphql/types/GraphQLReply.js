@@ -24,7 +24,11 @@ const GraphQLReply = new GraphQLObjectType({
     updatedBy: {
       type: registry.getType('User'),
       description: 'The User who last updated the reply',
-      resolve: async ({ updatedBy, createdBy }) => {
+      resolve: async ({ updatedBy, createdBy, ...other }) => {
+        if (other._updatedByUser) {
+          return other._updatedByUser
+        }
+
         const userId = updatedBy || createdBy
         return db.user.getUser(userId)
       },

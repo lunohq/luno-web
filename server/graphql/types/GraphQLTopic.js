@@ -24,6 +24,21 @@ const GraphQLTopic = new GraphQLObjectType({
       args: connectionArgs,
       resolve: async ({ teamId, id: topicId }, args) => {
         const replies = await db.reply.getRepliesForTopic({ teamId, topicId })
+        const userIds = {}
+        replies.forEach(reply => {
+          userIds[reply.updatedBy || reply.createdBy] = true
+        })
+        const users = await db.user.getUsersWithIds(Object.keys(userIds))
+        const usersMap = {}
+        users.forEach(user => {
+          usersMap[user.id] = user
+        })
+        replies.forEach(reply => {
+          const user = usersMap[reply.updatedBy || reply.createdBy]
+          if (user) {
+            reply._updatedByUser = user
+          }
+        })
         return connectionFromArray(replies, args)
       },
     },
