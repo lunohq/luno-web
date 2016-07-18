@@ -1,5 +1,5 @@
 import React from 'react'
-import { IndexRedirect, Route, IndexRoute } from 'react-router'
+import { Route, IndexRoute } from 'react-router'
 
 import ViewerQueries from './queries/Viewer'
 
@@ -24,7 +24,6 @@ export default (
     component={AppContainer}
     queries={ViewerQueries}
   >
-    <IndexRedirect to='/knowledge' />
     <Route
       path='knowledge'
       component={KnowledgeContainer}
@@ -64,6 +63,13 @@ export default (
         prepareParams={(params, props) => prepareThreadLogsParams({ ...params, hasThread: true }, props)}
       />
     </Route>
+    { /* /signin and /sadface are empty components we're using only to display a URL.
+     *
+     * The routing logic lives within App because relay and react-router don't
+     * handle this well (can't get state within onEnter).
+     */ }
+    <Route path='signin' component={() => <div />} />
+    <Route path='sadface' component={() => <div />} />
   </Route>
 )
 /* eslint-enable react/prop-types */

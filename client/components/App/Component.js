@@ -26,6 +26,7 @@ class App extends Component {
   componentWillMount() {
     // _insertCss comes from https://github.com/kriasoft/isomorphic-style-loader
     this.removeCss = s._insertCss()
+    this.authRedirect(this.props)
     tracker.init(this.props.viewer)
     if (!this.props.viewer.assumed) {
       tracker.trackPageView(this.props.location)
@@ -33,6 +34,7 @@ class App extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    this.authRedirect(nextProps)
     tracker.init(nextProps.viewer)
     if (this.props.location.pathname !== nextProps.location.pathname && !this.props.viewer.assumed) {
       tracker.trackPageView(this.props.location)
@@ -41,6 +43,16 @@ class App extends Component {
 
   componentWillUnmount() {
     this.removeCss()
+  }
+
+  authRedirect({ viewer: { anonymous, role }, location: { pathname } }) {
+    if (anonymous && pathname !== '/signin') {
+      this.context.router.replace('/signin')
+    } else if (role === 'CONSUMER' && pathname !== '/sadface') {
+      this.context.router.replace('/sadface')
+    } else if (!anonymous && pathname === '/') {
+      this.context.router.replace('/knowledge')
+    }
   }
 
   handleLogout = () => {
