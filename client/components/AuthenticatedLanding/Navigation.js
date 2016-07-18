@@ -23,17 +23,20 @@ const Navigation = ({ isAdmin, isAssumed, onLogout }) => {
 
   const icon = { color: colors.white, style: { height: 26, width: 26 } }
 
-  let logs
   let drawerContainerStyle
   if (isAssumed) {
+    drawerContainerStyle = { background: '#ff0000', boxShadow: 'none' }
+  } else {
+    drawerContainerStyle = { background: '#393F44', boxShadow: 'none' }
+  }
+
+  let logs
+  if (isAdmin) {
     logs = (
       <Link className={isSelected('/logs', true)} to='/logs'>
         <ViewListIcon {...icon} />
       </Link>
     )
-    drawerContainerStyle = { background: '#ff0000', boxShadow: 'none' }
-  } else {
-    drawerContainerStyle = { background: '#393F44', boxShadow: 'none' }
   }
 
   return (
