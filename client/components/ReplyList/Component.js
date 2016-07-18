@@ -43,7 +43,12 @@ class ReplyList extends Component {
       let changed = ' '
       if (node.changed) {
         changed = moment(node.changed).format('MMM D, YYYY')
-        changed = t(`Last updated on ${changed}`)
+        const updatedBy = node.updatedBy && node.updatedBy.username
+        if (updatedBy) {
+          changed = t(`Last updated by ${updatedBy} on ${changed}`)
+        } else {
+          changed = t(`Last updated on ${changed}`)
+        }
       }
       replyRows.push(
         <ListItem

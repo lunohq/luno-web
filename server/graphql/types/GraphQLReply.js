@@ -21,6 +21,14 @@ const GraphQLReply = new GraphQLObjectType({
       type: GraphQLString,
       description: 'Date the Reply was changed',
     },
+    updatedBy: {
+      type: registry.getType('User'),
+      description: 'The User who last updated the reply',
+      resolve: async ({ updatedBy, createdBy }) => {
+        const userId = updatedBy || createdBy
+        return db.user.getUser(userId)
+      },
+    },
     topic: {
       type: registry.getType('Topic'),
       description: 'The Topic the reply belongs to',

@@ -33,6 +33,9 @@ export default Relay.createContainer(Component, {
                 title
                 body
                 changed
+                updatedBy {
+                  username
+                }
               }
             }
           }
@@ -57,6 +60,9 @@ export default Relay.createContainer(Component, {
                     title
                     body
                     changed
+                    updatedBy {
+                      username
+                    }
                   }
                 }
               }

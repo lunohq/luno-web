@@ -262,7 +262,12 @@ class Reply extends Component {
       }
     } else if (reply.changed && !editing && !submitting) {
       const changed = moment(reply.changed).format('MMM D, YYYY')
-      message = t(`Last updated on ${changed}`)
+      const updatedBy = reply.updatedBy && reply.updatedBy.username
+      if (updatedBy) {
+        message = t(`Last updated by ${updatedBy} on ${changed}`)
+      } else {
+        message = t(`Last updated on ${changed}`)
+      }
     }
 
     const items = topics.map((topic, index) => {
