@@ -23,8 +23,14 @@ const Navigation = ({ isAdmin, isAssumed, onLogout }) => {
 
   const icon = { color: colors.white, style: { height: 26, width: 26 } }
 
+  let logs
   let drawerContainerStyle
   if (isAssumed) {
+    logs = (
+      <Link className={isSelected('/logs', true)} to='/logs'>
+        <ViewListIcon {...icon} />
+      </Link>
+    )
     drawerContainerStyle = { background: '#ff0000', boxShadow: 'none' }
   } else {
     drawerContainerStyle = { background: '#393F44', boxShadow: 'none' }
@@ -40,9 +46,7 @@ const Navigation = ({ isAdmin, isAssumed, onLogout }) => {
           <Link className={isSelected('/knowledge', true)} to='/knowledge'>
             <QuestionAnswerIcon {...icon} />
           </Link>
-          <Link className={isSelected('/logs', true)} to='/logs'>
-            <ViewListIcon {...icon} />
-          </Link>
+          {logs}
         </div>
         <div className={s.buttons}>
           <AccountMenu
