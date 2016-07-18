@@ -161,7 +161,6 @@ const GraphQLUser = new GraphQLObjectType({
     role: {
       type: registry.getType('UserRole'),
       description: 'Role of the user',
-      resolve: user => user.role === undefined ? db.user.CONSUMER : user.role,
     },
     isStaff: {
       type: GraphQLBoolean,
