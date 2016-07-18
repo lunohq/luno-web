@@ -1,8 +1,5 @@
 import { offsetToCursor } from 'graphql-relay'
 
-import d from '../utils/debug'
-const debug = d(__filename)
-
 export function cursorForInstanceInCollection(instance, connection) {
   let cursor
   for (const index in connection) {
@@ -79,7 +76,6 @@ export async function resolveMentions({ text, dataStore }) {
       }
     }
     const users = await Promise.all(promises)
-    debug('Resolving mentions', { matches, users })
     for (const user of users) {
       if (user) {
         const userMention = new RegExp(`\<\@${user.id}[^\>]*\>`, 'gi')
