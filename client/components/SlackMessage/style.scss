@@ -24,6 +24,7 @@
 .content {
     composes: text;
     composes: row from 's/vendor/flexboxgrid.css';
+    display: block;
 }
 
 .root {}
