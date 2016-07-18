@@ -5,9 +5,6 @@ import { db } from 'luno-core'
 import ThreadEvents from '../connections/ThreadEvents'
 import { registerType, nodeInterface } from './registry'
 
-import d from '../../utils/debug'
-const debug = d(__filename)
-
 const GraphQLThreadLog = new GraphQLObjectType({
   name: 'ThreadLog',
   description: 'ThreadLog within our system',
@@ -47,11 +44,6 @@ const GraphQLThreadLog = new GraphQLObjectType({
       resolve: async (obj, args, { dataStore }) => {
         let username = obj.userId
         const user = await dataStore.getUserById(obj.userId)
-        debug('Resolving user', {
-          userId: obj.userId,
-          userKey: dataStore.userKeyName,
-          user,
-        })
         if (user) {
           username = user.name
         }
