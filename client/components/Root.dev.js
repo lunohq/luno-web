@@ -13,6 +13,7 @@ const Root = ({ store, history }) => {
       <div>
         <Router
           history={history}
+          forceFetch
           routes={routes}
           render={applyRouterMiddleware(useRelay)}
           environment={Relay.Store}
