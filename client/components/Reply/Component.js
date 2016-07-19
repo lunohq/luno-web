@@ -264,7 +264,7 @@ class Reply extends Component {
       const changed = moment(reply.changed).format('MMM D, YYYY')
       const updatedBy = reply.updatedBy && reply.updatedBy.username
       if (updatedBy) {
-        message = t(`Last updated by ${updatedBy} on ${changed}`)
+        message = t(`Last updated by @${updatedBy} on ${changed}`)
       } else {
         message = t(`Last updated on ${changed}`)
       }

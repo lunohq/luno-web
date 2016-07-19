@@ -45,7 +45,7 @@ class ReplyList extends Component {
         changed = moment(node.changed).format('MMM D, YYYY')
         const updatedBy = node.updatedBy && node.updatedBy.username
         if (updatedBy) {
-          changed = t(`Last updated by ${updatedBy} on ${changed}`)
+          changed = t(`Last updated by @${updatedBy} on ${changed}`)
         } else {
           changed = t(`Last updated on ${changed}`)
         }
