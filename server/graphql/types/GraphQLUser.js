@@ -157,7 +157,7 @@ const GraphQLUser = new GraphQLObjectType({
     assumed: {
       type: GraphQLBoolean,
       description: 'Boolean indicating whether or not an admin is assuming this user',
-      resolve: (source, args, { auth }) => !!auth.a,
+      resolve: (source, args, { auth }) => auth && !!auth.a,
     },
     role: {
       type: registry.getType('UserRole'),
