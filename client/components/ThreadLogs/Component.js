@@ -4,6 +4,7 @@ import FlatButton from 'material-ui/FlatButton'
 
 import t from 'u/gettext'
 import withStyles from 'u/withStyles'
+import withForceFetch from 'u/withForceFetch'
 
 import AuthenticatedContent from 'c/AuthenticatedContent/Component'
 import Dialog from 'c/Dialog'
@@ -140,4 +141,4 @@ ThreadLogs.contextTypes = {
   }).isRequired,
 }
 
-export default withStyles(s)(ThreadLogs)
+export default withForceFetch(withStyles(s)(ThreadLogs))

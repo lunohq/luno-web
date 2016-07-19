@@ -11,7 +11,6 @@ const Root = ({ store, history }) => {
     <Provider store={store}>
       <Router
         history={history}
-        forceFetch
         routes={routes}
         render={applyRouterMiddleware(useRelay)}
         environment={Relay.Store}

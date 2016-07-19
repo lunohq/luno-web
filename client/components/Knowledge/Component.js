@@ -4,6 +4,7 @@ import { SubmissionError } from 'redux-form'
 
 import t from 'u/gettext'
 import withStyles from 'u/withStyles'
+import withForceFetch from 'u/withForceFetch'
 
 import CreateReply from 'm/CreateReply'
 import DeleteReply from 'm/DeleteReply'
@@ -413,4 +414,4 @@ Knowledge.contextTypes = {
   }).isRequired,
 }
 
-export default withStyles(s)(Knowledge)
+export default withForceFetch(withStyles(s)(Knowledge))

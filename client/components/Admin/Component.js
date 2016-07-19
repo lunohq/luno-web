@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react'
 
 import { NAV_WIDTH, MENU_WIDTH } from 'c/AuthenticatedLanding/Navigation'
 import withStyles from 'u/withStyles'
+import withForceFetch from 'u/withForceFetch'
 import BotSettingsContainer from 'c/BotSettings/Container'
 import ManageUsersContainer from 'c/ManageUsers/Container'
 import NotFound from 'c/NotFound/Component'
@@ -57,4 +58,4 @@ Admin.propTypes = {
   }).isRequired,
 }
 
-export default withStyles(s)(Admin)
+export default withForceFetch(withStyles(s)(Admin))
