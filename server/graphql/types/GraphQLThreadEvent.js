@@ -48,7 +48,7 @@ const GraphQLThreadEventMessage = new GraphQLObjectType({
       type: GraphQLString,
       description: 'Text of the message',
       resolve: (obj, args, { dataStore }) => {
-        let text = obj.text
+        let text = obj.text || ''
         if (obj.reaction) {
           let { reaction } = obj
           if (reaction === '-1') {

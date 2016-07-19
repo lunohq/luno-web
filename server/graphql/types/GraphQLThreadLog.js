@@ -36,7 +36,7 @@ const GraphQLThreadLog = new GraphQLObjectType({
       description: 'The message that started the thread',
       resolve: (obj, args, { dataStore }) => {
         const { message: { message: { text } } } = obj
-        return resolveMentions({ text, dataStore })
+        return resolveMentions({ text: text || '', dataStore })
       },
     },
     username: {
