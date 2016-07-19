@@ -18,9 +18,6 @@ const GraphQLQuery = new GraphQLObjectType({
         }
 
         user = await db.user.getUser(auth.uid)
-        if (auth.a) {
-          user.assumed = true
-        }
         return user
       },
     },
