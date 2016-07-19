@@ -26,7 +26,10 @@ const GraphQLTopic = new GraphQLObjectType({
         const replies = await db.reply.getRepliesForTopic({ teamId, topicId })
         const userIds = {}
         replies.forEach(reply => {
-          userIds[reply.updatedBy || reply.createdBy] = true
+          const updatedBy = reply.updatedBy || reply.createdBy
+          if (updatedBy) {
+            userIds[updatedBy] = true
+          }
         })
         const users = await db.user.getUsersWithIds(Object.keys(userIds))
         const usersMap = {}
