@@ -14,6 +14,17 @@ export function sendAdminPromotion({ team, sourceUserId, userId }) {
   return send({ to: userId, bot: team.slack.bot, message })
 }
 
+async function getAdminUserIds(teamId) {
+  const admins = await db.user.getAdmins(teamId)
+  return admins.map(({ id }) => id)
+}
+
+export async function sendNewTrainerNotification({ team, userId }) {
+  const adminUserIds = await getAdminUserIds(team.id)
+  const message = `Hey Luno admins, just an fyi, <@${userId}> just signed up to help train me.`
+  return send({ to: adminUserIds, bot: team.slack.bot, message })
+}
+
 export async function sendAccessRequest({ team, userId }) {
   const admins = await db.user.getAdmins(team.id)
   const adminUserIds = []
@@ -35,4 +46,5 @@ export default {
   sendInvite,
   sendAdminPromotion,
   sendAccessRequest,
+  sendNewTrainerNotification,
 }

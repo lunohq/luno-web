@@ -6,7 +6,7 @@ import { db } from 'luno-core'
 import config from '../config/environment'
 import { generateToken, setCookie } from '../actions/auth'
 import { isBotInstalled } from '../actions/slack'
-import { sendAccessRequest } from '../actions/notifications'
+import { sendNewTrainerNotification } from '../actions/notifications'
 import logger, { metadata } from '../logger'
 
 const debug = require('debug')('server:middleware:auth')
@@ -24,17 +24,22 @@ async function updateUserDetails({ user, team }) {
     logger.error('Error fetching user details', { details: userDetails })
   }
 
-  if (user.role === undefined) {
+  if (
+    user.role === undefined ||
+    // handle bumping old consumers to trainers. we should remove this once we
+    // no longer have any consumers or want to enable consumers again.
+    user.role === db.user.CONSUMER
+  ) {
     if (team.createdBy === user.id) {
       debug('Setting role to ADMIN', { team, user })
       user.role = db.user.ADMIN
     } else {
-      debug('Setting role to CONSUMER', { team, user })
-      user.role = db.user.CONSUMER
+      debug('Setting role to TRAINER', { team, user })
+      user.role = db.user.TRAINER
       try {
-        await sendAccessRequest({ team, userId: user.id })
+        await sendNewTrainerNotification({ team, userId: user.id })
       } catch (err) {
-        logger.error('Error sending access request', { err, team, user })
+        logger.error('Error sending new trainer notification', { err, team, user })
       }
     }
   }
