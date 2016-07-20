@@ -336,6 +336,19 @@ class Reply extends Component {
               rows={2}
             />
             <Field
+              autoComplete='off'
+              component={TextField}
+              disabled={submitting}
+              floatingLabelFixed
+              floatingLabelText={t('Keywords (add multiple using commas)')}
+              fullWidth
+              hintText={t('E.g. "contact, phone number, email" (optional)')}
+              multiLine
+              name='reply.keywords'
+              onFocus={this.handleFocus}
+              onKeyDown={this.handleIgnoreEnter}
+            />
+            <Field
               component={SelectField}
               disabled={submitting}
               floatingLabelText={t('Topic')}

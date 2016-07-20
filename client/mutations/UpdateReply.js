@@ -76,10 +76,12 @@ export default class UpdateReply extends Relay.Mutation {
       topic: { id: topicId },
       title,
       body,
+      keywords,
       bot: { id: botId },
     } = this.props
     return {
       body,
+      keywords,
       id,
       title,
       topicId,

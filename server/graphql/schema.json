@@ -1553,6 +1553,18 @@
               "deprecationReason": null
             },
             {
+              "name": "keywords",
+              "description": "Comma delimited list of keywords to index with the Reply",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "changed",
               "description": "Date the Reply was changed",
               "args": [],
@@ -3678,6 +3690,16 @@
               "defaultValue": null
             },
             {
+              "name": "keywords",
+              "description": "Comma delimited list of keywords to store with the Reply",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
               "name": "topicId",
               "description": "ID of the Topic the Reply is assigned to.",
               "type": {
@@ -3938,6 +3960,16 @@
                   "name": "String",
                   "ofType": null
                 }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "keywords",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
               },
               "defaultValue": null
             },

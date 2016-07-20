@@ -32,6 +32,7 @@ export default Relay.createContainer(Component, {
                 id
                 title
                 body
+                keywords
                 changed
                 updatedBy {
                   username
@@ -59,6 +60,7 @@ export default Relay.createContainer(Component, {
                     id
                     title
                     body
+                    keywords
                     changed
                     updatedBy {
                       username

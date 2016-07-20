@@ -17,6 +17,10 @@ const GraphQLReply = new GraphQLObjectType({
       type: GraphQLString,
       description: 'Body of the Reply',
     },
+    keywords: {
+      type: GraphQLString,
+      description: 'Comma delimited list of keywords to index with the Reply',
+    },
     changed: {
       type: GraphQLString,
       description: 'Date the Reply was changed',
