@@ -3,6 +3,7 @@ import { Link } from 'react-router'
 import Drawer from 'material-ui/Drawer'
 import QuestionAnswerIcon from 'material-ui/svg-icons/action/question-answer'
 import ViewListIcon from 'material-ui/svg-icons/action/view-list'
+import SearchIcon from 'material-ui/svg-icons/action/search'
 
 import colors from 's/colors'
 import withStyles from 'u/withStyles'
@@ -23,9 +24,15 @@ const Navigation = ({ isAdmin, isAssumed, onLogout }) => {
 
   const icon = { color: colors.white, style: { height: 26, width: 26 } }
 
+  let search
   let drawerContainerStyle
   if (isAssumed) {
     drawerContainerStyle = { background: '#ff0000', boxShadow: 'none' }
+    search = (
+      <Link className={isSelected('/search')} to='/search'>
+        <SearchIcon {...icon} />
+      </Link>
+    )
   } else {
     drawerContainerStyle = { background: '#393F44', boxShadow: 'none' }
   }
@@ -43,6 +50,7 @@ const Navigation = ({ isAdmin, isAssumed, onLogout }) => {
           <Link className={isSelected('/logs', true)} to='/logs'>
             <ViewListIcon {...icon} />
           </Link>
+          {search}
         </div>
         <div className={s.buttons}>
           <AccountMenu
