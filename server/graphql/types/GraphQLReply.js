@@ -30,7 +30,11 @@ const GraphQLReply = new GraphQLObjectType({
         }
 
         const userId = updatedBy || createdBy
-        return db.user.getUser(userId)
+        let user
+        if (userId) {
+          user = db.user.getUser(userId)
+        }
+        return user
       },
     },
     topic: {
