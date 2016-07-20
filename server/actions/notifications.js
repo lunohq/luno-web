@@ -21,13 +21,14 @@ async function getAdminUserIds(teamId) {
 
 export async function sendReactivatedNotification({ team, userId }) {
   const adminUserIds = await getAdminUserIds(team.id)
-  const message = `Hey Luno admins, just an fyi, <@${userId}> reinstalled me and has been set as an admin.`
+  const botUserId = team.slack.bot.userId
+  const message = `Hi there. I just wanted to let you know that <@${userId}> added the <@${botUserId}> bot to your Slack team and is now a Luno admin.\n<${config.dashboardUrl}/admin/users|Manage your team's Luno admins>`
   return send({ to: adminUserIds, bot: team.slack.bot, message })
 }
 
 export async function sendNewTrainerNotification({ team, userId }) {
   const adminUserIds = await getAdminUserIds(team.id)
-  const message = `Hey Luno admins, just an fyi, <@${userId}> just signed up to help train me.`
+  const message = `Hi there. I just wanted to let you know that <@${userId}> signed up for Luno as a bot trainer.\n<${config.dashboardUrl}/admin/users|Manage your team's Luno admins and trainers>`
   return send({ to: adminUserIds, bot: team.slack.bot, message })
 }
 
