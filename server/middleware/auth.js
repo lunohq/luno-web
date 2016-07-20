@@ -6,7 +6,7 @@ import { db } from 'luno-core'
 import config from '../config/environment'
 import { generateToken, setCookie } from '../actions/auth'
 import { isBotInstalled } from '../actions/slack'
-import { sendNewTrainerNotification } from '../actions/notifications'
+import { sendNewTrainerNotification, sendReactivatedNotification } from '../actions/notifications'
 import logger, { metadata } from '../logger'
 
 const debug = require('debug')('server:middleware:auth')
@@ -28,9 +28,11 @@ async function updateUserDetails({ user, team }) {
     user.role === undefined ||
     // handle bumping old consumers to trainers. we should remove this once we
     // no longer have any consumers or want to enable consumers again.
-    user.role === db.user.CONSUMER
+    user.role === db.user.CONSUMER ||
+    // handle user re-installing the app
+    team.status === db.team.STATUS_INACTIVE
   ) {
-    if (team.createdBy === user.id) {
+    if (team.createdBy === user.id || team.status === db.team.STATUS_INACTIVE) {
       debug('Setting role to ADMIN', { team, user })
       user.role = db.user.ADMIN
     } else {
@@ -49,6 +51,14 @@ async function updateUserDetails({ user, team }) {
     const { user: { name, profile } } = userDetails
     user.user = name
     user.profile = profile
+  }
+
+  if (user.role === db.user.ADMIN && team.status === db.team.STATUS_INACTIVE) {
+    // activate the team if someone has reinstalled it
+    await Promise.all([
+      db.team.activateTeam(team.id),
+      sendReactivatedNotification({ team, userId: user.id }),
+    ])
   }
 
   return db.user.updateUser(user)
@@ -82,6 +92,7 @@ function oauth(converse, app) {
     const installed = await isBotInstalled(team)
     debug('App install status', { installed })
     if (!installed) {
+      await db.team.deactivateTeam(team.id)
       logger.info('Routing initial user through install', { team: res.locals.team, user: res.locals.user })
       return res.redirect(converse.getInstallURL(team.id))
     }

@@ -19,6 +19,12 @@ async function getAdminUserIds(teamId) {
   return admins.map(({ id }) => id)
 }
 
+export async function sendReactivatedNotification({ team, userId }) {
+  const adminUserIds = await getAdminUserIds(team.id)
+  const message = `Hey Luno admins, just an fyi, <@${userId}> reinstalled me and has been set as an admin.`
+  return send({ to: adminUserIds, bot: team.slack.bot, message })
+}
+
 export async function sendNewTrainerNotification({ team, userId }) {
   const adminUserIds = await getAdminUserIds(team.id)
   const message = `Hey Luno admins, just an fyi, <@${userId}> just signed up to help train me.`
