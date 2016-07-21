@@ -190,6 +190,23 @@ type ReplyEdge {
   cursor: String!
 }
 
+type SearchResult {
+  score: Float
+  id: String
+  changed: String
+  body: String
+  displayTitle: String
+  explanation: String
+}
+
+type SearchResults {
+  took: Int
+  totalResults: Int
+  maxScore: Float
+  results: [SearchResult]
+  query: String
+}
+
 type SlackMember implements Node {
   id: ID!
   userId: ID!
@@ -382,6 +399,7 @@ type User implements Node {
   username: String
   team: Team
   bots(after: String, first: Int, before: String, last: Int): BotConnection
+  search(query: String!): SearchResults
   reply(id: ID!): Reply
   topic(id: ID!): Topic
   threadLog(id: ID!): ThreadLog

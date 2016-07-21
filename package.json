@@ -105,6 +105,7 @@
     "raven-winston": "0.0.1",
     "react": "^15.1.0",
     "slack-redis-data-store": "git+https://git@github.com/lunohq/slack-redis-data-store.git#dfe284d45f779e0c19574ec074d8c35d2c946026",
-    "winston": "^2.2.0"
+    "winston": "^2.2.0",
+    "yamljs": "^0.2.8"
   }
 }
