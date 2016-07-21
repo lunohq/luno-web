@@ -7,6 +7,7 @@ import AppContainer from 'c/App/Container'
 import KnowledgeContainer from 'c/Knowledge/Container'
 import AdminContainer from 'c/Admin/Container'
 import ThreadLogsContainer from 'c/ThreadLogs/Container'
+import Search from 'c/Search/Container'
 import Loading from 'c/Loading'
 
 function prepareThreadLogsParams(pre, { location: { state } }) {
@@ -63,6 +64,11 @@ export default (
         prepareParams={(params, props) => prepareThreadLogsParams({ ...params, hasThread: true }, props)}
       />
     </Route>
+    <Route
+      path='search'
+      component={Search}
+      queries={ViewerQueries}
+    />
     { /* /signin and /sadface are empty components we're using only to display a URL.
      *
      * The routing logic lives within App because relay and react-router don't

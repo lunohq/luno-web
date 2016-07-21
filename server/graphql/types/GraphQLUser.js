@@ -11,11 +11,12 @@ import {
   globalIdField,
   fromGlobalId,
 } from 'graphql-relay'
-import { db } from 'luno-core'
+import { db, es } from 'luno-core'
 
 import GraphQLTopic from './GraphQLTopic'
 import GraphQLReply from './GraphQLReply'
 import GraphQLThreadLog, { resolve } from './GraphQLThreadLog'
+import GraphQLSearchResults from './GraphQLSearchResults'
 import Topics from '../connections/Topics'
 import Bots from '../connections/Bots'
 import ThreadLogs from '../connections/ThreadLogs'
@@ -57,6 +58,17 @@ const GraphQLUser = new GraphQLObjectType({
           return connectionFromArray(bots, args)
         }
         return null
+      },
+    },
+    search: {
+      type: GraphQLSearchResults,
+      description: 'A search against the User\'s team\'s index',
+      args: {
+        query: { type: new GraphQLNonNull(GraphQLString) },
+      },
+      resolve: async ({ teamId }, { query }) => {
+        const results = await es.reply.search({ teamId, query, options: { explain: true } })
+        return { query, ...results }
       },
     },
     reply: {
