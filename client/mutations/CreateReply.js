@@ -35,9 +35,10 @@ export default class CreateReply extends Relay.Mutation {
   }
 
   getVariables() {
-    const { title, body, bot: { id: botId }, topic: { id: topicId } } = this.props
+    const { title, body, keywords, bot: { id: botId }, topic: { id: topicId } } = this.props
     return {
       body,
+      keywords,
       title,
       botId,
       topicId,

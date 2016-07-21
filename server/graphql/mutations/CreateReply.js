@@ -20,6 +20,10 @@ export default mutationWithClientMutationId({
       description: 'Body of the Reply',
       type: new GraphQLNonNull(GraphQLString),
     },
+    keywords: {
+      description: 'Comma delimited list of keywords to store with the Reply',
+      type: GraphQLString,
+    },
     topicId: {
       description: 'ID of the Topic the Reply is assigned to.',
       type: new GraphQLNonNull(GraphQLID),
@@ -42,13 +46,14 @@ export default mutationWithClientMutationId({
       }
     },
   },
-  mutateAndGetPayload: async ({ title, body, topicId: globalId, botId: globalBotId }, { auth }) => {
+  mutateAndGetPayload: async ({ title, body, keywords, topicId: globalId, botId: globalBotId }, { auth }) => {
     const { uid: createdBy } = auth
     const { id: compositeId } = fromGlobalId(globalId)
     const [teamId, topicId] = db.client.deconstructId(compositeId)
     const reply = await db.reply.createReply({
       title,
       body,
+      keywords,
       teamId,
       createdBy,
       topicId,

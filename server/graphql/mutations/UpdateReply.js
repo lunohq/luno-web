@@ -16,6 +16,7 @@ export default mutationWithClientMutationId({
     id: { type: new GraphQLNonNull(GraphQLID) },
     title: { type: new GraphQLNonNull(GraphQLString) },
     body: { type: new GraphQLNonNull(GraphQLString) },
+    keywords: { type: GraphQLString },
     topicId: { type: new GraphQLNonNull(GraphQLID) },
     previousTopicId: { type: new GraphQLNonNull(GraphQLID) },
     botId: { type: new GraphQLNonNull(GraphQLID) }
@@ -49,6 +50,7 @@ export default mutationWithClientMutationId({
     id: globalId,
     title,
     body,
+    keywords,
     topicId: globalTopicId,
     previousTopicId: globalPreviousTopicId,
     botId: globalBotId,
@@ -64,6 +66,7 @@ export default mutationWithClientMutationId({
       id,
       body,
       title,
+      keywords,
       updatedBy,
       topicId,
       teamId,
