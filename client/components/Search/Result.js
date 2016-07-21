@@ -32,8 +32,8 @@ const Result = ({ body, explanation, displayTitle, score }) => {
 
 Result.propTypes = {
   body: PropTypes.string.isRequired,
-  explanation: PropTypes.string.isRequired,
   displayTitle: PropTypes.string.isRequired,
+  explanation: PropTypes.string.isRequired,
   score: PropTypes.number.isRequired,
 }
 
