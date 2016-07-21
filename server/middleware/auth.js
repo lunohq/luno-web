@@ -20,7 +20,7 @@ async function updateUserDetails({ user, team }) {
     logger.error('Error fetching user details', { err, user, team })
   }
 
-  if (!userDetails.ok) {
+  if (userDetails && !userDetails.ok) {
     logger.error('Error fetching user details', { details: userDetails })
   }
 
