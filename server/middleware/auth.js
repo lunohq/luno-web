@@ -85,14 +85,17 @@ function oauth(converse, app) {
       return res.redirect('/')
     }
 
-    const { locals: { team } } = res
+    const { locals: { team, isNew } } = res
     let { locals: { user } } = res
 
     debug('Checking if app is installed', { team })
     const installed = await isBotInstalled(team)
     debug('App install status', { installed })
     if (!installed) {
-      await db.team.deactivateTeam(team.id)
+      if (!isNew.team && team.status !== db.team.STATUS_INACTIVE) {
+        logger.info('Deactivating uninstalled team')
+        await db.team.deactivateTeam(team.id)
+      }
       logger.info('Routing initial user through install', { team: res.locals.team, user: res.locals.user })
       return res.redirect(converse.getInstallURL(team.id))
     }
