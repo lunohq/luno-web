@@ -24,6 +24,7 @@ export default Relay.createContainer(Component, {
           results {
             score
             displayTitle
+            title
             id
             body
             explanation

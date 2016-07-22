@@ -31,6 +31,11 @@ const GraphQLSearchResult = new GraphQLObjectType({
       description: 'Display title of the Reply',
       resolve: obj => obj._source.displayTitle,
     },
+    title: {
+      type: GraphQLString,
+      description: 'The title that is searched against',
+      resolve: obj => obj._source.title,
+    },
     explanation: {
       type: GraphQLString,
       description: 'YAML explanation for the result score',

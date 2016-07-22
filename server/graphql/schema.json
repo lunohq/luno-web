@@ -1685,6 +1685,18 @@
               "deprecationReason": null
             },
             {
+              "name": "title",
+              "description": "The title that is searched against",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "explanation",
               "description": "YAML explanation for the result score",
               "args": [],

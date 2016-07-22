@@ -196,6 +196,7 @@ type SearchResult {
   changed: String
   body: String
   displayTitle: String
+  title: String
   explanation: String
 }
 
