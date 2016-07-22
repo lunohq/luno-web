@@ -69,7 +69,7 @@ const GraphQLUser = new GraphQLObjectType({
       resolve: async ({ anonymous, teamId }, { query }) => {
         let results
         if (!anonymous) {
-          results = await es.reply.search({ teamId, query, options: { explain: true } })
+          results = await es.reply.search({ teamId, query, options: { explain: true, size: 100 } })
           results = { query, ...results }
         }
         return results
