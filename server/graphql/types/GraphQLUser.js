@@ -88,16 +88,11 @@ const GraphQLUser = new GraphQLObjectType({
       resolve: async ({ anonymous }, { query, options: rawOptions }) => {
         let result
         if (!anonymous) {
-          let options = {}
+          let options = { analyzer: 'default_search' }
           if (rawOptions) {
             options = JSON.parse(rawOptions)
           }
-          result = await es.reply.analyze({ query, ...options })
-          result = {
-            result,
-            query,
-            options,
-          }
+          result = { result: await es.reply.analyze({ query, ...options }) }
         }
         return result
       },

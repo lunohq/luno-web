@@ -5,6 +5,7 @@ import withStyles from 'u/withStyles'
 import { NAV_WIDTH, MENU_WIDTH } from 'c/AuthenticatedLanding/Navigation'
 import Search from 'c/Search/Container'
 import Explain from 'c/Explain/Container'
+import Analyze from 'c/Analyze/Container'
 
 import Navigation from './Navigation'
 
@@ -18,6 +19,9 @@ const SearchDashboard = ({ location, params: { slug }, viewer }) => {
       break
     case 'explain':
       content = <Explain viewer={viewer} />
+      break
+    case 'analyze':
+      content = <Analyze viewer={viewer} />
       break
     default:
   }

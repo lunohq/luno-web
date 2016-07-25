@@ -4,9 +4,7 @@ schema {
 }
 
 type AnalyzeResult {
-  options: String
   result: String
-  query: String
 }
 
 type Bot implements Node {

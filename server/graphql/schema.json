@@ -1616,32 +1616,8 @@
           "description": "The result of running the query through the given analyzer",
           "fields": [
             {
-              "name": "options",
-              "description": "Analyze options",
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
               "name": "result",
               "description": "Results from analyzing the query",
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "query",
-              "description": "Query that was analyzed",
               "args": [],
               "type": {
                 "kind": "SCALAR",
