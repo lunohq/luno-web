@@ -339,6 +339,7 @@ class Reply extends Component {
               autoComplete='off'
               component={TextField}
               disabled={submitting}
+              className={s.field}
               floatingLabelFixed
               floatingLabelText={t('Keywords (add multiple using commas)')}
               fullWidth
