@@ -17,6 +17,9 @@ import GraphQLTopic from './GraphQLTopic'
 import GraphQLReply from './GraphQLReply'
 import GraphQLThreadLog, { resolve } from './GraphQLThreadLog'
 import GraphQLSearchResults from './GraphQLSearchResults'
+import GraphQLAnalyzeResult from './GraphQLAnalyzeResult'
+import GraphQLValidateResult from './GraphQLValidateResult'
+import GraphQLExplainResult from './GraphQLExplainResult'
 import Topics from '../connections/Topics'
 import Bots from '../connections/Bots'
 import ThreadLogs from '../connections/ThreadLogs'
@@ -73,6 +76,65 @@ const GraphQLUser = new GraphQLObjectType({
           results = { query, ...results }
         }
         return results
+      },
+    },
+    analyze: {
+      type: GraphQLAnalyzeResult,
+      description: 'Analyze the given query',
+      args: {
+        query: { type: new GraphQLNonNull(GraphQLString) },
+        options: { type: GraphQLString },
+      },
+      resolve: async ({ anonymous }, { query, options: rawOptions }) => {
+        let result
+        if (!anonymous) {
+          let options = {}
+          if (rawOptions) {
+            options = JSON.parse(rawOptions)
+          }
+          result = await es.reply.analyze({ query, ...options })
+          result = {
+            result,
+            query,
+            options,
+          }
+        }
+        return result
+      },
+    },
+    validate: {
+      type: GraphQLValidateResult,
+      description: 'Validate the given query',
+      args: {
+        query: { type: new GraphQLNonNull(GraphQLString) },
+      },
+      resolve: async ({ anonymous, teamId }, { query }) => {
+        let result
+        if (!anonymous) {
+          result = await es.reply.validate({ teamId, query })
+          result = {
+            result,
+            query,
+          }
+        }
+        return result
+      },
+    },
+    explain: {
+      type: GraphQLExplainResult,
+      description: 'Explain why a specific reply matched or didn\'t match the query',
+      args: {
+        query: { type: new GraphQLNonNull(GraphQLString) },
+        replyId: { type: new GraphQLNonNull(GraphQLID) },
+      },
+      resolve: async ({ anonymous, teamId }, { query, replyId: globalId }) => {
+        let result
+        if (!anonymous) {
+          const { id: compositeId } = fromGlobalId(globalId)
+          const replyId = db.client.deconstructId(compositeId)[1]
+          result = await es.reply.explain({ teamId, query, replyId })
+        }
+        return result
       },
     },
     reply: {

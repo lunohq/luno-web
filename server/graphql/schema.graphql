@@ -3,6 +3,12 @@ schema {
   mutation: Mutation
 }
 
+type AnalyzeResult {
+  options: String
+  result: String
+  query: String
+}
+
 type Bot implements Node {
   id: ID!
   purpose: String
@@ -67,6 +73,11 @@ type DeleteTopicPayload {
   viewer: User
   deletedId: ID
   clientMutationId: String!
+}
+
+type ExplainResult {
+  matched: Boolean
+  explanation: String
 }
 
 input InviteUserInput {
@@ -339,6 +350,9 @@ type User implements Node {
   team: Team
   bots(after: String, first: Int, before: String, last: Int): BotConnection
   search(query: String!): SearchResults
+  analyze(query: String!, options: String): AnalyzeResult
+  validate(query: String!): ValidateResult
+  explain(query: String!, replyId: ID!): ExplainResult
   reply(id: ID!): Reply
   topic(id: ID!): Topic
   threadLog(id: ID!): ThreadLog
@@ -367,4 +381,9 @@ enum UserRole {
   ADMIN
   TRAINER
   CONSUMER
+}
+
+type ValidateResult {
+  query: String
+  result: String
 }
