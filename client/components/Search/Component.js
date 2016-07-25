@@ -3,7 +3,6 @@ import React, { Component, PropTypes } from 'react'
 import withStyles from 'u/withStyles'
 
 import SearchBar from 'c/SearchBar/Component'
-import { NAV_WIDTH } from 'c/AuthenticatedLanding/Navigation'
 
 import Summary from './Summary'
 import Results from './Results'
@@ -27,7 +26,7 @@ class Search extends Component {
     }
 
     return (
-      <div style={{ marginLeft: NAV_WIDTH }}>
+      <div>
         <SearchBar onChange={this.handleSearch} />
         <section className={s.content}>
           {summary}

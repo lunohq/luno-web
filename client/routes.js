@@ -7,7 +7,7 @@ import AppContainer from 'c/App/Container'
 import KnowledgeContainer from 'c/Knowledge/Container'
 import AdminContainer from 'c/Admin/Container'
 import ThreadLogsContainer from 'c/ThreadLogs/Container'
-import Search from 'c/Search/Container'
+import SearchDashboard from 'c/SearchDashboard/Container'
 import Loading from 'c/Loading'
 
 function prepareThreadLogsParams(pre, { location: { state } }) {
@@ -65,8 +65,8 @@ export default (
       />
     </Route>
     <Route
-      path='search'
-      component={Search}
+      path='search/:slug'
+      component={SearchDashboard}
       queries={ViewerQueries}
     />
     { /* /signin and /sadface are empty components we're using only to display a URL.
