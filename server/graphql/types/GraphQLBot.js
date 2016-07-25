@@ -1,8 +1,7 @@
 import { GraphQLString, GraphQLList, GraphQLID, GraphQLObjectType } from 'graphql'
-import { globalIdField, toGlobalId, connectionArgs, connectionFromArray } from 'graphql-relay'
+import { globalIdField, toGlobalId } from 'graphql-relay'
 import { db } from 'luno-core'
 
-import Answers from '../connections/Answers'
 import { registerType, nodeInterface } from './registry'
 
 const GraphQLBot = new GraphQLObjectType({
@@ -18,15 +17,6 @@ const GraphQLBot = new GraphQLObjectType({
       type: new GraphQLList(GraphQLID),
       description: 'Points of contact of the Bot for escalation',
       resolve: (obj) => obj.pointsOfContact ? obj.pointsOfContact.map(id => toGlobalId('User', id)) : null,
-    },
-    answers: {
-      type: Answers.connectionType,
-      description: 'Answers configured for the Bot',
-      args: connectionArgs,
-      resolve: async (bot, args) => {
-        const answers = await db.answer.getAnswers(bot.id)
-        return connectionFromArray(answers, args)
-      },
     },
   }),
   interfaces: [nodeInterface],

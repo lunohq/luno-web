@@ -3,28 +3,10 @@ schema {
   mutation: Mutation
 }
 
-type Answer implements Node {
-  id: ID!
-  title: String
-  body: String
-  changed: String
-}
-
-type AnswerConnection {
-  pageInfo: PageInfo!
-  edges: [AnswerEdge]
-}
-
-type AnswerEdge {
-  node: Answer
-  cursor: String!
-}
-
 type Bot implements Node {
   id: ID!
   purpose: String
   pointsOfContact: [ID]
-  answers(after: String, first: Int, before: String, last: Int): AnswerConnection
 }
 
 type BotConnection {
@@ -37,26 +19,11 @@ type BotEdge {
   cursor: String!
 }
 
-input CreateAnswerInput {
-  title: String!
-  body: String!
-  botId: String!
-  topicId: String
-  clientMutationId: String!
-}
-
-type CreateAnswerPayload {
-  bot: Bot
-  answerEdge: AnswerEdge
-  clientMutationId: String!
-}
-
 input CreateReplyInput {
   title: String!
   body: String!
   keywords: String
   topicId: ID!
-  botId: ID!
   clientMutationId: String!
 }
 
@@ -79,21 +46,9 @@ type CreateTopicPayload {
   clientMutationId: String!
 }
 
-input DeleteAnswerInput {
-  id: ID!
-  clientMutationId: String!
-}
-
-type DeleteAnswerPayload {
-  bot: Bot
-  deletedId: ID
-  clientMutationId: String!
-}
-
 input DeleteReplyInput {
   id: ID!
   topicId: ID!
-  botId: ID!
   clientMutationId: String!
 }
 
@@ -138,9 +93,6 @@ type LogoutPayload {
 }
 
 type Mutation {
-  createAnswer(input: CreateAnswerInput!): CreateAnswerPayload
-  deleteAnswer(input: DeleteAnswerInput!): DeleteAnswerPayload
-  updateAnswer(input: UpdateAnswerInput!): UpdateAnswerPayload
   logout(input: LogoutInput!): LogoutPayload
   updateBotPurpose(input: UpdateBotPurposeInput!): UpdateBotPurposePayload
   updateBotPointsOfContact(input: UpdateBotPointsOfContactInput!): UpdateBotPointsOfContactPayload
@@ -317,19 +269,6 @@ type TopicEdge {
   cursor: String!
 }
 
-input UpdateAnswerInput {
-  id: ID!
-  title: String!
-  body: String!
-  topicId: String
-  clientMutationId: String!
-}
-
-type UpdateAnswerPayload {
-  answer: Answer
-  clientMutationId: String!
-}
-
 input UpdateBotPointsOfContactInput {
   id: ID!
   pointsOfContact: [String]
@@ -359,7 +298,6 @@ input UpdateReplyInput {
   keywords: String
   topicId: ID!
   previousTopicId: ID!
-  botId: ID!
   clientMutationId: String!
 }
 

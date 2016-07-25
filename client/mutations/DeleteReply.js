@@ -7,11 +7,6 @@ export default class DeleteReply extends Relay.Mutation {
         id
       }
     `,
-    bot: () => Relay.QL`
-      fragment on Bot {
-        id
-      }
-    `,
     topic: () => Relay.QL`
       fragment on Topic {
         id
@@ -43,11 +38,10 @@ export default class DeleteReply extends Relay.Mutation {
   }
 
   getVariables() {
-    const { reply: { id }, topic: { id: topicId }, bot: { id: botId } } = this.props
+    const { reply: { id }, topic: { id: topicId } } = this.props
     return {
       id,
       topicId,
-      botId,
     }
   }
 

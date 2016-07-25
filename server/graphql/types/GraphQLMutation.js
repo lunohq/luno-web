@@ -1,9 +1,6 @@
 import { GraphQLObjectType } from 'graphql'
 import { db } from 'luno-core'
 
-import CreateAnswer from '../mutations/CreateAnswer'
-import DeleteAnswer from '../mutations/DeleteAnswer'
-import UpdateAnswer from '../mutations/UpdateAnswer'
 import CreateReply from '../mutations/CreateReply'
 import DeleteReply from '../mutations/DeleteReply'
 import UpdateReply from '../mutations/UpdateReply'
@@ -49,9 +46,6 @@ function staffMutation({ resolve, ...other }) {
 const GraphQLMutation = new GraphQLObjectType({
   name: 'Mutation',
   fields: () => ({
-    createAnswer: staffMutation(CreateAnswer),
-    deleteAnswer: staffMutation(DeleteAnswer),
-    updateAnswer: staffMutation(UpdateAnswer),
     logout: Logout,
     updateBotPurpose: adminMutation(UpdateBotPurpose),
     updateBotPointsOfContact: adminMutation(UpdateBotPointsOfContact),

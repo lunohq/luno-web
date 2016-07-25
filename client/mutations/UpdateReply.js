@@ -7,11 +7,6 @@ export default class UpdateReply extends Relay.Mutation {
         id
       }
     `,
-    bot: () => Relay.QL`
-      fragment on Bot {
-        id
-      }
-    `,
     topic: () => Relay.QL`
       fragment on Topic {
         id
@@ -77,7 +72,6 @@ export default class UpdateReply extends Relay.Mutation {
       title,
       body,
       keywords,
-      bot: { id: botId },
     } = this.props
     return {
       body,
@@ -86,7 +80,6 @@ export default class UpdateReply extends Relay.Mutation {
       title,
       topicId,
       previousTopicId,
-      botId,
     }
   }
 

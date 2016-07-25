@@ -39,9 +39,9 @@ const Result = ({ body, explanation, displayTitle, score, title }) => {
 Result.propTypes = {
   body: PropTypes.string.isRequired,
   displayTitle: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired,
   explanation: PropTypes.string.isRequired,
   score: PropTypes.number.isRequired,
+  title: PropTypes.string.isRequired,
 }
 
 export default withStyles(s)(Result)

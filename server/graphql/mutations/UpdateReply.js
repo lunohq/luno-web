@@ -3,7 +3,6 @@ import { toGlobalId, fromGlobalId, mutationWithClientMutationId } from 'graphql-
 import { db } from 'luno-core'
 
 import tracker from '../../tracker'
-import logger from '../../logger'
 
 import GraphQLReply from '../types/GraphQLReply'
 import GraphQLTopic from '../types/GraphQLTopic'
@@ -19,7 +18,6 @@ export default mutationWithClientMutationId({
     keywords: { type: GraphQLString },
     topicId: { type: new GraphQLNonNull(GraphQLID) },
     previousTopicId: { type: new GraphQLNonNull(GraphQLID) },
-    botId: { type: new GraphQLNonNull(GraphQLID) }
   },
   outputFields: {
     reply: {
@@ -53,7 +51,6 @@ export default mutationWithClientMutationId({
     keywords,
     topicId: globalTopicId,
     previousTopicId: globalPreviousTopicId,
-    botId: globalBotId,
   }, { auth }) => {
     const { uid: updatedBy } = auth
     const { id: compositeId } = fromGlobalId(globalId)
@@ -71,20 +68,6 @@ export default mutationWithClientMutationId({
       topicId,
       teamId,
     })
-    // Update the corresponding answer
-    try {
-      const { id: compositeBotId } = fromGlobalId(globalBotId)
-      const botId = db.client.deconstructId(compositeBotId)[1]
-      await db.answer.updateAnswer({
-        body,
-        title,
-        botId,
-        id,
-        updatedBy,
-      })
-    } catch (err) {
-      logger.error('Error updating answer', { teamId, id, globalBotId, reply })
-    }
     tracker.trackUpdateAnswer({ auth, id })
     return { reply, teamId, topicId, previousTopicId }
   },

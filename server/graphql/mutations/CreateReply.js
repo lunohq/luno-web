@@ -3,7 +3,6 @@ import { fromGlobalId, mutationWithClientMutationId } from 'graphql-relay'
 import { db } from 'luno-core'
 
 import tracker from '../../tracker'
-import logger from '../../logger'
 
 import GraphQLTopic from '../types/GraphQLTopic'
 import Replies from '../connections/Replies'
@@ -28,10 +27,6 @@ export default mutationWithClientMutationId({
       description: 'ID of the Topic the Reply is assigned to.',
       type: new GraphQLNonNull(GraphQLID),
     },
-    botId: {
-      description: 'ID of the Bot to support copying to answer.',
-      type: new GraphQLNonNull(GraphQLID),
-    },
   },
   outputFields: {
     topic: {
@@ -46,7 +41,7 @@ export default mutationWithClientMutationId({
       }
     },
   },
-  mutateAndGetPayload: async ({ title, body, keywords, topicId: globalId, botId: globalBotId }, { auth }) => {
+  mutateAndGetPayload: async ({ title, body, keywords, topicId: globalId }, { auth }) => {
     const { uid: createdBy } = auth
     const { id: compositeId } = fromGlobalId(globalId)
     const [teamId, topicId] = db.client.deconstructId(compositeId)
@@ -58,21 +53,6 @@ export default mutationWithClientMutationId({
       createdBy,
       topicId,
     })
-    // Create the corresponding answer
-    try {
-      const { id: compositeBotId } = fromGlobalId(globalBotId)
-      const botId = db.client.deconstructId(compositeBotId)[1]
-      await db.answer.createAnswer({
-        title,
-        body,
-        botId,
-        teamId,
-        createdBy,
-        id: reply.id,
-      })
-    } catch (err) {
-      logger.error('Error creating answer', { err, globalBotId, reply })
-    }
     tracker.trackCreateAnswer({ auth, id: reply.id })
     return { reply, teamId, topicId }
   },

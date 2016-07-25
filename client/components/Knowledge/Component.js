@@ -57,12 +57,6 @@ class Knowledge extends Component {
     }
   }
 
-  // TODO remove when we stop writing answers
-  getBot(props = this.props) {
-    const { viewer: { bots } } = props
-    return bots.edges[0].node
-  }
-
   getDefaultTopic(props = this.props) {
     const { viewer: { defaultTopic } } = props
     return defaultTopic
@@ -195,8 +189,6 @@ class Knowledge extends Component {
 
   handleDeleteReply = (reply) => {
     return new Promise((resolve, reject) => {
-      const bot = this.getBot()
-
       const onSuccess = () => {
         this.routeToDefaultReply({ ignoreId: reply.id })
         resolve()
@@ -206,7 +198,7 @@ class Knowledge extends Component {
       }
 
       const { topic } = reply
-      Relay.Store.commitUpdate(new DeleteReply({ topic, reply, bot }), { onSuccess, onFailure })
+      Relay.Store.commitUpdate(new DeleteReply({ topic, reply }), { onSuccess, onFailure })
     })
   }
 
@@ -219,10 +211,9 @@ class Knowledge extends Component {
   handleSubmitReply = ({ reply }) => {
     return new Promise((resolve, reject) => {
       let mutation
-      const bot = this.getBot()
       const { activeTopic } = this.state
       if (!reply.id) {
-        mutation = new CreateReply({ bot, ...reply })
+        mutation = new CreateReply(reply)
       } else {
         const topics = this.getAllTopics()
         let topic
@@ -232,7 +223,7 @@ class Knowledge extends Component {
           }
         })
         // TODO clean this up, "reply" has a topic scratched on to it
-        mutation = new UpdateReply({ ...reply, reply, bot, previousTopic: reply.topic, topic })
+        mutation = new UpdateReply({ ...reply, reply, previousTopic: reply.topic, topic })
       }
 
       const onSuccess = ({ createReply }) => {

@@ -4,7 +4,6 @@ import Component from './Component'
 import CreateTopic from 'm/CreateTopic'
 import UpdateTopic from 'm/UpdateTopic'
 import DeleteTopic from 'm/DeleteTopic'
-import CreateReply from 'm/CreateReply'
 import DeleteReply from 'm/DeleteReply'
 import UpdateReply from 'm/UpdateReply'
 
@@ -68,16 +67,6 @@ export default Relay.createContainer(Component, {
                   }
                 }
               }
-            }
-          }
-        }
-
-        bots(first: 1) {
-          edges {
-            node {
-              ${CreateReply.getFragment('bot')}
-              ${DeleteReply.getFragment('bot')}
-              ${UpdateReply.getFragment('bot')}
             }
           }
         }
