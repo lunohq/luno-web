@@ -1,0 +1,12 @@
+.explanation {
+    composes: code from 's/typography.scss'
+}
+
+.text {
+    font-size: 1.6rem;
+    line-height: 20px;
+}
+
+.row {
+    padding-bottom: 10px;
+}
