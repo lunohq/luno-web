@@ -13,7 +13,6 @@ class Navigation extends Component {
 
   handleQueryTouchTap = () => this.context.router.push('/search/query')
   handleAnalyzeTouchTap = () => this.context.router.push('/search/analyze')
-  handleValidateTouchTap = () => this.context.router.push('/search/validate')
   handleExplainTouchTap = () => this.context.router.push('/search/explain')
 
   render() {
@@ -34,11 +33,6 @@ class Navigation extends Component {
             onTouchTap={this.handleAnalyzeTouchTap}
             primaryText={t('Analyze')}
             value='/search/analyze'
-          />
-          <ListItem
-            onTouchTap={this.handleValidateTouchTap}
-            primaryText={t('Validate')}
-            value='/search/validate'
           />
           <ListItem
             onTouchTap={this.handleExplainTouchTap}
