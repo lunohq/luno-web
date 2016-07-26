@@ -11,6 +11,10 @@ const GraphQLSearchResults = new GraphQLObjectType({
       type: GraphQLInt,
       description: 'Number of ms ES took to execute the search',
     },
+    requestTook: {
+      type: GraphQLInt,
+      description: 'Number of ms for the request to complete',
+    },
     totalResults: {
       type: GraphQLInt,
       description: 'Total number of documents that matched',

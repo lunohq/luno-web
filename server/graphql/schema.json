@@ -1448,6 +1448,18 @@
               "deprecationReason": null
             },
             {
+              "name": "requestTook",
+              "description": "Number of ms for the request to complete",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "totalResults",
               "description": "Total number of documents that matched",
               "args": [],

@@ -19,6 +19,7 @@ export default Relay.createContainer(Component, {
         search(query: $query) @include(if: $hasQuery) {
           query
           took
+          requestTook
           totalResults
           maxScore
           results {

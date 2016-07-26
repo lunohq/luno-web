@@ -163,6 +163,7 @@ type SearchResult {
 
 type SearchResults {
   took: Int
+  requestTook: Int
   totalResults: Int
   maxScore: Float
   results: [SearchResult]
