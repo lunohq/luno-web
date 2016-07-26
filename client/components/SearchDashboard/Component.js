@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react'
+import React, { Component, PropTypes } from 'react'
 
 import withStyles from 'u/withStyles'
 
@@ -11,43 +11,58 @@ import Navigation from './Navigation'
 
 import s from './style.scss'
 
-const SearchDashboard = ({ location, params: { slug }, viewer }) => {
-  let content
-  switch (slug) {
-    case 'query':
-      content = <Search viewer={viewer} />
-      break
-    case 'explain':
-      content = <Explain viewer={viewer} />
-      break
-    case 'analyze':
-      content = <Analyze viewer={viewer} />
-      break
-    default:
+class SearchDashboard extends Component {
+  componentWillMount() {
+    /* eslint-disable no-undef */
+    if (!__ENABLE_SEARCH_DASHBOARD__ && !this.props.viewer.isAssumed) {
+    /* eslint-enable no-undef */
+      this.context.router.replace('/')
+    }
   }
 
-  const style = {
-    marginLeft: NAV_WIDTH + MENU_WIDTH,
-  }
-  return (
-    <div>
-      <section>
-        <Navigation location={location} />
-        <section
-          className={s.contnet}
-          style={style}
-        >
-          {content}
+  render() {
+    const { location, params: { slug }, viewer } = this.props
+    let content
+    switch (slug) {
+      case 'query':
+        content = <Search viewer={viewer} />
+        break
+      case 'explain':
+        content = <Explain viewer={viewer} />
+        break
+      case 'analyze':
+        content = <Analyze viewer={viewer} />
+        break
+      default:
+    }
+
+    const style = {
+      marginLeft: NAV_WIDTH + MENU_WIDTH,
+    }
+    return (
+      <div>
+        <section>
+          <Navigation location={location} />
+          <section
+            className={s.contnet}
+            style={style}
+          >
+            {content}
+          </section>
         </section>
-      </section>
-    </div>
-  )
+      </div>
+    )
+  }
 }
 
 SearchDashboard.propTypes = {
   location: PropTypes.object.isRequired,
   params: PropTypes.object.isRequired,
   viewer: PropTypes.object.isRequired,
+}
+
+SearchDashboard.contextTypes = {
+  router: PropTypes.object.isRequired,
 }
 
 export default withStyles(s)(SearchDashboard)

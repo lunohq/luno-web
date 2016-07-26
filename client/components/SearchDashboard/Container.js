@@ -9,6 +9,7 @@ export default Relay.createContainer(Component, {
   fragments: {
     viewer: () => Relay.QL`
       fragment on User {
+        assumed
         ${Analyze.getFragment('viewer')}
         ${Search.getFragment('viewer')}
         ${Explain.getFragment('viewer')}

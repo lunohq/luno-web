@@ -42,7 +42,8 @@ const development = {
     new webpack.DefinePlugin({
       __ENABLE_SENTRY__: true,
       __SENTRY_DSN__: JSON.stringify('https://0c2c66c2cd8b46f09fcfe7315fa57cd7@app.getsentry.com/61527'),
-      __MIXPANEL_TOKEN__: JSON.stringify('9c41cd75afb094fdfa50e3e829f4bad3')
+      __MIXPANEL_TOKEN__: JSON.stringify('9c41cd75afb094fdfa50e3e829f4bad3'),
+      __ENABLE_SEARCH_DASHBOARD__: true,
     }),
     new CopyWebpackPlugin([
       { from: 'client/.well-known', to: '.well-known' }
@@ -97,6 +98,7 @@ const production = {
       __ENABLE_SENTRY__: true,
       __SENTRY_DSN__: JSON.stringify('https://e797ece0159c474ea264041392b714f7@app.getsentry.com/75750'),
       __MIXPANEL_TOKEN__: JSON.stringify('b339f301bbea524831d42bc9abc0fceb'),
+      __ENABLE_SEARCH_DASHBOARD__: false,
     }),
   ]),
   scssLoaders: [

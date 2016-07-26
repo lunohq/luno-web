@@ -24,17 +24,22 @@ const Navigation = ({ isAdmin, isAssumed, onLogout }) => {
 
   const icon = { color: colors.white, style: { height: 26, width: 26 } }
 
-  let search
   let drawerContainerStyle
   if (isAssumed) {
     drawerContainerStyle = { background: '#ff0000', boxShadow: 'none' }
+  } else {
+    drawerContainerStyle = { background: '#393F44', boxShadow: 'none' }
+  }
+
+  let search
+  /* eslint-disable no-undef */
+  if (__ENABLE_SEARCH_DASHBOARD__ || isAssumed) {
+  /* eslint-enable no-undef */
     search = (
-      <Link className={isSelected('/search')} to='/search'>
+      <Link className={isSelected('/search', true)} to='/search/query'>
         <SearchIcon {...icon} />
       </Link>
     )
-  } else {
-    drawerContainerStyle = { background: '#393F44', boxShadow: 'none' }
   }
 
   return (
