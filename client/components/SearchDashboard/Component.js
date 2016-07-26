@@ -15,7 +15,7 @@ import s from './style.scss'
 class SearchDashboard extends Component {
   componentWillMount() {
     /* eslint-disable no-undef */
-    if (!__ENABLE_SEARCH_DASHBOARD__ || !this.props.viewer.isAssumed) {
+    if (!(__ENABLE_SEARCH_DASHBOARD__ || this.props.viewer.isAssumed)) {
     /* eslint-enable no-undef */
       this.context.router.replace('/')
     }
