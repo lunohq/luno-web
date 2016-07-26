@@ -28,9 +28,9 @@ const Result = ({ body, explanation, displayTitle, score, title }) => {
         showExpandableButton
       />
       <CardText expandable>
-        <span className={s.explanation}>
+        <pre className={s.explanation}>
           {explanation}
-        </span>
+        </pre>
       </CardText>
     </Card>
   )

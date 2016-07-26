@@ -12,6 +12,7 @@
 
 .explanation {
     composes: text;
+    composes: code from 's/typography.scss';
 }
 
 .title {
