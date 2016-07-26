@@ -17,6 +17,7 @@ import GraphQLTopic from './GraphQLTopic'
 import GraphQLReply from './GraphQLReply'
 import GraphQLThreadLog, { resolve } from './GraphQLThreadLog'
 import GraphQLSearchResults from './GraphQLSearchResults'
+import GraphQLSearchResultsV2 from './GraphQLSearchResultsV2'
 import GraphQLAnalyzeResult from './GraphQLAnalyzeResult'
 import GraphQLValidateResult from './GraphQLValidateResult'
 import GraphQLExplainResult from './GraphQLExplainResult'
@@ -74,6 +75,23 @@ const GraphQLUser = new GraphQLObjectType({
         if (!anonymous) {
           const start = Date.now()
           results = await es.reply.search({ teamId, query, options: { explain: true, size: 100 } })
+          const end = Date.now()
+          results = { query, requestTook: end - start, ...results }
+        }
+        return results
+      },
+    },
+    searchV2: {
+      type: GraphQLSearchResultsV2,
+      description: 'A v2 search against the User\'s team\'s index',
+      args: {
+        query: { type: new GraphQLNonNull(GraphQLString) },
+      },
+      resolve: async ({ anonymous, teamId }, { query }) => {
+        let results
+        if (!anonymous) {
+          const start = Date.now()
+          results = await es.reply.searchV2({ teamId, query, options: { explain: true, size: 100 } })
           const end = Date.now()
           results = { query, requestTook: end - start, ...results }
         }

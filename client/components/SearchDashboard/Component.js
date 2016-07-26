@@ -4,6 +4,7 @@ import withStyles from 'u/withStyles'
 
 import { NAV_WIDTH, MENU_WIDTH } from 'c/AuthenticatedLanding/Navigation'
 import Search from 'c/Search/Container'
+import SearchV2 from 'c/SearchV2/Container'
 import Explain from 'c/Explain/Container'
 import Analyze from 'c/Analyze/Container'
 
@@ -26,6 +27,9 @@ class SearchDashboard extends Component {
     switch (slug) {
       case 'query':
         content = <Search viewer={viewer} />
+        break
+      case 'queryV2':
+        content = <SearchV2 viewer={viewer} />
         break
       case 'explain':
         content = <Explain viewer={viewer} />

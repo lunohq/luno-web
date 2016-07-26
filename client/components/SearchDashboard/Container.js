@@ -3,6 +3,7 @@ import Component from './Component'
 
 import Analyze from 'c/Analyze/Container'
 import Search from 'c/Search/Container'
+import SearchV2 from 'c/SearchV2/Container'
 import Explain from 'c/Explain/Container'
 
 export default Relay.createContainer(Component, {
@@ -12,6 +13,7 @@ export default Relay.createContainer(Component, {
         assumed
         ${Analyze.getFragment('viewer')}
         ${Search.getFragment('viewer')}
+        ${SearchV2.getFragment('viewer')}
         ${Explain.getFragment('viewer')}
       }
     `,

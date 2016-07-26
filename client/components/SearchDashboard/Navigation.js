@@ -12,6 +12,7 @@ import SelectableList from 'c/SelectableList'
 class Navigation extends Component {
 
   handleQueryTouchTap = () => this.context.router.push('/search/query')
+  handleQueryV2TouchTap = () => this.context.router.push('/search/queryV2')
   handleAnalyzeTouchTap = () => this.context.router.push('/search/analyze')
   handleExplainTouchTap = () => this.context.router.push('/search/explain')
 
@@ -28,6 +29,11 @@ class Navigation extends Component {
             onTouchTap={this.handleQueryTouchTap}
             primaryText={t('Search')}
             value='/search/query'
+          />
+          <ListItem
+            onTouchTap={this.handleQueryV2TouchTap}
+            primaryText={t('Search V2')}
+            value='/search/queryV2'
           />
           <ListItem
             onTouchTap={this.handleAnalyzeTouchTap}

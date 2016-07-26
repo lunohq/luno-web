@@ -170,6 +170,26 @@ type SearchResults {
   query: String
 }
 
+type SearchResultsV2 {
+  took: Int
+  requestTook: Int
+  totalResults: Int
+  maxScore: Float
+  results: [SearchResultV2]
+  query: String
+}
+
+type SearchResultV2 {
+  score: Float
+  id: String
+  changed: String
+  body: String
+  title: String
+  keywords: String
+  topic: String
+  explanation: String
+}
+
 type SlackMember implements Node {
   id: ID!
   userId: ID!
@@ -349,6 +369,7 @@ type User implements Node {
   team: Team
   bots(after: String, first: Int, before: String, last: Int): BotConnection
   search(query: String!): SearchResults
+  searchV2(query: String!): SearchResultsV2
   analyze(query: String!, options: String): AnalyzeResult
   validate(query: String!): ValidateResult
   explain(query: String!, replyId: ID!): ExplainResult

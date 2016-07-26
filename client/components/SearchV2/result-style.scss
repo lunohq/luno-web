@@ -1,0 +1,21 @@
+.text {
+    white-space: pre-wrap;
+}
+
+.body {
+    composes: text;
+}
+
+.bodyContainer {
+    padding: 16px 0px;
+}
+
+.explanation {
+    composes: text;
+    composes: code from 's/typography.scss';
+}
+
+.meta {
+    font-size: 1.3rem;
+    padding-bottom: 15px;
+}
