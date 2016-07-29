@@ -8,6 +8,7 @@ import GraphQLTopic from '../types/GraphQLTopic'
 import GraphQLAttachmentInput from '../types/GraphQLAttachmentInput'
 import Replies from '../connections/Replies'
 import { cursorForInstanceInCollection } from '../utils'
+import { formatAttachments } from './utils'
 
 export default mutationWithClientMutationId({
   name: 'CreateReply',
@@ -57,7 +58,7 @@ export default mutationWithClientMutationId({
       teamId,
       createdBy,
       topicId,
-      attachments,
+      attachments: formatAttachments(attachments),
     })
     tracker.trackCreateAnswer({ auth, id: reply.id })
     return { reply, teamId, topicId }

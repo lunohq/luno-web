@@ -12,7 +12,7 @@ type Attachment {
 }
 
 input AttachmentInput {
-  file: FileInput
+  file: FileInput!
 }
 
 type Bot implements Node {
@@ -87,8 +87,8 @@ type ExplainResult {
   explanation: String
 }
 
-type File {
-  id: String
+type File implements Node {
+  id: ID!
   name: String
   permalink: String
   key: String
@@ -97,12 +97,9 @@ type File {
 }
 
 input FileInput {
-  id: String
-  name: String
-  permalink: String
-  key: String
-  bucket: String
-  created: String
+  id: ID!
+  name: String!
+  permalink: String!
 }
 
 input InviteUserInput {

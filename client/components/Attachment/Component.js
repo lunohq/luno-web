@@ -57,7 +57,7 @@ class Attachment extends Component {
   }
 
   componentWillMount() {
-    if (!this.props.value.created) {
+    if (!this.props.value.id) {
       const promise = this.uploadFile(this.props.value)
       this.props.value.promise = promise
       this.props.onChange(this.props.value)

@@ -1,4 +1,5 @@
 import Relay from 'react-relay'
+import { formatAttachments } from './utils'
 
 export default class UpdateReply extends Relay.Mutation {
   static fragments = {
@@ -15,6 +16,13 @@ export default class UpdateReply extends Relay.Mutation {
     previousTopic: () => Relay.QL`
       fragment on Topic {
         id
+      }
+    `,
+    file: () => Relay.QL`
+      fragment on File {
+        id
+        name
+        permalink
       }
     `,
   }
@@ -81,7 +89,7 @@ export default class UpdateReply extends Relay.Mutation {
       title,
       topicId,
       previousTopicId,
-      attachments,
+      attachments: formatAttachments(attachments),
     }
   }
 

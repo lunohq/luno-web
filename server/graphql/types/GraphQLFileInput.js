@@ -1,4 +1,4 @@
-import { GraphQLString, GraphQLInputObjectType } from 'graphql'
+import { GraphQLNonNull, GraphQLID, GraphQLString, GraphQLInputObjectType } from 'graphql'
 
 import { registerType } from './registry'
 
@@ -6,28 +6,16 @@ const GraphQLFileInput = new GraphQLInputObjectType({
   name: 'FileInput',
   fields: () => ({
     id: {
-      type: GraphQLString,
+      type: new GraphQLNonNull(GraphQLID),
       description: 'ID of the File',
     },
     name: {
-      type: GraphQLString,
+      type: new GraphQLNonNull(GraphQLString),
       description: 'Name of the File',
     },
     permalink: {
-      type: GraphQLString,
+      type: new GraphQLNonNull(GraphQLString),
       description: 'Permanent link to the File',
-    },
-    key: {
-      type: GraphQLString,
-      description: 'Key where the file is stored',
-    },
-    bucket: {
-      type: GraphQLString,
-      description: 'S3 bucket where the file is stored',
-    },
-    created: {
-      type: GraphQLString,
-      description: 'Epoch timestamp when the file was created',
     },
   }),
 })

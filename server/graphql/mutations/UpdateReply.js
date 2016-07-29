@@ -9,6 +9,7 @@ import GraphQLTopic from '../types/GraphQLTopic'
 import GraphQLAttachmentInput from '../types/GraphQLAttachmentInput'
 import Replies from '../connections/Replies'
 import { cursorForInstanceInCollection } from '../utils'
+import { formatAttachments } from './utils'
 
 export default mutationWithClientMutationId({
   name: 'UpdateReply',
@@ -70,7 +71,7 @@ export default mutationWithClientMutationId({
       updatedBy,
       topicId,
       teamId,
-      attachments,
+      attachments: formatAttachments(attachments),
     })
     tracker.trackUpdateAnswer({ auth, id })
     return { reply, teamId, topicId, previousTopicId }

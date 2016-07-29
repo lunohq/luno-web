@@ -1,4 +1,4 @@
-import { GraphQLInputObjectType } from 'graphql'
+import { GraphQLNonNull, GraphQLInputObjectType } from 'graphql'
 
 import GraphQLFileInput from './GraphQLFileInput'
 import { registerType } from './registry'
@@ -7,7 +7,7 @@ const GraphQLAttachmentInput = new GraphQLInputObjectType({
   name: 'AttachmentInput',
   fields: () => ({
     file: {
-      type: GraphQLFileInput,
+      type: new GraphQLNonNull(GraphQLFileInput),
       description: 'File for the Attachment',
     },
   }),
