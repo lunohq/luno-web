@@ -1,4 +1,4 @@
-import { GraphQLID, GraphQLNonNull, GraphQLString } from 'graphql'
+import { GraphQLID, GraphQLNonNull, GraphQLString, GraphQLList } from 'graphql'
 import { toGlobalId, fromGlobalId, mutationWithClientMutationId } from 'graphql-relay'
 import { db } from 'luno-core'
 
@@ -6,6 +6,7 @@ import tracker from '../../tracker'
 
 import GraphQLReply from '../types/GraphQLReply'
 import GraphQLTopic from '../types/GraphQLTopic'
+import GraphQLAttachmentInput from '../types/GraphQLAttachmentInput'
 import Replies from '../connections/Replies'
 import { cursorForInstanceInCollection } from '../utils'
 
@@ -16,6 +17,7 @@ export default mutationWithClientMutationId({
     title: { type: new GraphQLNonNull(GraphQLString) },
     body: { type: new GraphQLNonNull(GraphQLString) },
     keywords: { type: GraphQLString },
+    attachments: { type: new GraphQLList(GraphQLAttachmentInput) },
     topicId: { type: new GraphQLNonNull(GraphQLID) },
     previousTopicId: { type: new GraphQLNonNull(GraphQLID) },
   },
@@ -49,6 +51,7 @@ export default mutationWithClientMutationId({
     title,
     body,
     keywords,
+    attachments,
     topicId: globalTopicId,
     previousTopicId: globalPreviousTopicId,
   }, { auth }) => {
@@ -67,6 +70,7 @@ export default mutationWithClientMutationId({
       updatedBy,
       topicId,
       teamId,
+      attachments,
     })
     tracker.trackUpdateAnswer({ auth, id })
     return { reply, teamId, topicId, previousTopicId }

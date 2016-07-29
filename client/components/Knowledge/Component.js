@@ -209,7 +209,24 @@ class Knowledge extends Component {
   }
 
   handleSubmitReply = ({ reply }) => {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
+      // TODO handle existing attachments and uploading a new one
+      // TODO handle removing attachments
+      if (reply.attachments) {
+        const promises = reply.attachments.map(({ file }) => {
+          let promise = Promise.resolve({ file })
+          if (file.promise) {
+            promise = file.promise
+          }
+          return promise
+        })
+        try {
+          reply.attachments = await Promise.all(promises)
+        } catch (err) {
+          reject(new SubmissionError({ _error: t('Error uploading attachments') }))
+        }
+      }
+
       let mutation
       const { activeTopic } = this.state
       if (!reply.id) {

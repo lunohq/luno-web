@@ -33,6 +33,12 @@ export default Relay.createContainer(Component, {
                 body
                 keywords
                 changed
+                attachments {
+                  file {
+                    name
+                    created
+                  }
+                }
                 updatedBy {
                   username
                 }
@@ -61,6 +67,12 @@ export default Relay.createContainer(Component, {
                     body
                     keywords
                     changed
+                    attachments {
+                      file {
+                        name
+                        created
+                      }
+                    }
                     updatedBy {
                       username
                     }

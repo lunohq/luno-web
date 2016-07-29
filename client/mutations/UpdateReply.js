@@ -72,6 +72,7 @@ export default class UpdateReply extends Relay.Mutation {
       title,
       body,
       keywords,
+      attachments,
     } = this.props
     return {
       body,
@@ -80,6 +81,7 @@ export default class UpdateReply extends Relay.Mutation {
       title,
       topicId,
       previousTopicId,
+      attachments,
     }
   }
 

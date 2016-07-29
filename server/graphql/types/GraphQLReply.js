@@ -1,7 +1,8 @@
-import { GraphQLString, GraphQLObjectType } from 'graphql'
+import { GraphQLString, GraphQLObjectType, GraphQLList } from 'graphql'
 import { globalIdField } from 'graphql-relay'
 import { db } from 'luno-core'
 
+import GraphQLAttachment from './GraphQLAttachment'
 import registry, { registerType, nodeInterface } from './registry'
 
 const GraphQLReply = new GraphQLObjectType({
@@ -48,6 +49,10 @@ const GraphQLReply = new GraphQLObjectType({
         const topics = await db.reply.getTopicsForReply({ teamId, id })
         return topics[0]
       },
+    },
+    attachments: {
+      type: new GraphQLList(GraphQLAttachment),
+      description: 'Reply Attachments',
     },
   }),
   interfaces: [nodeInterface],

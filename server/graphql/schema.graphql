@@ -7,6 +7,14 @@ type AnalyzeResult {
   result: String
 }
 
+type Attachment {
+  file: File
+}
+
+input AttachmentInput {
+  file: FileInput
+}
+
 type Bot implements Node {
   id: ID!
   purpose: String
@@ -28,6 +36,7 @@ input CreateReplyInput {
   body: String!
   keywords: String
   topicId: ID!
+  attachments: [AttachmentInput]
   clientMutationId: String!
 }
 
@@ -79,6 +88,15 @@ type ExplainResult {
 }
 
 type File {
+  id: String
+  name: String
+  permalink: String
+  key: String
+  bucket: String
+  created: String
+}
+
+input FileInput {
   id: String
   name: String
   permalink: String
@@ -149,6 +167,7 @@ type Reply implements Node {
   changed: String
   updatedBy: User
   topic: Topic
+  attachments: [Attachment]
 }
 
 type ReplyConnection {
@@ -336,6 +355,7 @@ input UpdateReplyInput {
   title: String!
   body: String!
   keywords: String
+  attachments: [AttachmentInput]
   topicId: ID!
   previousTopicId: ID!
   clientMutationId: String!
