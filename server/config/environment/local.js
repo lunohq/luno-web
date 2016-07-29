@@ -20,4 +20,7 @@ export default {
   features: {
     replies: true,
   },
+  files: {
+    bucket: 'dev-luno-bot-files',
+  },
 }

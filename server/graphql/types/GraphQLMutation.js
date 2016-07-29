@@ -12,6 +12,7 @@ import InviteUser from '../mutations/InviteUser'
 import CreateTopic from '../mutations/CreateTopic'
 import UpdateTopic from '../mutations/UpdateTopic'
 import DeleteTopic from '../mutations/DeleteTopic'
+import UploadFile from '../mutations/UploadFile'
 
 import { registerType } from './registry'
 
@@ -57,6 +58,7 @@ const GraphQLMutation = new GraphQLObjectType({
     createTopic: staffMutation(CreateTopic),
     deleteTopic: staffMutation(DeleteTopic),
     updateTopic: staffMutation(UpdateTopic),
+    uploadFile: staffMutation(UploadFile),
   }),
 })
 

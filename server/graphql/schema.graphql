@@ -78,6 +78,15 @@ type ExplainResult {
   explanation: String
 }
 
+type File {
+  id: String
+  name: String
+  permalink: String
+  key: String
+  bucket: String
+  created: String
+}
+
 input InviteUserInput {
   userId: String!
   role: UserRole!
@@ -113,6 +122,7 @@ type Mutation {
   createTopic(input: CreateTopicInput!): CreateTopicPayload
   deleteTopic(input: DeleteTopicInput!): DeleteTopicPayload
   updateTopic(input: UpdateTopicInput!): UpdateTopicPayload
+  uploadFile(input: UploadFileInput!): UploadFilePayload
 }
 
 interface Node {
@@ -360,6 +370,15 @@ input UpdateUserInput {
 type UpdateUserPayload {
   team: Team
   user: User
+  clientMutationId: String!
+}
+
+input UploadFileInput {
+  clientMutationId: String!
+}
+
+type UploadFilePayload {
+  file: File
   clientMutationId: String!
 }
 
