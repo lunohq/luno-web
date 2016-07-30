@@ -9,9 +9,10 @@ import FileIcon from 'material-ui/svg-icons/editor/insert-drive-file'
 import colors from 's/colors'
 import UploadFile from 'm/UploadFile'
 
-const Uploading = ({ name }) => (
+const Uploading = ({ name, onRemove }) => (
   <Chip
-    labelStyle={{ paddingLeft: 4, }}
+    labelStyle={{ paddingLeft: 4 }}
+    onRequestDelete={onRemove}
     style={{ margin: '4px 8px 4px 0' }}
   >
     <Avatar backgroundColor='none'>
@@ -27,11 +28,13 @@ const Uploading = ({ name }) => (
 
 Uploading.propTypes = {
   name: PropTypes.string.isRequired,
+  onRemove: PropTypes.func.isRequired,
 }
 
-const Uploaded = ({ name }) => (
+const Uploaded = ({ name, onRemove }) => (
   <Chip
     labelStyle={{ paddingLeft: 4 }}
+    onRequestDelete={onRemove}
     style={{ margin: '4px 8px 4px 0' }}
   >
     <Avatar
@@ -45,6 +48,7 @@ const Uploaded = ({ name }) => (
 
 Uploaded.propTypes = {
   name: PropTypes.string.isRequired,
+  onRemove: PropTypes.func.isRequired,
 }
 
 const UPLOADING = 1
@@ -71,20 +75,20 @@ class Attachment extends Component {
         this.setState({ status: UPLOADED })
         resolve({ file })
       }
-      const onFailure = (transaction) => reject(transaction)
+      const onFailure = (transaction) => reject(transaction.getError())
       Relay.Store.commitUpdate(new UploadFile({ file }), { onSuccess, onFailure })
     })
   }
 
   render() {
-    const { value } = this.props
+    const { value, onRemove } = this.props
     let chip
     switch (this.state.status) {
       case UPLOADED:
-        chip = <Uploaded name={value.name} />
+        chip = <Uploaded name={value.name} onRemove={onRemove} />
         break
       default:
-        chip = <Uploading name={value.name} />
+        chip = <Uploading name={value.name} onRemove={onRemove} />
     }
     return chip
   }
@@ -93,6 +97,7 @@ class Attachment extends Component {
 
 Attachment.propTypes = {
   onChange: PropTypes.func.isRequired,
+  onRemove: PropTypes.func.isRequired,
   value: PropTypes.object.isRequired,
 }
 

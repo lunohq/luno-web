@@ -18,13 +18,6 @@ export default class UpdateReply extends Relay.Mutation {
         id
       }
     `,
-    file: () => Relay.QL`
-      fragment on File {
-        id
-        name
-        permalink
-      }
-    `,
   }
 
   getMutation() {
@@ -81,7 +74,23 @@ export default class UpdateReply extends Relay.Mutation {
       body,
       keywords,
       attachments,
+      previousAttachments,
     } = this.props
+
+    let deleteFileIds
+    if (previousAttachments) {
+      const attachmentIds = attachments.map(({ file: { id } }) => id)
+      const previousAttachmentIds = previousAttachments.map(({ file: { id } }) => id)
+      previousAttachmentIds.forEach(id => {
+        if (!attachmentIds.includes(id)) {
+          if (!deleteFileIds) {
+            deleteFileIds = []
+          }
+          deleteFileIds.push(id)
+        }
+      })
+    }
+
     return {
       body,
       keywords,
@@ -89,6 +98,7 @@ export default class UpdateReply extends Relay.Mutation {
       title,
       topicId,
       previousTopicId,
+      deleteFileIds,
       attachments: formatAttachments(attachments),
     }
   }

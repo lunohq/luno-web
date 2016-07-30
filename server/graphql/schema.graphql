@@ -353,6 +353,7 @@ input UpdateReplyInput {
   body: String!
   keywords: String
   attachments: [AttachmentInput]
+  deleteFileIds: [ID]
   topicId: ID!
   previousTopicId: ID!
   clientMutationId: String!

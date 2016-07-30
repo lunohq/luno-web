@@ -13,7 +13,7 @@ export default mutationWithClientMutationId({
   },
   mutateAndGetPayload: async (args, { request: { file: upload }, auth }) => {
     const { uid: createdBy, tid: teamId } = auth
-    debug('Uploaded file', { upload })
+    debug('Uploaded file', { upload, args })
     const file = await db.file.createFile({
       createdBy,
       teamId,

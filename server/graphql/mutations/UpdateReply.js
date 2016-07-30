@@ -3,6 +3,9 @@ import { toGlobalId, fromGlobalId, mutationWithClientMutationId } from 'graphql-
 import { db } from 'luno-core'
 
 import tracker from '../../tracker'
+import logger from '../../logger'
+
+import { deleteFiles } from '../../actions/file'
 
 import GraphQLReply from '../types/GraphQLReply'
 import GraphQLTopic from '../types/GraphQLTopic'
@@ -19,6 +22,7 @@ export default mutationWithClientMutationId({
     body: { type: new GraphQLNonNull(GraphQLString) },
     keywords: { type: GraphQLString },
     attachments: { type: new GraphQLList(GraphQLAttachmentInput) },
+    deleteFileIds: { type: new GraphQLList(GraphQLID) },
     topicId: { type: new GraphQLNonNull(GraphQLID) },
     previousTopicId: { type: new GraphQLNonNull(GraphQLID) },
   },
@@ -55,6 +59,7 @@ export default mutationWithClientMutationId({
     attachments,
     topicId: globalTopicId,
     previousTopicId: globalPreviousTopicId,
+    deleteFileIds,
   }, { auth }) => {
     const { uid: updatedBy } = auth
     const { id: compositeId } = fromGlobalId(globalId)
@@ -63,6 +68,14 @@ export default mutationWithClientMutationId({
     const [teamId, id] = db.client.deconstructId(compositeId)
     const topicId = db.client.deconstructId(compositeTopicId)[1]
     const previousTopicId = db.client.deconstructId(compositePreviousTopicId)[1]
+    if (deleteFileIds) {
+      const fileIds = deleteFileIds.map(globalId => fromGlobalId(globalId).id)
+      try {
+        await deleteFiles({ teamId, fileIds })
+      } catch (err) {
+        logger.error('Error deleting files', { teamId, fileIds, err })
+      }
+    }
     const reply = await db.reply.updateReply({
       id,
       body,

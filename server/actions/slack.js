@@ -39,6 +39,12 @@ export async function isBotInstalled(team) {
   return installed
 }
 
+export async function deleteFiles({ teamId, ids }) {
+  const client = await getClient(teamId)
+  const promises = ids.map(id => client.files.delete(id))
+  return Promise.all(promises)
+}
+
 export function getMember(teamId, id) {
   return new Promise(async (resolve, reject) => {
     const client = await getClient(teamId)
@@ -124,4 +130,5 @@ export default {
   send,
   getMembers,
   getMember,
+  deleteFiles,
 }

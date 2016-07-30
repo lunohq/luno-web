@@ -32,6 +32,7 @@ class Attachments extends Component {
         component={Attachment}
         key={index}
         name={`${attachment}.file`}
+        onRemove={() => fields.remove(index)}
       />
     ))
     return (

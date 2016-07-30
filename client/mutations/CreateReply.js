@@ -3,16 +3,6 @@ import { formatAttachments } from './utils'
 
 export default class CreateReply extends Relay.Mutation {
 
-  static fragments = {
-    file: () => Relay.QL`
-      fragment on File {
-        id
-        name
-        permalink
-      }
-    `,
-  }
-
   getMutation() {
     return Relay.QL`mutation { createReply }`
   }

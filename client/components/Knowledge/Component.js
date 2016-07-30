@@ -70,6 +70,9 @@ class Knowledge extends Component {
         for (const { node } of topic.replies.edges) {
           // TODO clean this up
           node.topic = topic
+          // we scratch on original attachments so we can more easily diff
+          // attachmens when saving
+          node.previousAttachments = node.attachments
           replies.push({ node })
         }
       }
@@ -240,7 +243,13 @@ class Knowledge extends Component {
           }
         })
         // TODO clean this up, "reply" has a topic scratched on to it
-        mutation = new UpdateReply({ ...reply, reply, previousTopic: reply.topic, topic })
+        mutation = new UpdateReply({
+          ...reply,
+          reply,
+          topic,
+          previousTopic: reply.topic,
+          previousAttachments: reply.previousAttachments,
+        })
       }
 
       const onSuccess = ({ createReply }) => {
