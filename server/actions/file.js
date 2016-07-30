@@ -20,7 +20,7 @@ function deleteFromS3(files) {
     const params = {
       Bucket: bucket,
       Delete: {
-        Objects: files.map(file => file.key),
+        Objects: files.map(file => ({ Key: file.key })),
       },
     }
     promises.push(s3.deleteObjects(params).promise())
