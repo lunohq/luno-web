@@ -42,6 +42,7 @@ function deleteFromS3(files) {
 }
 
 export async function deleteFiles({ files = [], fileIds, teamId }) {
+  debug('deleteFiles', { files, fileIds, teamId })
   if (files.length) {
     fileIds = files.map(file => file.id)
   } else {
