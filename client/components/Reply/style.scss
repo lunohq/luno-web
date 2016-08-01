@@ -47,3 +47,10 @@
 .error {
     color: red;
 }
+
+.attachments {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+    z-index: 1;
+}

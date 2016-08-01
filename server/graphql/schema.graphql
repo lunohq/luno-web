@@ -7,6 +7,14 @@ type AnalyzeResult {
   result: String
 }
 
+type Attachment {
+  file: File
+}
+
+input AttachmentInput {
+  file: FileInput!
+}
+
 type Bot implements Node {
   id: ID!
   purpose: String
@@ -23,11 +31,28 @@ type BotEdge {
   cursor: String!
 }
 
+input CancelFileInput {
+  name: String!
+  mutationId: String!
+  fileId: String
+}
+
+input CancelFileUploadsInput {
+  uploads: [CancelFileInput]
+  clientMutationId: String!
+}
+
+type CancelFileUploadsPayload {
+  mutationIds: [String]
+  clientMutationId: String!
+}
+
 input CreateReplyInput {
   title: String!
   body: String!
   keywords: String
   topicId: ID!
+  attachments: [AttachmentInput]
   clientMutationId: String!
 }
 
@@ -47,6 +72,16 @@ type CreateTopicPayload {
   viewer: User
   topic: Topic
   topicEdge: TopicEdge
+  clientMutationId: String!
+}
+
+input DeleteFileInput {
+  fileId: String
+  clientMutationId: String!
+}
+
+type DeleteFilePayload {
+  fileId: String
   clientMutationId: String!
 }
 
@@ -76,6 +111,21 @@ type DeleteTopicPayload {
 type ExplainResult {
   matched: Boolean
   explanation: String
+}
+
+type File implements Node {
+  id: ID!
+  name: String
+  permalink: String
+  key: String
+  bucket: String
+  created: String
+}
+
+input FileInput {
+  id: ID!
+  name: String!
+  permalink: String!
 }
 
 input InviteUserInput {
@@ -113,6 +163,9 @@ type Mutation {
   createTopic(input: CreateTopicInput!): CreateTopicPayload
   deleteTopic(input: DeleteTopicInput!): DeleteTopicPayload
   updateTopic(input: UpdateTopicInput!): UpdateTopicPayload
+  uploadFile(input: UploadFileInput!): UploadFilePayload
+  cancelFileUploads(input: CancelFileUploadsInput!): CancelFileUploadsPayload
+  deleteFile(input: DeleteFileInput!): DeleteFilePayload
 }
 
 interface Node {
@@ -139,6 +192,7 @@ type Reply implements Node {
   changed: String
   updatedBy: User
   topic: Topic
+  attachments: [Attachment]
 }
 
 type ReplyConnection {
@@ -326,6 +380,8 @@ input UpdateReplyInput {
   title: String!
   body: String!
   keywords: String
+  attachments: [AttachmentInput]
+  deleteFileIds: [ID]
   topicId: ID!
   previousTopicId: ID!
   clientMutationId: String!
@@ -360,6 +416,15 @@ input UpdateUserInput {
 type UpdateUserPayload {
   team: Team
   user: User
+  clientMutationId: String!
+}
+
+input UploadFileInput {
+  clientMutationId: String!
+}
+
+type UploadFilePayload {
+  file: File
   clientMutationId: String!
 }
 

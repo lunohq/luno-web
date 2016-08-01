@@ -11,6 +11,7 @@ import raven from 'raven'
 import config from './config/environment'
 import schema from './graphql/schema'
 import auth from './middleware/auth'
+import uploads from './middleware/uploads'
 import slashCommands from './middleware/slashCommands'
 import admin from './middleware/admin'
 import formatError from './utils/formatError'
@@ -33,10 +34,15 @@ slashCommands(relayServer, converse)
 admin(relayServer)
 relayServer.use(historyApiFallback())
 relayServer.use('/', express.static(path.join(__dirname, '../output', process.env.NODE_ENV)))
+uploads('/graphql', relayServer)
 relayServer.use('/graphql', graphQLHTTP(request => ({
   schema,
   formatError,
-  context: { auth: request.auth, dataStore: getDataStore(request.auth) },
+  context: {
+    request,
+    auth: request.auth,
+    dataStore: getDataStore(request.auth),
+  },
 })))
 relayServer.use(raven.middleware.express.errorHandler(config.sentry.dsn))
 relayServer.listen(config.port, () => console.log(chalk.green(`Relay is listening on port ${config.port}`)))

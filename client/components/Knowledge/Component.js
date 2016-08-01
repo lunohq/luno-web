@@ -13,6 +13,8 @@ import CreateTopic from 'm/CreateTopic'
 import UpdateTopic from 'm/UpdateTopic'
 import DeleteTopic from 'm/DeleteTopic'
 
+import { cancelUploads, clearUploads } from 'd/files'
+
 import { NAV_WIDTH, MENU_WIDTH } from 'c/AuthenticatedLanding/Navigation'
 import DocumentTitle from 'c/DocumentTitle'
 import ReplyList from 'c/ReplyList/Component'
@@ -70,6 +72,9 @@ class Knowledge extends Component {
         for (const { node } of topic.replies.edges) {
           // TODO clean this up
           node.topic = topic
+          // we scratch on original attachments so we can more easily diff
+          // attachmens when saving
+          node.previousAttachments = node.attachments
           replies.push({ node })
         }
       }
@@ -203,13 +208,35 @@ class Knowledge extends Component {
   }
 
   handleCancelReply = () => {
+    this.context.store.dispatch(cancelUploads())
     if (!this.state.activeReply.id) {
       this.routeToDefaultReply()
     }
   }
 
   handleSubmitReply = ({ reply }) => {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
+      if (reply.attachments) {
+        const promises = reply.attachments.map(({ file }) => {
+          let promise = Promise.resolve({ file })
+          if (file.promise) {
+            promise = file.promise
+          }
+          return promise
+        })
+        try {
+          const attachments = await Promise.all(promises)
+          reply.attachments = []
+          attachments.forEach(attachment => {
+            if (attachment) {
+              reply.attachments.push(attachment)
+            }
+          })
+        } catch (err) {
+          reject(new SubmissionError({ _error: t('Error uploading attachments') }))
+        }
+      }
+
       let mutation
       const { activeTopic } = this.state
       if (!reply.id) {
@@ -223,7 +250,13 @@ class Knowledge extends Component {
           }
         })
         // TODO clean this up, "reply" has a topic scratched on to it
-        mutation = new UpdateReply({ ...reply, reply, previousTopic: reply.topic, topic })
+        mutation = new UpdateReply({
+          ...reply,
+          reply,
+          topic,
+          previousTopic: reply.topic,
+          previousAttachments: reply.previousAttachments,
+        })
       }
 
       const onSuccess = ({ createReply }) => {
@@ -231,6 +264,7 @@ class Knowledge extends Component {
           const { replyEdge: { node: { id } } } = createReply
           this.context.router.replace(`/knowledge/${activeTopic.id}/${id}`)
         }
+        this.context.store.dispatch(clearUploads())
         resolve()
       }
 
@@ -403,6 +437,7 @@ Knowledge.contextTypes = {
   router: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
+  store: PropTypes.object.isRequired,
 }
 
 export default withForceFetch(withStyles(s)(Knowledge))

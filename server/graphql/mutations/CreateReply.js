@@ -1,12 +1,14 @@
-import { GraphQLID, GraphQLNonNull, GraphQLString } from 'graphql'
+import { GraphQLID, GraphQLNonNull, GraphQLString, GraphQLList } from 'graphql'
 import { fromGlobalId, mutationWithClientMutationId } from 'graphql-relay'
 import { db } from 'luno-core'
 
 import tracker from '../../tracker'
 
 import GraphQLTopic from '../types/GraphQLTopic'
+import GraphQLAttachmentInput from '../types/GraphQLAttachmentInput'
 import Replies from '../connections/Replies'
 import { cursorForInstanceInCollection } from '../utils'
+import { formatAttachments } from './utils'
 
 export default mutationWithClientMutationId({
   name: 'CreateReply',
@@ -27,6 +29,10 @@ export default mutationWithClientMutationId({
       description: 'ID of the Topic the Reply is assigned to.',
       type: new GraphQLNonNull(GraphQLID),
     },
+    attachments: {
+      description: 'Reply Attachments',
+      type: new GraphQLList(GraphQLAttachmentInput),
+    },
   },
   outputFields: {
     topic: {
@@ -41,7 +47,7 @@ export default mutationWithClientMutationId({
       }
     },
   },
-  mutateAndGetPayload: async ({ title, body, keywords, topicId: globalId }, { auth }) => {
+  mutateAndGetPayload: async ({ title, body, keywords, attachments, topicId: globalId }, { auth }) => {
     const { uid: createdBy } = auth
     const { id: compositeId } = fromGlobalId(globalId)
     const [teamId, topicId] = db.client.deconstructId(compositeId)
@@ -52,6 +58,7 @@ export default mutationWithClientMutationId({
       teamId,
       createdBy,
       topicId,
+      attachments: formatAttachments(attachments),
     })
     tracker.trackCreateAnswer({ auth, id: reply.id })
     return { reply, teamId, topicId }

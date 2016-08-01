@@ -1,6 +1,8 @@
 import { createStore, applyMiddleware, compose } from 'redux'
 import createLogger from 'redux-logger'
+import thunk from 'redux-thunk'
 import rootReducer from '../rootReducer'
+import mutationMiddleware from '../middleware/mutationMiddleware'
 import DevTools from 'c/DevTools'
 
 export default function (initialState) {
@@ -8,7 +10,7 @@ export default function (initialState) {
     rootReducer,
     initialState,
     compose(
-      applyMiddleware(createLogger()),
+      applyMiddleware(createLogger(), thunk, mutationMiddleware),
       DevTools.instrument()
     ),
   )

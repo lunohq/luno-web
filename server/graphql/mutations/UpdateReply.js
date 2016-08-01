@@ -1,13 +1,18 @@
-import { GraphQLID, GraphQLNonNull, GraphQLString } from 'graphql'
+import { GraphQLID, GraphQLNonNull, GraphQLString, GraphQLList } from 'graphql'
 import { toGlobalId, fromGlobalId, mutationWithClientMutationId } from 'graphql-relay'
 import { db } from 'luno-core'
 
 import tracker from '../../tracker'
+import logger from '../../logger'
+
+import { deleteFiles } from '../../actions/file'
 
 import GraphQLReply from '../types/GraphQLReply'
 import GraphQLTopic from '../types/GraphQLTopic'
+import GraphQLAttachmentInput from '../types/GraphQLAttachmentInput'
 import Replies from '../connections/Replies'
 import { cursorForInstanceInCollection } from '../utils'
+import { formatAttachments } from './utils'
 
 export default mutationWithClientMutationId({
   name: 'UpdateReply',
@@ -16,6 +21,8 @@ export default mutationWithClientMutationId({
     title: { type: new GraphQLNonNull(GraphQLString) },
     body: { type: new GraphQLNonNull(GraphQLString) },
     keywords: { type: GraphQLString },
+    attachments: { type: new GraphQLList(GraphQLAttachmentInput) },
+    deleteFileIds: { type: new GraphQLList(GraphQLID) },
     topicId: { type: new GraphQLNonNull(GraphQLID) },
     previousTopicId: { type: new GraphQLNonNull(GraphQLID) },
   },
@@ -49,8 +56,10 @@ export default mutationWithClientMutationId({
     title,
     body,
     keywords,
+    attachments,
     topicId: globalTopicId,
     previousTopicId: globalPreviousTopicId,
+    deleteFileIds,
   }, { auth }) => {
     const { uid: updatedBy } = auth
     const { id: compositeId } = fromGlobalId(globalId)
@@ -59,6 +68,14 @@ export default mutationWithClientMutationId({
     const [teamId, id] = db.client.deconstructId(compositeId)
     const topicId = db.client.deconstructId(compositeTopicId)[1]
     const previousTopicId = db.client.deconstructId(compositePreviousTopicId)[1]
+    if (deleteFileIds) {
+      const fileIds = deleteFileIds.map(globalId => fromGlobalId(globalId).id)
+      try {
+        await deleteFiles({ teamId, fileIds })
+      } catch (err) {
+        logger.error('Error deleting files', { teamId, fileIds, err })
+      }
+    }
     const reply = await db.reply.updateReply({
       id,
       body,
@@ -67,6 +84,7 @@ export default mutationWithClientMutationId({
       updatedBy,
       topicId,
       teamId,
+      attachments: formatAttachments(attachments),
     })
     tracker.trackUpdateAnswer({ auth, id })
     return { reply, teamId, topicId, previousTopicId }

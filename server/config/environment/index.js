@@ -39,6 +39,11 @@ const config = {
   features: {
     replies: parseInt(process.env.FEATURE_FLAGS_REPLIES, 10) === 1 || false,
   },
+  files: {
+    bucket: process.env.FILES_BUCKET,
+    acl: process.env.FILES_ACL || 'bucket-owner-full-control',
+    functionArn: process.env.FILES_FUNCTION_ARN || 'luno-upload-file',
+  },
 }
 
 export default _.merge(config, require(`./${config.env}`).default)

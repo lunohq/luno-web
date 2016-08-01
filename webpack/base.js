@@ -60,6 +60,7 @@ module.exports = (options) => ({
       m: path.resolve(process.cwd(), 'client', 'mutations'),
       s: path.resolve(process.cwd(), 'client', 'styles'),
       r: path.resolve(process.cwd(), 'client'),
+      d: path.resolve(process.cwd(), 'client', 'redux', 'modules'),
     },
   },
   devtool: options.devtool,

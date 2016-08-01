@@ -15,6 +15,7 @@ import config from './config/environment'
 import schema from './graphql/schema'
 import updateSchema from './utils/updateSchema'
 import auth from './middleware/auth'
+import uploads from './middleware/uploads'
 import slashCommands from './middleware/slashCommands'
 import admin from './middleware/admin'
 import getDataStore from './utils/getDataStore'
@@ -27,11 +28,16 @@ let relayServer
 function startGraphQLServer(schema) {
   const graphql = express()
   auth(graphql)
+  uploads('/', graphql)
   graphql.use('/', graphQLHTTP(request => {
     return {
       graphiql: true,
       pretty: true,
-      context: { auth: request.auth, dataStore: getDataStore(request.auth) },
+      context: {
+        request,
+        auth: request.auth,
+        dataStore: getDataStore(request.auth),
+      },
       schema,
       formatError,
     }

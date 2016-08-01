@@ -1,7 +1,7 @@
 import { isEqual } from 'lodash'
 import React, { Component, PropTypes } from 'react'
 import ReactDOM from 'react-dom'
-import { reduxForm, Field, initialize, SubmissionError, change } from 'redux-form'
+import { reduxForm, Field, FieldArray, initialize, SubmissionError, change } from 'redux-form'
 import keycode from 'keycode'
 import { TextField, SelectField } from 'redux-form-material-ui'
 
@@ -16,6 +16,8 @@ import t from 'u/gettext'
 import withStyles from 'u/withStyles'
 import moment from 'u/moment'
 import colors from 's/colors'
+
+import Attachments from 'c/Attachments/Component'
 
 import DeleteDialog from './DeleteDialog'
 import s from './style.scss'
@@ -334,6 +336,12 @@ class Reply extends Component {
               name='reply.body'
               onFocus={this.handleFocus}
               rows={2}
+            />
+            <FieldArray
+              className={s.attachments}
+              component={Attachments}
+              disabled={submitting}
+              name='reply.attachments'
             />
             <Field
               autoComplete='off'
