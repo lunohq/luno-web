@@ -2,6 +2,7 @@ import AWS from 'aws-sdk'
 import multer from 'multer'
 import multerS3 from 'multer-s3'
 import uuid from 'node-uuid'
+import { db } from 'luno-core'
 
 import config from '../config/environment'
 import logger from '../logger'
@@ -35,9 +36,11 @@ async function lambdaUpload(req, res, next) {
     return next()
   }
 
+  const team = await db.team.getTeam(req.auth.tid)
   const params = {
-    teamId: req.auth.tid,
+    teamId: team.id,
     key: req.file.key,
+    channelId: team.slack.fileChannelId || '#general',
   }
   debug('Invoking lambda function', { params })
   let response
