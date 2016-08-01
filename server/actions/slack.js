@@ -28,6 +28,11 @@ export async function createFileChannel({ team, user }) {
   await client.channels.invite(channelId, team.slack.bot.userId)
   await client.channels.leave(channelId)
   team.slack.fileChannelId = channelId
+  team.slack.fileAdmin = {
+    userId: user.id,
+    accessToken: user.accessToken,
+    created: new Date().toISOString(),
+  }
   db.team.updateTeam(team)
 }
 

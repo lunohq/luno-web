@@ -78,15 +78,17 @@ server.on('authenticated', async ({ user, team, isNew }) => {
       if (isNew.bot) {
         await publishCreateTeam(team)
         await publishCreateUser(user)
-        if (user.scopes.includes('channels:write')) {
-          try {
-            await createFileChannel({ team, user })
-          } catch (err) {
-            logger.error('Error creating file channel', { err, user, team })
-          }
-        }
       } else if (isNew.user) {
         await publishCreateUser(user)
+      }
+
+      // Support new teams and existing teams who need to add this scope
+      if (user.scopes.includes('channels:write') && !team.slack.fileChannelId) {
+        try {
+          await createFileChannel({ team, user })
+        } catch (err) {
+          logger.error('Error creating file channel', { err, user, team })
+        }
       }
     } else if (team.createdBy !== user.id) {
       logger.error('Login Flow Error: bot should exist', { team, user })

@@ -67,6 +67,7 @@ function startRelayServer() {
       // index.html. This is required so we can access these urls.
       rewrites: [
         { from: /\/login/, to: noop },
+        { from: /\/install/, to: noop },
         { from: /\/oauth/, to: noop },
         { from: /\/l\/admin/, to: noop },
       ],
