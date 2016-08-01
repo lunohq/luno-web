@@ -8,6 +8,7 @@ import FileIcon from 'material-ui/svg-icons/editor/insert-drive-file'
 
 import colors from 's/colors'
 import UploadFile from 'm/UploadFile'
+import { startUpload, cancelUpload } from 'd/files'
 
 const Uploading = ({ name, onRemove }) => (
   <Chip
@@ -53,11 +54,13 @@ Uploaded.propTypes = {
 
 const UPLOADING = 1
 const UPLOADED = 2
+const CANCELLED = 3
 
 class Attachment extends Component {
 
   state = {
     status: UPLOADED,
+    transaction: null,
   }
 
   componentWillMount() {
@@ -72,23 +75,40 @@ class Attachment extends Component {
   uploadFile(file) {
     return new Promise((resolve, reject) => {
       const onSuccess = ({ uploadFile: { file } }) => {
-        this.setState({ status: UPLOADED })
-        resolve({ file })
+        if (this.state.status !== CANCELLED) {
+          this.setState({ status: UPLOADED })
+        }
+        let payload
+        if (file) {
+          payload = { file }
+        }
+        resolve(payload)
       }
       const onFailure = (transaction) => reject(transaction.getError())
-      Relay.Store.commitUpdate(new UploadFile({ file }), { onSuccess, onFailure })
+      const transaction = Relay.Store.commitUpdate(new UploadFile({ file }), { onSuccess, onFailure })
+      this.setState({ transaction })
+      this.context.store.dispatch(startUpload({ file, transaction }))
     })
   }
 
+  handleRemove = () => {
+    if (this.state.status === UPLOADING) {
+      this.context.store.dispatch(cancelUpload(this.state.transaction))
+      this.setState({ status: CANCELLED }, this.props.onRemove)
+      return
+    }
+    this.props.onRemove()
+  }
+
   render() {
-    const { value, onRemove } = this.props
+    const { value } = this.props
     let chip
     switch (this.state.status) {
       case UPLOADED:
-        chip = <Uploaded name={value.name} onRemove={onRemove} />
+        chip = <Uploaded name={value.name} onRemove={this.handleRemove} />
         break
       default:
-        chip = <Uploading name={value.name} onRemove={onRemove} />
+        chip = <Uploading name={value.name} onRemove={this.handleRemove} />
     }
     return chip
   }
@@ -96,9 +116,14 @@ class Attachment extends Component {
 }
 
 Attachment.propTypes = {
+  index: PropTypes.number.isRequired,
   onChange: PropTypes.func.isRequired,
   onRemove: PropTypes.func.isRequired,
   value: PropTypes.object.isRequired,
+}
+
+Attachment.contextTypes = {
+  store: PropTypes.object.isRequired,
 }
 
 export default Attachment

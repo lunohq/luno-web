@@ -31,6 +31,21 @@ type BotEdge {
   cursor: String!
 }
 
+input CancelFileInput {
+  name: String!
+  mutationId: String!
+}
+
+input CancelFileUploadsInput {
+  uploads: [CancelFileInput]
+  clientMutationId: String!
+}
+
+type CancelFileUploadsPayload {
+  mutationIds: [String]
+  clientMutationId: String!
+}
+
 input CreateReplyInput {
   title: String!
   body: String!
@@ -138,6 +153,7 @@ type Mutation {
   deleteTopic(input: DeleteTopicInput!): DeleteTopicPayload
   updateTopic(input: UpdateTopicInput!): UpdateTopicPayload
   uploadFile(input: UploadFileInput!): UploadFilePayload
+  cancelFileUploads(input: CancelFileUploadsInput!): CancelFileUploadsPayload
 }
 
 interface Node {

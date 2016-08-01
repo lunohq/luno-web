@@ -1,6 +1,6 @@
 import { mutationWithClientMutationId } from 'graphql-relay'
-import { db } from 'luno-core'
 
+import { wasCancelled, deleteFile, createFile } from '../../actions/file'
 import GraphQLFile from '../types/GraphQLFile'
 
 import d from '../../utils/debug'
@@ -11,19 +11,35 @@ export default mutationWithClientMutationId({
   outputFields: {
     file: { type: GraphQLFile },
   },
-  mutateAndGetPayload: async (args, { request: { file: upload }, auth }) => {
-    const { uid: createdBy, tid: teamId } = auth
-    debug('Uploaded file', { upload, args })
-    const file = await db.file.createFile({
-      createdBy,
+  mutateAndGetPayload: async ({ clientMutationId: mutationId }, { request: { file: upload }, auth }) => {
+    const { uid: userId, tid: teamId } = auth
+    const name = upload.lambda.name
+    debug('Uploaded file', { upload, mutationId })
+    const cancelled = await wasCancelled({
+      mutationId,
       teamId,
-      id: upload.lambda.id,
-      name: upload.lambda.name,
-      permalink: upload.lambda.permalink,
-      key: upload.s3.key,
-      bucket: upload.s3.bucket,
-      created: upload.lambda.created,
+      userId,
+      name,
     })
-    return { file }
+    let file
+    if (cancelled) {
+      debug('Cancelled file')
+      await deleteFile({
+        file: {
+          name,
+          bucket: upload.s3.bucket,
+          key: upload.s3.key,
+          id: upload.lambda.id,
+        },
+        teamId,
+      })
+    } else {
+      file = await createFile({ userId, teamId, upload, mutationId })
+    }
+
+    if (file) {
+      return { file }
+    }
+    return {}
   },
 })

@@ -13,6 +13,8 @@ import CreateTopic from 'm/CreateTopic'
 import UpdateTopic from 'm/UpdateTopic'
 import DeleteTopic from 'm/DeleteTopic'
 
+import { cancelUploads, clearUploads } from 'd/files'
+
 import { NAV_WIDTH, MENU_WIDTH } from 'c/AuthenticatedLanding/Navigation'
 import DocumentTitle from 'c/DocumentTitle'
 import ReplyList from 'c/ReplyList/Component'
@@ -206,6 +208,7 @@ class Knowledge extends Component {
   }
 
   handleCancelReply = () => {
+    this.context.store.dispatch(cancelUploads())
     if (!this.state.activeReply.id) {
       this.routeToDefaultReply()
     }
@@ -213,8 +216,6 @@ class Knowledge extends Component {
 
   handleSubmitReply = ({ reply }) => {
     return new Promise(async (resolve, reject) => {
-      // TODO handle existing attachments and uploading a new one
-      // TODO handle removing attachments
       if (reply.attachments) {
         const promises = reply.attachments.map(({ file }) => {
           let promise = Promise.resolve({ file })
@@ -224,7 +225,13 @@ class Knowledge extends Component {
           return promise
         })
         try {
-          reply.attachments = await Promise.all(promises)
+          const attachments = await Promise.all(promises)
+          reply.attachments = []
+          attachments.forEach(attachment => {
+            if (attachment) {
+              reply.attachments.push(attachment)
+            }
+          })
         } catch (err) {
           reject(new SubmissionError({ _error: t('Error uploading attachments') }))
         }
@@ -257,6 +264,7 @@ class Knowledge extends Component {
           const { replyEdge: { node: { id } } } = createReply
           this.context.router.replace(`/knowledge/${activeTopic.id}/${id}`)
         }
+        this.context.store.dispatch(clearUploads())
         resolve()
       }
 
@@ -429,6 +437,7 @@ Knowledge.contextTypes = {
   router: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
+  store: PropTypes.object.isRequired,
 }
 
 export default withForceFetch(withStyles(s)(Knowledge))
