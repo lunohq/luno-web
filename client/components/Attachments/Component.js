@@ -17,6 +17,14 @@ import Attachment from 'c/Attachment/Component'
 
 class Attachments extends Component {
 
+  state = {
+    uploads: {},
+  }
+
+  componentWillUnmount() {
+    Object.values(this.state.uploads).forEach(upload => clearInterval(upload.interval))
+  }
+
   handleOpenFilePicker = () => {
     if (!this.props.disabled) {
       this.refs.input.click()
@@ -45,31 +53,52 @@ class Attachments extends Component {
       const onFailure = (transaction) => reject(transaction.getError())
       file.transaction = Relay.Store.commitUpdate(new UploadFile({ file }), { onSuccess, onFailure })
       this.context.store.dispatch(startUpload({ file, transaction: file.transaction }))
+      this.progress(file.transaction)
     })
     return { file }
   }
 
+  progress = (transaction, complete = 0) => {
+    const { uploads } = this.state
+    const upload = uploads[transaction.getID()] || {}
+    if (!upload.interval) {
+      upload.interval = setInterval(() => this.progress(transaction, 5), 1000)
+    }
+    if (!upload.complete) {
+      upload.complete = 0
+    }
+    upload.complete += complete
+    if (upload.complete > 80) {
+      clearInterval(upload.interval)
+    }
+    uploads[transaction.getID()] = upload
+    this.setState({ uploads })
+  }
+
   render() {
     const { className, disabled, fields } = this.props
-    const attachments = fields.map((attachment, index) => (
-      <Field
-        component={Attachment}
-        disabled={disabled}
-        key={index}
-        name={`${attachment}.file`}
-        onRemove={(file) => {
-          try {
-            file.transaction.getStatus()
-            this.context.store(cancelUpload(file.transaction))
-          } catch (err) {
-            if (file.payload) {
-              Relay.Store.commitUpdate(new DeleteFile({ file: file.payload && file.payload.file }))
+    const attachments = fields.map((attachment, index) => {
+      return (
+        <Field
+          component={Attachment}
+          disabled={disabled}
+          key={index}
+          name={`${attachment}.file`}
+          onRemove={(file) => {
+            try {
+              file.transaction.getStatus()
+              this.context.store(cancelUpload(file.transaction))
+            } catch (err) {
+              if (file.payload) {
+                Relay.Store.commitUpdate(new DeleteFile({ file: file.payload && file.payload.file }))
+              }
             }
-          }
-          fields.remove(index)
-        }}
-      />
-    ))
+            fields.remove(index)
+          }}
+          uploads={this.state.uploads}
+        />
+      )
+    })
     const style = { boxShadow: 'none', margin: '4px 8px 4px -8px' }
     if (disabled) {
       style.cursor = 'not-allowed'

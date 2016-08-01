@@ -81,11 +81,11 @@ class Attachment extends Component {
 
   state = {
     status: UPLOADING,
+    complete: 0,
   }
 
   componentWillMount() {
     this.initialize(this.props)
-    this.setState({ status: this.props.value.promise ? UPLOADING : UPLOADED })
   }
 
   componentWillReceiveProps(nextProps) {
@@ -93,16 +93,32 @@ class Attachment extends Component {
   }
 
   initialize(props) {
-    if (props.value.promise) {
-      props.value.promise.then(() => this.setState({ status: UPLOADED }))
+    const { value: { promise, transaction }, uploads } = props
+    if (promise) {
+      promise.then(() => this.setState({ status: UPLOADED }))
     }
+
+    let complete
+    if (transaction) {
+      const upload = uploads[transaction.getID()]
+      if (upload) {
+        complete = upload.complete
+      }
+    }
+
     let status
     try {
-      status = props.value.transaction && props.value.transaction.getStatus() ? UPLOADING : UPLOADED
+      status = transaction && transaction.getStatus() ? UPLOADING : UPLOADED
     } catch (err) {
       status = UPLOADED
     }
-    this.setState({ status })
+
+    const state = { status }
+    if (complete) {
+      state.complete = complete
+    }
+
+    this.setState(state)
   }
 
   handleRemove = () => {
@@ -128,7 +144,7 @@ class Attachment extends Component {
             disabled={disabled}
             name={value.name}
             onRemove={this.handleRemove}
-            value={this.state.completed}
+            value={this.state.complete}
           />
         )
     }
@@ -141,6 +157,7 @@ Attachment.propTypes = {
   disabled: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
   onRemove: PropTypes.func.isRequired,
+  uploads: PropTypes.object,
   value: PropTypes.object.isRequired,
 }
 
