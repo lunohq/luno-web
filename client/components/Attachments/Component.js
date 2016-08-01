@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { Field } from 'redux-form'
+import Relay from 'react-relay'
 
 import Avatar from 'material-ui/Avatar'
 import Chip from 'material-ui/Chip'
@@ -8,33 +9,71 @@ import AddIcon from 'material-ui/svg-icons/content/add'
 import t from 'u/gettext'
 import colors from 's/colors'
 
+import UploadFile from 'm/UploadFile'
+import DeleteFile from 'm/DeleteFile'
+import { startUpload, cancelUpload } from 'd/files'
+
 import Attachment from 'c/Attachment/Component'
 
 class Attachments extends Component {
 
   handleOpenFilePicker = () => {
-    this.refs.input.click()
+    if (!this.props.disabled) {
+      this.refs.input.click()
+    }
   }
 
   handlePickedFile = (event) => {
     if (event.target.value) {
       const { fields } = this.props
       const file = event.target.files[0]
-      fields.push({ file })
+      fields.push(this.uploadFile(file))
       event.target.value = ''
     }
   }
 
+  uploadFile = (file) => {
+    file.promise = new Promise((resolve, reject) => {
+      const onSuccess = ({ uploadFile: { file: res } }) => {
+        let payload
+        if (res) {
+          payload = { file: res }
+        }
+        file.payload = payload
+        resolve(payload)
+      }
+      const onFailure = (transaction) => reject(transaction.getError())
+      file.transaction = Relay.Store.commitUpdate(new UploadFile({ file }), { onSuccess, onFailure })
+      this.context.store.dispatch(startUpload({ file, transaction: file.transaction }))
+    })
+    return { file }
+  }
+
   render() {
-    const { className, fields } = this.props
+    const { className, disabled, fields } = this.props
     const attachments = fields.map((attachment, index) => (
       <Field
         component={Attachment}
+        disabled={disabled}
         key={index}
         name={`${attachment}.file`}
-        onRemove={() => fields.remove(index)}
+        onRemove={(file) => {
+          try {
+            file.transaction.getStatus()
+            this.context.store(cancelUpload(file.transaction))
+          } catch (err) {
+            if (file.payload) {
+              Relay.Store.commitUpdate(new DeleteFile({ file: file.payload && file.payload.file }))
+            }
+          }
+          fields.remove(index)
+        }}
       />
     ))
+    const style = { boxShadow: 'none', margin: '4px 8px 4px -8px' }
+    if (disabled) {
+      style.cursor = 'not-allowed'
+    }
     return (
       <div className={className}>
         {attachments}
@@ -42,7 +81,7 @@ class Attachments extends Component {
           backgroundColor='none'
           labelStyle={{ color: colors.muiHintTextColor, paddingLeft: 0 }}
           onTouchTap={this.handleOpenFilePicker}
-          style={{ boxShadow: 'none', margin: '4px 8px 4px -8px' }}
+          style={style}
         >
           <Avatar color={colors.muiHintTextColor} backgroundColor='none' icon={<AddIcon />} />
           {t('Attachment')}
@@ -61,7 +100,12 @@ class Attachments extends Component {
 
 Attachments.propTypes = {
   className: PropTypes.string.isRequired,
+  disabled: PropTypes.bool,
   fields: PropTypes.array.isRequired,
+}
+
+Attachments.contextTypes = {
+  store: PropTypes.object.isRequired,
 }
 
 export default Attachments

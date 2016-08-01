@@ -13,6 +13,10 @@ const GraphQLCancelFileInput = new GraphQLInputObjectType({
       type: new GraphQLNonNull(GraphQLString),
       description: 'The mutation id of the file being cancelled',
     },
+    fileId: {
+      type: GraphQLString,
+      description: 'The fileId if the file has been uploaded already',
+    },
   }),
 })
 

@@ -64,31 +64,25 @@ export async function deleteFile({ file, teamId }) {
   ])
 }
 
-function cancelUploadHashKey({ teamId, userId }) {
-  return `cu.${teamId}.${userId}`
-}
-
-function cancelUploadKey({ name, mutationId }) {
+function cancelUploadKey({ teamId, userId, mutationId, name }) {
   const hash = crypto.createHash('md5').update(name).digest('hex')
-  return `${mutationId}.${hash}`
+  return `cu.${teamId}.${userId}.${mutationId}.${hash}`
 }
 
 export function cancelFileUploads({ uploads, teamId, userId }) {
   const redis = getRedisClient()
   let multi = redis.multi()
   uploads.forEach(({ name, mutationId }) => {
-    const hash = cancelUploadHashKey({ teamId, userId })
-    const key = cancelUploadKey({ name, mutationId })
-    multi = multi.hsetnx(hash, key, true)
+    const key = cancelUploadKey({ teamId, userId, mutationId, name })
+    multi = multi.set(key, true).expire(key, 300)
   })
   return multi.execAsync()
 }
 
 export async function wasCancelled({ mutationId, teamId, userId, name }) {
   const redis = getRedisClient()
-  const hash = cancelUploadHashKey({ teamId, userId })
-  const key = cancelUploadKey({ mutationId, name })
-  const response = await redis.multi().hget(hash, key).hdel(hash, key).execAsync()
+  const key = cancelUploadKey({ teamId, userId, mutationId, name })
+  const response = await redis.multi().get(key).del(key).execAsync()
   return response[0]
 }
 
@@ -104,13 +98,12 @@ export async function createFile({ userId, teamId, upload, mutationId }) {
     created: upload.lambda.created,
   })
   const redis = getRedisClient()
-  const hash = cancelUploadHashKey({ teamId, userId })
-  const key = cancelUploadKey({ mutationId, name: file.name })
-  const response = await redis.hsetnxAsync(hash, key, JSON.stringify(file))
-  if (!response) {
+  const key = cancelUploadKey({ teamId, userId, mutationId, name: file.name })
+  const response = await redis.multi().setnx(key, JSON.stringify(file)).expire(key, 5).execAsync()
+  if (!response[0]) {
     await deleteFiles({ files: [file], teamId })
     file = null
-    await redis.hdelAsync(hash, key)
+    await redis.delAsync(key)
   }
   return file
 }

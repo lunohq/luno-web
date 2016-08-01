@@ -1,5 +1,5 @@
 import { GraphQLList, GraphQLString } from 'graphql'
-import { mutationWithClientMutationId } from 'graphql-relay'
+import { mutationWithClientMutationId, fromGlobalId } from 'graphql-relay'
 
 import { cancelFileUploads, deleteFiles, wasCancelled } from '../../actions/file'
 
@@ -23,17 +23,30 @@ export default mutationWithClientMutationId({
     },
   },
   mutateAndGetPayload: async ({ uploads }, { auth: { tid: teamId, uid: userId } }) => {
-    const response = await cancelFileUploads({ uploads, teamId, userId })
+    const fileIdsToDelete = []
     const filesToDelete = []
-    for (const index in response) {
-      const res = response[index]
-      if (!res) {
-        const { mutationId, name } = uploads[index]
-        debug('Should delete cancelled file', { mutationId, name })
-        const data = await wasCancelled({ name, mutationId, teamId, userId })
-        const file = JSON.parse(data)
-        debug('Deleting cancelled file', { file })
-        filesToDelete.push(file)
+    const filesToCancel = []
+    uploads.forEach(({ fileId, ...rest }) => {
+      if (fileId) {
+        const { id } = fromGlobalId(fileId)
+        fileIdsToDelete.push(id)
+      } else {
+        filesToCancel.push(rest)
+      }
+    })
+
+    if (filesToCancel.length) {
+      const response = await cancelFileUploads({ teamId, userId, uploads: filesToCancel })
+      for (const index in response) {
+        const res = response[index]
+        if (!res) {
+          const { mutationId, name } = uploads[index]
+          debug('Should delete cancelled file', { mutationId, name })
+          const data = await wasCancelled({ name, mutationId, teamId, userId })
+          const file = JSON.parse(data)
+          debug('Deleting cancelled file', { file })
+          filesToDelete.push(file)
+        }
       }
     }
 
@@ -41,6 +54,11 @@ export default mutationWithClientMutationId({
     if (filesToDelete.length) {
       debug('Deleting cancelled files', { filesToDelete })
       await deleteFiles({ files: filesToDelete, teamId })
+    }
+
+    if (fileIdsToDelete.length) {
+      debug('Deleting cancelled fileIds', { fileIdsToDelete })
+      await deleteFiles({ fileIds: fileIdsToDelete, teamId })
     }
 
     debug('Cancelled upload', { uploads, teamId, userId })

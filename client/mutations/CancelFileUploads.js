@@ -22,7 +22,16 @@ export default class CancelFileUploads extends Relay.Mutation {
   getVariables() {
     const { uploads } = this.props
     return {
-      uploads: uploads.map(({ file, transaction }) => ({ name: file.name, mutationId: transaction.getID() })),
+      uploads: uploads.map(({ file, transaction }) => {
+        const payload = {
+          name: file.name,
+          mutationId: transaction.getID(),
+        }
+        if (file.payload && file.payload.file && file.payload.file.id) {
+          payload.fileId = file.payload.file.id
+        }
+        return payload
+      }),
     }
   }
 

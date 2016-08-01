@@ -340,6 +340,7 @@ class Reply extends Component {
             <FieldArray
               className={s.attachments}
               component={Attachments}
+              disabled={submitting}
               name='reply.attachments'
             />
             <Field

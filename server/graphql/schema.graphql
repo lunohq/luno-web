@@ -34,6 +34,7 @@ type BotEdge {
 input CancelFileInput {
   name: String!
   mutationId: String!
+  fileId: String
 }
 
 input CancelFileUploadsInput {
@@ -71,6 +72,16 @@ type CreateTopicPayload {
   viewer: User
   topic: Topic
   topicEdge: TopicEdge
+  clientMutationId: String!
+}
+
+input DeleteFileInput {
+  fileId: String
+  clientMutationId: String!
+}
+
+type DeleteFilePayload {
+  fileId: String
   clientMutationId: String!
 }
 
@@ -154,6 +165,7 @@ type Mutation {
   updateTopic(input: UpdateTopicInput!): UpdateTopicPayload
   uploadFile(input: UploadFileInput!): UploadFilePayload
   cancelFileUploads(input: CancelFileUploadsInput!): CancelFileUploadsPayload
+  deleteFile(input: DeleteFileInput!): DeleteFilePayload
 }
 
 interface Node {
