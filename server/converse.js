@@ -26,7 +26,7 @@ const server = new Server({
   clientSecret: config.slack.clientSecret,
   scopes: {
     login: ['identity.basic', 'identity.email', 'identity.team', 'identity.avatar'],
-    install: ['bot', 'commands'],
+    install: ['bot', 'commands', 'channels:write'],
   },
   storage: converse.storage,
   isNewUser,
