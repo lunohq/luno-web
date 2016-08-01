@@ -11,7 +11,7 @@ const Uploading = ({ disabled, name, onRemove, value }) => {
   let handleDelete = onRemove
   const labelStyle = { paddingLeft: 4 }
   const chipStyle = { margin: '4px 8px 4px 0' }
-  const progressStyle = { height: '32px', margin: 0, width: '32px' }
+  const progressStyle = {}
   if (disabled) {
     handleDelete = null
     labelStyle.color = colors.muiHintTextColor
@@ -26,11 +26,8 @@ const Uploading = ({ disabled, name, onRemove, value }) => {
     >
       <Avatar backgroundColor='none'>
         <CircularProgress
-          innerStyle={{ height: '32px', marginLeft: '-8px', marginTop: '-9px', width: '32px', }}
-          mode='determinate'
-          size={0.4}
+          size={0.35}
           style={progressStyle}
-          value={value}
         />
       </Avatar>
       {name}
