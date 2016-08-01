@@ -20,6 +20,17 @@ function getClient(teamIdOrTeam) {
   })
 }
 
+export async function createFileChannel({ team, user }) {
+  const { accessToken } = user
+  const client = new WebClient(accessToken)
+
+  const { channel: { id: channelId } } = await client.channels.create('luno-file-uploads')
+  await client.channels.invite(channelId, team.slack.bot.userId)
+  await client.channels.leave(channelId)
+  team.slack.fileChannelId = channelId
+  db.team.updateTeam(team)
+}
+
 export async function isBotInstalled(team) {
   let installed = false
   if (team.slack && team.slack.bot) {

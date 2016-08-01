@@ -4,6 +4,7 @@ import { converse, events } from 'luno-core'
 import config from './config/environment'
 import logger from './logger'
 import tracker from './tracker'
+import { createFileChannel } from './actions/slack'
 
 /**
  * Given the way we handle invites, a user can be "new" but have already been
@@ -77,6 +78,13 @@ server.on('authenticated', async ({ user, team, isNew }) => {
       if (isNew.bot) {
         await publishCreateTeam(team)
         await publishCreateUser(user)
+        if (user.scopes.includes('channels:write')) {
+          try {
+            await createFileChannel({ team, user })
+          } catch (err) {
+            logger.error('Error creating file channel', { err, user, team })
+          }
+        }
       } else if (isNew.user) {
         await publishCreateUser(user)
       }
