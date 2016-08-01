@@ -9,16 +9,18 @@ import colors from 's/colors'
 
 const Uploading = ({ disabled, name, onRemove, value }) => {
   let handleDelete = onRemove
+  const labelStyle = { paddingLeft: 4 }
   const chipStyle = { margin: '4px 8px 4px 0' }
   const progressStyle = { height: '32px', margin: 0, width: '32px' }
   if (disabled) {
     handleDelete = null
-    chipStyle.cursor = 'not-allow'
+    labelStyle.color = colors.muiHintTextColor
+    chipStyle.cursor = 'not-allowed'
     progressStyle.opacity = 0.4
   }
   return (
     <Chip
-      labelStyle={{ paddingLeft: 4 }}
+      labelStyle={labelStyle}
       onRequestDelete={handleDelete}
       style={chipStyle}
     >
@@ -46,15 +48,17 @@ Uploading.propTypes = {
 const Uploaded = ({ disabled, name, onRemove }) => {
   let handleDelete = onRemove
   let avatarColor = colors.darkGrey
+  const labelStyle = { paddingLeft: 4 }
   const chipStyle = { margin: '4px 8px 4px 0' }
   if (disabled) {
     handleDelete = null
-    chipStyle.cursor = 'not-allow'
+    labelStyle.color = colors.muiHintTextColor
+    chipStyle.cursor = 'not-allowed'
     avatarColor = colors.muiHintTextColor
   }
   return (
     <Chip
-      labelStyle={{ paddingLeft: 4 }}
+      labelStyle={labelStyle}
       onRequestDelete={handleDelete}
       style={chipStyle}
     >
