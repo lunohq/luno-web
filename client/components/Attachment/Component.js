@@ -7,7 +7,7 @@ import FileIcon from 'material-ui/svg-icons/editor/insert-drive-file'
 
 import colors from 's/colors'
 
-const Uploading = ({ disabled, name, onRemove, value }) => {
+const Uploading = ({ disabled, name, onRemove }) => {
   let handleDelete = onRemove
   const labelStyle = { paddingLeft: 4 }
   const chipStyle = { margin: '4px 8px 4px 0' }
@@ -39,7 +39,6 @@ Uploading.propTypes = {
   disabled: PropTypes.bool,
   name: PropTypes.string.isRequired,
   onRemove: PropTypes.func.isRequired,
-  value: PropTypes.number.isRequired,
 }
 
 const Uploaded = ({ disabled, name, onRemove }) => {
@@ -94,32 +93,14 @@ class Attachment extends Component {
   }
 
   initialize(props) {
-    const { value: { promise, transaction }, uploads } = props
+    const { value: { id, promise } } = props
+    let status = UPLOADING
     if (promise) {
       promise.then(() => this.setState({ status: UPLOADED }))
-    }
-
-    let complete
-    if (transaction) {
-      const upload = uploads[transaction.getID()]
-      if (upload) {
-        complete = upload.complete
-      }
-    }
-
-    let status
-    try {
-      status = transaction && transaction.getStatus() ? UPLOADING : UPLOADED
-    } catch (err) {
+    } else if (id) {
       status = UPLOADED
     }
-
-    const state = { status }
-    if (complete) {
-      state.complete = complete
-    }
-
-    this.setState(state)
+    this.setState({ status })
   }
 
   handleRemove = () => {
@@ -145,7 +126,6 @@ class Attachment extends Component {
             disabled={disabled}
             name={value.name}
             onRemove={this.handleRemove}
-            value={this.state.complete}
           />
         )
     }
@@ -158,12 +138,7 @@ Attachment.propTypes = {
   disabled: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
   onRemove: PropTypes.func.isRequired,
-  uploads: PropTypes.object,
   value: PropTypes.object.isRequired,
-}
-
-Attachment.contextTypes = {
-  store: PropTypes.object.isRequired,
 }
 
 export default Attachment

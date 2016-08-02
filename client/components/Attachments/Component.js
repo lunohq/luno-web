@@ -17,14 +17,6 @@ import Attachment from 'c/Attachment/Component'
 
 class Attachments extends Component {
 
-  state = {
-    uploads: {},
-  }
-
-  componentWillUnmount() {
-    Object.values(this.state.uploads).forEach(upload => clearInterval(upload.interval))
-  }
-
   handleOpenFilePicker = () => {
     if (!this.props.disabled) {
       this.refs.input.click()
@@ -51,28 +43,10 @@ class Attachments extends Component {
         resolve(payload)
       }
       const onFailure = (transaction) => reject(transaction.getError())
-      file.transaction = Relay.Store.commitUpdate(new UploadFile({ file }), { onSuccess, onFailure })
-      this.context.store.dispatch(startUpload({ file, transaction: file.transaction }))
-      this.progress(file.transaction)
+      const transaction = Relay.Store.commitUpdate(new UploadFile({ file }), { onSuccess, onFailure })
+      this.context.store.dispatch(startUpload({ file, transaction }))
     })
     return { file }
-  }
-
-  progress = (transaction, complete = 0) => {
-    const { uploads } = this.state
-    const upload = uploads[transaction.getID()] || {}
-    if (!upload.interval) {
-      upload.interval = setInterval(() => this.progress(transaction, 5), 1000)
-    }
-    if (!upload.complete) {
-      upload.complete = 0
-    }
-    upload.complete += complete
-    if (upload.complete > 80) {
-      clearInterval(upload.interval)
-    }
-    uploads[transaction.getID()] = upload
-    this.setState({ uploads })
   }
 
   render() {
@@ -95,7 +69,6 @@ class Attachments extends Component {
             }
             fields.remove(index)
           }}
-          uploads={this.state.uploads}
         />
       )
     })
