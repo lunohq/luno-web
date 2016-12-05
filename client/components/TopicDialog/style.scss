@@ -1,0 +1,8 @@
+.actions {
+    composes: row between-xs from 's/vendor/flexboxgrid.css';
+    margin: 0;
+}
+
+.field {
+    margin: 30px 0;
+}

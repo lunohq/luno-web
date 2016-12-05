@@ -1,0 +1,13 @@
+.container {
+    composes: col-xs-12 from 's/vendor/flexboxgrid.css';
+}
+
+.header {
+    font-size: 3.6em;
+    font-weight: 300;
+    color: white;
+}
+
+.headerContainer {
+    composes: row center-xs from 's/vendor/flexboxgrid.css';
+}

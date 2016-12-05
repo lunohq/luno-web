@@ -1,0 +1,11 @@
+.root {
+    composes: row from 's/vendor/flexboxgrid.css';
+    overflow-x: hidden;
+    height: 100vh;
+}
+
+.main {
+    background: #FFF;
+    height: 100%;
+    width: 100%;
+}

@@ -1,0 +1,26 @@
+#!/usr/bin/env babel-node
+
+import s3 from 's3'
+
+function main() {
+  const bucket = process.env.S3_BUCKET
+  const client = s3.createClient({
+    s3Options: {
+      region: process.env.S3_REGION,
+    },
+  })
+  const params = {
+    localDir: 'build',
+    deleteRemoved: false,
+    s3Params: {
+      Bucket: bucket,
+    },
+  }
+  const uploader = client.uploadDir(params)
+  console.log(`Uploading build directory to: ${bucket}...`)
+  uploader.on('fileUploadStart', (path, key) => console.log(`...uploading ${path} -> ${key}`))
+  uploader.on('error', (err) => console.error('unable to sync', err))
+  uploader.on('end', () => console.log('...Finished'))
+}
+
+main()

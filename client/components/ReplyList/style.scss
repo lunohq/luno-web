@@ -1,0 +1,56 @@
+.root {
+    margin-top: 10px;
+    height: calc(100vh - 10px); //less the top margin
+    overflow: hidden;
+}
+
+.header {
+    composes: row col-xs-12 between-xs from 's/vendor/flexboxgrid.css';
+    margin-left: 0;
+    margin-right: 0;
+    padding-right: 6px;
+}
+
+.headerLeftContainer{
+  composes: col-xs from 's/vendor/flexboxgrid.css';
+  overflow: hidden;
+  padding: 0;
+}
+
+.headerText {
+  flex-shrink: 0;
+  line-height: 20px;
+  padding-top: 15px;
+}
+
+.headerActionButtons {
+  height: 48px;
+}
+
+.content {
+    height: calc(100% - 48px - 80px); //less header height and padding bottom
+    overflow: scroll;
+    padding-bottom: 80px;
+}
+
+.form {
+    composes: row col-xs from 's/vendor/flexboxgrid.css';
+    margin-left: 0;
+    margin-right: 0;
+    padding: 0px 16px;
+}
+
+.field {
+    margin-bottom: 12px; //offset for line-height of error message
+}
+
+.error {
+    color: red;
+}
+
+.attachments {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+    z-index: 1;
+}

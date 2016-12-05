@@ -1,0 +1,30 @@
+.header {
+    composes: row middle-xs from 's/vendor/flexboxgrid.css';
+}
+
+.text {
+    color: #2c2d30;
+    font-size: 1.5rem;
+    line-height: 2.2rem;
+}
+
+.author {
+    composes: text;
+    font-weight: 900;
+    margin-right: 0.4rem;
+}
+
+.timestamp {
+    composes: text;
+    font-size: 1.2rem;
+    color: #9e9ea6;
+    line-height: 1.8rem;
+}
+
+.content {
+    composes: text;
+    composes: row from 's/vendor/flexboxgrid.css';
+    display: block;
+}
+
+.root {}

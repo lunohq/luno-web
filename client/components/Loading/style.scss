@@ -1,0 +1,4 @@
+.root {
+    composes: row col-xs center-xs middle-xs from 's/vendor/flexboxgrid.css';
+    height: 100%;
+}

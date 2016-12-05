@@ -1,0 +1,16 @@
+.text {
+    composes: text from 's/typography.scss';
+}
+
+.expertise {
+    margin: 0 10px;
+}
+
+.titleContainer {
+    composes: titleContainer from './style.scss';
+}
+
+.body {
+    composes: body from './style.scss';
+    composes: row middle-xs from 's/vendor/flexboxgrid.css'
+}

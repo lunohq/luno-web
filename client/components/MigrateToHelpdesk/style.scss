@@ -1,0 +1,46 @@
+.container {
+    composes: col-xs-12 from 's/vendor/flexboxgrid.css';
+}
+
+.header {
+    font-size: 3.6rem;
+    font-weight: 300;
+    color: white;
+}
+
+.learnMoreLink {
+    composes: header;
+    color: #00bcd4;
+    text-decoration: none;
+}
+
+.learnMoreLink:visited {
+    color: #00bcd4;
+}
+
+.headerContainer {
+    composes: row center-xs from 's/vendor/flexboxgrid.css';
+    padding-bottom: 16px;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 56px;
+}
+
+.footerLinks {
+    composes: row center-xs from 's/vendor/flexboxgrid.css';
+}
+
+.footerLink {
+    font-size: 1.6rem;
+    text-decoration: none;
+    color: white;
+}
+
+.footerLink:visited {
+    color: white;
+}

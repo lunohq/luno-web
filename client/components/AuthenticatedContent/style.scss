@@ -1,0 +1,4 @@
+.content {
+    composes: content from 's/layout.scss';
+    padding: 30px 40px;
+}

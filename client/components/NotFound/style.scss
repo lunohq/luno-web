@@ -1,0 +1,9 @@
+.root {
+    composes: row center-xs middle-xs from 's/vendor/flexboxgrid.css';
+    height: 100vh;
+}
+
+.header {
+    font-size: 3.6rem;
+    font-weight: 300;
+}

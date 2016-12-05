@@ -1,0 +1,23 @@
+@import '../../styles/colors.scss';
+
+.tokenContainer {
+    display: flex;
+}
+
+.token {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    background-color: $light-gray;
+    height: 22px;
+    margin: 10px 10px 0 0;
+    padding: 0 5px;
+}
+
+.token :global span {
+    font-size: 1.4rem;
+}
+
+.icon {
+    padding-left: 4px;
+}

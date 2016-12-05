@@ -1,0 +1,26 @@
+.root {
+    background-color: #484959;
+    height: 100vh;
+}
+
+.container {
+    composes: container from 's/layout.scss';
+}
+
+.content {
+    composes: row center-xs from 's/vendor/flexboxgrid.css';
+    padding-top: 200px;
+}
+
+.brand {
+    composes: brand from 's/typography.scss';
+}
+
+.brandContainer {
+    composes: col-xs-6 from 's/vendor/flexboxgrid.css';
+}
+
+.header {
+    composes: row from 's/vendor/flexboxgrid.css';
+    padding-top: 15px;
+}

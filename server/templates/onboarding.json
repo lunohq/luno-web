@@ -1,0 +1,79 @@
+[
+  {
+    "body": "Let's jump right in! First, go to Slack and look for a direct message from Luno and try asking Luno some of the questions in the Sample FAQs. \n\nAfter you get a hang of how Luno works, come back here to start training Luno with your company information. \n\nFeel free to delete these canned replies when you're ready to launch to your team. If you have any questions, email us at hotline@lunohq.com.", 
+    "keywords": "", 
+    "topic_name": "", 
+    "attachments": "", 
+    "title": "Welcome to Luno!"
+  }, 
+  {
+    "body": "If you have any questions, we're here to help. Just email us at hotline@lunohq.com.", 
+    "keywords": "contact", 
+    "topic_name": "Luno Tips & Tricks", 
+    "attachments": "", 
+    "title": "Luno Support"
+  }, 
+  {
+    "body": "After you've trained Luno, there are a few ways to launch him to your team. Here's a couple techniques that we've seen work well.\n\n- When someone asks you a question that Luno has been trained on, instead of answering yourself, tell them to how they should ask Luno to get the answer. \n- Another way to do it is to bring Luno into a group chat with the user, and you can show them how they can ask Luno to get the answer to their question.\n- You can also create a help channel in Slack and tell your team that you'll only answer questions there. In the help channel, you can use Luno as your personal assistant to retrieve answers.\n\nYour team will quickly learn that it's easier to bug Luno because he's always available and doesn't get annoyed :sunglasses:", 
+    "keywords": "", 
+    "topic_name": "Luno Tips & Tricks", 
+    "attachments": "", 
+    "title": "Launching Luno to your Team"
+  }, 
+  {
+    "body": "We are constantly improving our search algorithm, but in general, this is how it works:\n\n- There are a handful of system replies like \"hi\", \"help\", and \"human\" that can be customized here: https://app.lunohq.com/admin/bot. For everything else, Luno will search what he's been trained on.\n- We detect common words like \"how\", \"you\", \"to\" and ignore them. Then we use the the remaining words to search across the everything in the reply - title, body, topic name, and keywords.\n- If we are highly confident in one result, we just show that one result. \n- If there's more than one result, we show a list and let the user select the one they want to see. ", 
+    "keywords": "", 
+    "topic_name": "Luno Tips & Tricks", 
+    "attachments": "", 
+    "title": "How Luno Search Works"
+  }, 
+  {
+    "body": "Talking to Luno is as simple as direct messaging @luno. Most people prefer this method. You can track their questions with our logs: https://app.lunohq.com/logs.\n\nYou can also add Luno to specific channels by typing `/invite @luno` in that channel. Once he's added, type @luno before your question to talk to Luno, e.g. `@luno talking to luno`.", 
+    "keywords": "", 
+    "topic_name": "Luno Tips & Tricks", 
+    "attachments": "", 
+    "title": "Talking to Luno"
+  }, 
+  {
+    "body": "You can access the admin dashboard directly at app.lunohq.com.", 
+    "keywords": "train, login, signin, sign in", 
+    "topic_name": "Luno Tips & Tricks", 
+    "attachments": "", 
+    "title": "Logging into Luno"
+  }, 
+  {
+    "body": "Network: AcmeGuest\nPassword: supersecret2016", 
+    "keywords": "internet, access, wi-fi", 
+    "topic_name": "Sample FAQs", 
+    "attachments": "", 
+    "title": "Guest Wifi"
+  },
+  {
+    "body": "123 Main St, Suite 1000,\nSan Francisco, CA 94105", 
+    "keywords": "office, hq, headquarters, sf", 
+    "topic_name": "Sample FAQs", 
+    "attachments": "", 
+    "title": "Company Address"
+  }, 
+  {
+    "body": "We have 10 company holidays: \n- New Year's Day (Jan 1)\n- Martin Luther King Day (Jan)\n- Presidents Day (Feb)\n- Memorial Day (May)\n- Independence Day (July)\n- Labor Day (Sep)\n- Thanksgiving + day after (Nov)\n- Christmas Eve & Christmas Day (Dec 25 & 26)", 
+    "keywords": "mlk, new years eve", 
+    "topic_name": "Sample FAQs", 
+    "attachments": "", 
+    "title": "Company Holidays"
+  }, 
+  {
+    "body": "When working with independent contractors or freelancers, we need their tax identification number for the IRS. \n\nWhen you sign the agreement with a new contractor, please make sure you have them fill out the attached W-9 form, and send the completed form to finance@acme.com.", 
+    "keywords": "w9, TIN, vendor", 
+    "topic_name": "Sample FAQs", 
+    "attachments": "onboarding/08a1ef89-1a19-416b-80e8-1f9cc51c4bb2", 
+    "title": "W-9 Form"
+  }, 
+  {
+    "body": "This is a sample reply.\n\nReplies are the basic units of information in Luno. They can be organized into Topics (this one is in \"Sample FAQs\").\n\nReplies can also contain attachments. Image files (jpg, png, bmp, gifs) will automatically preview in Slack. All other file types will be handled as normal attachments.\n\nYou can also add keywords to handle the different ways people ask the same question.\n\nTo see what this reply looks like in Slack, direct message Luno `testing 123`.", 
+    "keywords": "demo, sample, example, answer, faq, testing 123", 
+    "topic_name": "Sample FAQs", 
+    "attachments": "onboarding/3e82ea78-b3f0-4106-b77a-e036ab18f275", 
+    "title": "Test"
+  }
+]

@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- The first thing in any HTML file should be the charset -->
+    <meta charset="utf-8">
+    <!-- Make the page mobile compatible -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Allow installing the app to the homescreen -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Luno</title>
+    <link href='https://fonts.googleapis.com/css?family=Lato:300,400,900' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Sofia' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,400italic,500,500italic,700,700italic,300italic' rel='stylesheet' type='text/css'>
+  </head>
+  <!-- The style prevents the rubber banding effect when scrolling -->
+  <body style="position: absolute; top: 0; bottom: 0; left: 0; right: 0; overflow: hidden; min-width: 962px;">
+    <!-- The app hooks into this div -->
+    <div id="app"></div>
+    <!-- HtmlWebpackPlugin automatically includes all assets -->
+  </body>
+</html>

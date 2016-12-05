@@ -1,0 +1,15 @@
+.root {}
+
+.content {
+    composes: content from 's/layout.scss';
+}
+
+.body {
+    font-size: 1.6rem;
+    margin-bottom: 60px;
+}
+
+.titleContainer {
+    composes: row between-xs middle-xs from 's/vendor/flexboxgrid.css';
+    margin: 0;
+}

@@ -1,0 +1,8 @@
+.iconContainer {
+    composes: row middle-xs from 's/vendor/flexboxgrid.css';
+    height: 100%;
+}
+
+.input {
+    font-size: 2.0rem !important;
+}

@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+.root {
+    height: 100%;
+}
+
+.content {
+    composes: row from 's/vendor/flexboxgrid.css';
+    padding: 0px 15px;
+    height: 100%;
+    flex-wrap: nowrap;
+}
+
+.replyList {
+    composes: col-xs-5 from 's/vendor/flexboxgrid.css';
+}
+
+.reply {
+    composes: col-xs from 's/vendor/flexboxgrid.css';
+    padding-left: 10px;
+}
+
+.navPadding {
+  padding-top: 2px;
+  padding-bottom: 80px;
+}

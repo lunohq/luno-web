@@ -1,0 +1,493 @@
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+type AnalyzeResult {
+  result: String
+}
+
+type Attachment {
+  file: File
+}
+
+input AttachmentInput {
+  file: FileInput!
+}
+
+type Bot implements Node {
+  id: ID!
+  purpose: String
+  pointsOfContact: [ID]
+}
+
+type BotConnection {
+  pageInfo: PageInfo!
+  edges: [BotEdge]
+}
+
+type BotEdge {
+  node: Bot
+  cursor: String!
+}
+
+input CancelFileInput {
+  name: String!
+  mutationId: String!
+  fileId: String
+}
+
+input CancelFileUploadsInput {
+  uploads: [CancelFileInput]
+  clientMutationId: String!
+}
+
+type CancelFileUploadsPayload {
+  mutationIds: [String]
+  clientMutationId: String!
+}
+
+input CreateReplyInput {
+  title: String!
+  body: String!
+  keywords: String
+  topicId: ID!
+  attachments: [AttachmentInput]
+  clientMutationId: String!
+}
+
+type CreateReplyPayload {
+  topic: Topic
+  replyEdge: ReplyEdge
+  clientMutationId: String!
+}
+
+input CreateTopicInput {
+  name: String!
+  pointsOfContact: [String]
+  clientMutationId: String!
+}
+
+type CreateTopicPayload {
+  viewer: User
+  topic: Topic
+  topicEdge: TopicEdge
+  clientMutationId: String!
+}
+
+input DeleteFileInput {
+  fileId: String
+  clientMutationId: String!
+}
+
+type DeleteFilePayload {
+  fileId: String
+  clientMutationId: String!
+}
+
+input DeleteReplyInput {
+  id: ID!
+  topicId: ID!
+  clientMutationId: String!
+}
+
+type DeleteReplyPayload {
+  topic: Topic
+  deletedId: ID
+  clientMutationId: String!
+}
+
+input DeleteTopicInput {
+  id: ID!
+  clientMutationId: String!
+}
+
+type DeleteTopicPayload {
+  viewer: User
+  deletedId: ID
+  clientMutationId: String!
+}
+
+type ExplainResult {
+  matched: Boolean
+  explanation: String
+}
+
+type File implements Node {
+  id: ID!
+  name: String
+  permalink: String
+  key: String
+  bucket: String
+  created: String
+}
+
+input FileInput {
+  id: ID!
+  name: String!
+  permalink: String!
+}
+
+input InviteUserInput {
+  userId: String!
+  role: UserRole!
+  username: String!
+  clientMutationId: String!
+}
+
+type InviteUserPayload {
+  team: Team
+  user: User
+  userEdge: UserEdge
+  clientMutationId: String!
+}
+
+input LogoutInput {
+  clientMutationId: String!
+}
+
+type LogoutPayload {
+  viewer: User
+  clientMutationId: String!
+}
+
+type MultiSearchResult {
+  responses: [SearchResultsV2]
+  requestTook: Int
+  analyzed: String
+}
+
+type Mutation {
+  logout(input: LogoutInput!): LogoutPayload
+  updateBotPurpose(input: UpdateBotPurposeInput!): UpdateBotPurposePayload
+  updateBotPointsOfContact(input: UpdateBotPointsOfContactInput!): UpdateBotPointsOfContactPayload
+  updateUser(input: UpdateUserInput!): UpdateUserPayload
+  inviteUser(input: InviteUserInput!): InviteUserPayload
+  createReply(input: CreateReplyInput!): CreateReplyPayload
+  deleteReply(input: DeleteReplyInput!): DeleteReplyPayload
+  updateReply(input: UpdateReplyInput!): UpdateReplyPayload
+  createTopic(input: CreateTopicInput!): CreateTopicPayload
+  deleteTopic(input: DeleteTopicInput!): DeleteTopicPayload
+  updateTopic(input: UpdateTopicInput!): UpdateTopicPayload
+  uploadFile(input: UploadFileInput!): UploadFilePayload
+  cancelFileUploads(input: CancelFileUploadsInput!): CancelFileUploadsPayload
+  deleteFile(input: DeleteFileInput!): DeleteFilePayload
+}
+
+interface Node {
+  id: ID!
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+
+type Query {
+  node(id: ID!): Node
+  viewer: User
+}
+
+type Reply implements Node {
+  id: ID!
+  title: String
+  body: String
+  keywords: String
+  changed: String
+  updatedBy: User
+  topic: Topic
+  attachments: [Attachment]
+}
+
+type ReplyConnection {
+  pageInfo: PageInfo!
+  edges: [ReplyEdge]
+}
+
+type ReplyEdge {
+  node: Reply
+  cursor: String!
+}
+
+type SearchResult {
+  score: Float
+  id: String
+  changed: String
+  body: String
+  displayTitle: String
+  title: String
+  explanation: String
+}
+
+type SearchResults {
+  took: Int
+  requestTook: Int
+  totalResults: Int
+  maxScore: Float
+  results: [SearchResult]
+  query: String
+}
+
+type SearchResultsV2 {
+  took: Int
+  totalResults: Int
+  maxScore: Float
+  results: [SearchResultV2]
+}
+
+type SearchResultV2 {
+  score: Float
+  id: String
+  changed: String
+  body: String
+  title: String
+  keywords: String
+  topic: String
+  explanation: String
+}
+
+type SlackMember implements Node {
+  id: ID!
+  userId: ID!
+  name: String
+  profile: SlackMemberProfile
+}
+
+type SlackMemberConnection {
+  pageInfo: PageInfo!
+  edges: [SlackMemberEdge]
+}
+
+type SlackMemberEdge {
+  node: SlackMember
+  cursor: String!
+}
+
+type SlackMemberProfile {
+  realName: String
+  email: String
+}
+
+type Team implements Node {
+  id: ID!
+  name: String
+  attachmentsEnabled: Boolean
+  createdBy: ID!
+  members(after: String, first: Int, before: String, last: Int): SlackMemberConnection
+  users(after: String, first: Int, before: String, last: Int): UserConnection
+  staff(after: String, first: Int, before: String, last: Int): UserConnection
+  admins(after: String, first: Int, before: String, last: Int): UserConnection
+}
+
+type ThreadEvent {
+  created: String
+  message: ThreadEventMessage
+  type: ThreadEventType
+  meta: String
+}
+
+type ThreadEventMessage {
+  event: String
+  type: String
+  user: String
+  ts: Float
+  text: String
+}
+
+type ThreadEventsConnection {
+  pageInfo: PageInfo!
+  edges: [ThreadEventsEdge]
+}
+
+type ThreadEventsEdge {
+  node: ThreadEvent
+  cursor: String!
+}
+
+enum ThreadEventType {
+  MESSAGE_RECEIVED
+  MESSAGE_SENT
+  GREETING_FLOW
+  HELP_FLOW
+  ANSWER_FLOW
+  FEEDBACK
+  SMART_REPLY
+  MULTIPLE_RESULTS
+  NO_RESULTS
+  CLARIFICATION
+  ESCALATION_FLOW
+}
+
+type ThreadLog implements Node {
+  id: ID!
+  channelName: String
+  created: String
+  message: String
+  username: String
+  length: Int
+  status: Int
+  events(after: String, first: Int, before: String, last: Int): ThreadEventsConnection
+}
+
+type ThreadLogConnection {
+  pageInfo: PageInfo!
+  edges: [ThreadLogEdge]
+}
+
+type ThreadLogEdge {
+  node: ThreadLog
+  cursor: String!
+}
+
+type Topic implements Node {
+  id: ID!
+  isDefault: Boolean
+  name: String
+  replies(after: String, first: Int, before: String, last: Int): ReplyConnection
+}
+
+type TopicConnection {
+  pageInfo: PageInfo!
+  edges: [TopicEdge]
+}
+
+type TopicEdge {
+  node: Topic
+  cursor: String!
+}
+
+input UpdateBotPointsOfContactInput {
+  id: ID!
+  pointsOfContact: [String]
+  clientMutationId: String!
+}
+
+type UpdateBotPointsOfContactPayload {
+  bot: Bot
+  clientMutationId: String!
+}
+
+input UpdateBotPurposeInput {
+  id: ID!
+  purpose: String
+  clientMutationId: String!
+}
+
+type UpdateBotPurposePayload {
+  bot: Bot
+  clientMutationId: String!
+}
+
+input UpdateReplyInput {
+  id: ID!
+  title: String!
+  body: String!
+  keywords: String
+  attachments: [AttachmentInput]
+  deleteFileIds: [ID]
+  topicId: ID!
+  previousTopicId: ID!
+  clientMutationId: String!
+}
+
+type UpdateReplyPayload {
+  reply: Reply
+  replyId: ID
+  replyEdge: ReplyEdge
+  previousTopic: Topic
+  topic: Topic
+  clientMutationId: String!
+}
+
+input UpdateTopicInput {
+  id: ID!
+  name: String!
+  clientMutationId: String!
+}
+
+type UpdateTopicPayload {
+  topic: Topic
+  clientMutationId: String!
+}
+
+input UpdateUserInput {
+  id: ID!
+  role: UserRole!
+  clientMutationId: String!
+}
+
+type UpdateUserPayload {
+  team: Team
+  user: User
+  clientMutationId: String!
+}
+
+input UploadFileInput {
+  clientMutationId: String!
+}
+
+type UploadFilePayload {
+  file: File
+  clientMutationId: String!
+}
+
+type User implements Node {
+  id: ID!
+  username: String
+  team: Team
+  bots(after: String, first: Int, before: String, last: Int): BotConnection
+  search(query: String!): SearchResults
+  msearch(query: String!): MultiSearchResult
+  zsearch(domain: String!, query: String!): ZendeskSearchResults
+  analyze(query: String!, options: String): AnalyzeResult
+  validate(query: String!): ValidateResult
+  explain(query: String!, replyId: ID!, tier: Int!): ExplainResult
+  reply(id: ID!): Reply
+  topic(id: ID!): Topic
+  threadLog(id: ID!): ThreadLog
+  defaultTopic: Topic
+  topics(after: String, first: Int, before: String, last: Int): TopicConnection
+  threadLogs(after: String, first: Int, before: String, last: Int): ThreadLogConnection
+  anonymous: Boolean
+  assumed: Boolean
+  role: UserRole
+  isStaff: Boolean
+  isAdmin: Boolean
+  displayRole: String
+}
+
+type UserConnection {
+  pageInfo: PageInfo!
+  edges: [UserEdge]
+}
+
+type UserEdge {
+  node: User
+  cursor: String!
+}
+
+enum UserRole {
+  ADMIN
+  TRAINER
+  CONSUMER
+}
+
+type ValidateResult {
+  query: String
+  result: String
+}
+
+type ZendeskSearchResult {
+  url: String
+  title: String
+  labels: String
+}
+
+type ZendeskSearchResults {
+  requestTook: Int
+  pages: Int
+  totalResults: Int
+  results: [ZendeskSearchResult]
+}
